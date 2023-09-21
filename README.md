@@ -65,7 +65,8 @@ int main()
     cout << "Your number: " << number << "\n";
 }
 ```
-## References
+## Memory
+### References
 All data is stored in memory as a combination of a value & an address. The purpose of the address is to know the location of its associated value in memory. Therefore, whenever a variable is read or written to, the variable's address is accessed first to direct the program to the value.
 
 In C++, when you copy a variable, you have the option to either copy it entirely (copy by value / deep copy) or only copy its address (copy by reference / shallow copy). Since the reference points to the same value as the preceding variable, the same result will be acquired. In order to hold a reference, the use of the ampersand ```&``` as a suffix to the variable type is used.
@@ -74,7 +75,7 @@ In C++, when you copy a variable, you have the option to either copy it entirely
 int main()
 {
     int originalNumber = 64;
-    int& referenceToNumber = originalNumber;
+    int& referenceToNumber = originalNumber; //The '&' is used to declare a reference
     int copyOfNumber = originalNumber;
     cout << "Copy by Reference: " << referenceToNumber << "\n";
     cout << "Copy by Value: " << copyOfNumber << "\n";
@@ -97,4 +98,23 @@ int main()
 }
 ```
 
-When ```originalNumber``` is modified, ```referenceToNumber``` mirrors this change. However, ```copyOfNumber``` does not. The former points to the original value, whereas the latter points to a new, copied value.
+When ```originalNumber``` is modified, ```referenceToNumber``` mirrors this change. However, ```copyOfNumber``` does not. This is because the former points to the original value, whereas the latter points to a new, copied value.
+
+When declaring a function, any parameters must also specify whether to copy by reference or value. For example, the code below achieves the same result as in the previous example, however ```originalNumber``` is now passed through a function. As one might expect, passing by reference through a function is faster than passing by value.
+
+```c++
+int main()
+{
+    originalNumber = 64; //Assigned as an object variable for purpose of demonstration
+    Hello(originalNumber, originalNumber);
+}
+
+void Hello(int& number0In, int number1In)
+{
+    originalNumber = 128;
+    cout << "Copy by Reference: " << number0In << "\n";
+    cout << "Copy by Value: " << number1In << "\n";
+}
+```
+
+### Pointers
