@@ -159,29 +159,48 @@ int main()
 ### Allocation
 When creating a new object, there are two options: static or dynamic allocation of memory. Static memory allocation uses the relatively small stack memory, whilst dynamic memory allocation uses the relatively large heap memory.
 
-Stack memory is allocated when a program is executed and is deallocated upon its closure. For this reason, all statically assigned objects will persist until the program ends & do not require manual deallocation. However, heap memory is allocated during the runtime of the given program & therefore must also be manually deallocated during runtime. In this case, all dynamically assigned objects must be manually allocated & deallocated during a program's lifetime.
+Stack memory is allocated when a program is executed and is deallocated upon its closure. For this reason, all statically assigned objects will persist throughout the program's lifetime & do not require manual deallocation. However, heap memory is allocated during the runtime of the given program & therefore dynamically assigned objects must be manually & appropriately deallocated during runtime.
+
+In the example shown, two instances of the class `Dragon` are created. ```Dragon1``` is statically assigned & ```Dragon2``` is dynamically assigned. Static allocation allows for the retrieval of the object itself, whereas dynamic allocation requires that a pointer to the object is instantiated instead. Additionally, ```Dragon2``` must be deleted with the ```delete``` keyword after its use ceases to avoid a memory leak.
 
 ```c++
 int main()
 {
-    Dragon NewDragon1("TrueDragon");
-    Dragon* NewDragon2 = new Dragon("Wyvern");
+    Dragon Dragon1("TrueDragon");
+    Dragon* Dragon2 = new Dragon("Wyvern");
+    delete Dragon2; //If not deleted, will continue to exist after going out of scope
 }
 ```
 
-When using a pointer to an object, there is a syntactical difference when attempting to retrieve member variables or call member functions of the given object.
+A pointer to a dynamically assigned object can be used in order to retrieve a member of the object. In this case, the use of the arrow ```->``` is required, whereas the dot ```.``` is used for retrieving members of statically assigned objects.
 
 ```c++
 int main()
 {
-    Dragon NewDragon1("TrueDragon");
-    cout << NewDragon1.type << "\n";
-    NewDragon1.Roar();
+    Dragon Dragon1("TrueDragon");
+    cout << Dragon1.type << "\n";
+    Dragon1.Roar();
 
-    Dragon* NewDragon2 = new Dragon("Wyvern");
-    cout << NewDragon2->type << "\n";
-    NewDragon2->Roar();
+    Dragon* Dragon2 = new Dragon("Wyvern");
+    cout << Dragon2->type << "\n";
+    Dragon2->Roar();
+    delete Dragon2;
 }
 ```
-### Deletion
-Unlike passing or accessing by reference, pointers are variables. Therefore, their lifetime may persist beyond the existence of the variable that it points to.
+### Null Pointers
+Unlike passing or accessing by reference, pointers are variables. Therefore, their lifetime may persist beyond the existence of the variable that it points to. This is problematic in the case of dynamically allocated memory. If a pointer that no longer points to another variable is accessed, it is referred to as a null pointer. Displayed is an example of how a null pointer can be generated:
+
+```c++
+int main()
+{
+    Dragon* Dragon2 = new Dragon("Wyvern");
+    Dragon2->Die(); //Deallocates itself within function, leaving empty pointer
+    cout << Dragon2->type << "\n"; //This will not print the Dragon2 type
+}
+
+void Dragon::Die()
+{
+    cout << type << " died!" << "\n";
+    delete this; //deallocation of itself (Dragon2)
+}
+```
