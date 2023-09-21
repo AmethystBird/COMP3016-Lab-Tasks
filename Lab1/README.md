@@ -23,7 +23,7 @@ In your newly created project, a .cpp file should have been generated; this is w
 ### Includes
 In order for your .cpp file to be able to make use of your .h file, you must type ```#include "fileName.h"``` at the top of your file. You may have also noticed that the line ```#include <iostream>``` also exists in the project & instead uses angle brackets, as opposed to quotation marks. Depending upon which is chosen will determine how the preprocessor searches for the file to include. Generally, the quotations are used to locate program-related & user-defined header files, whereas the angle brackets are used to locate system header files.
 
-## Input and Output
+## Input & Output
 ### Output
 To print text to a console, the ```cout``` object can be used. The example project you created in [Setup](#setup) should already demonstrate this as such:
 
