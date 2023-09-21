@@ -5,6 +5,13 @@ In this module, we will be using the OpenGL (Open Graphics Library) programming 
 ## Setup
 All labs will utilise Visual Studio 2019 or 2022 with Windows 10 or 11. Run Visual Studio and click 'Create a new project' & create a project of type 'Console App' with the tags C++, Windows & Console. If this does not appear, then run the Visual Studio Installer. Find the relevant Visual Studio installation, select 'Modify' & install the 'Desktop development with C++' package. Now proceed to run Visual Studio to create the relevant project.
 
+## Files
+### Types
+In your newly created project, a .cpp file should have been generated; this is where the majority of code will be located. This is adequate for the existing contents of this project, however in order to correctly declare object and global variables & functions, a header file must be created. To do this, navigate to the solution explorer, right click the Source Files folder, hover over Add & select New Item. Give the new file the same name as your .cpp file, but give it the .h extension.
+
+### Includes
+In order for your .cpp file to be able to make use of your .h file, you must type ```#include "fileName.h"``` at the top of your file. You may have also noticed that the line ```#include <iostream>``` also exists in the project & instead uses angle brackets, as opposed to quotation marks. Depending upon which is chosen will determine how the preprocessor searches for the file to include. Generally, the quotations are used to locate program-related & user-defined header files, whereas the angle brackets are used to locate system header files.
+
 ## Input and Output
 ### Output
 To print text to a console, the ```cout``` object can be used. The example project you created in [Setup](#setup) should already demonstrate this as such:
@@ -46,10 +53,11 @@ int main()
     namespace2::Hello();
 }
 ```
-### Default
+
 Without namespaces, this would not be possible due to the C++ compiler being unable to disambiguify which name refers to what. The code would fail to compile as a result.
 
-However, for the case where a particular namespace is being used more frequently than another within a cpp file, the namespace can be effectively hidden if one declares it as the default namespace for that cpp file. While the use of the namespace prefix may still be used for the given namespace, it no longer has to be used. Of course, this can only be done with one namespace per file, otherwise this would defeat the purpose of them as naming collisions could occur.
+### Default
+For the case where a particular namespace is being used more frequently than another within a cpp file, the namespace can be effectively hidden if one declares it as the default namespace for that cpp file. While the use of the namespace prefix may still be used for the given namespace, it no longer has to be used. Of course, this can only be done with one namespace per file, otherwise this would defeat the purpose of them as naming collisions could occur.
 
 ```c++
 #include <iostream>
