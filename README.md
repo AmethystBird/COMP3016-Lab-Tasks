@@ -66,8 +66,10 @@ int main()
 }
 ```
 ## Memory
-### References
+### Addresses and Values
 All data is stored in memory as a combination of a value & an address. The purpose of the address is to know the location of its associated value in memory. Therefore, whenever a variable is read or written to, the variable's address is accessed first to direct the program to the value.
+
+If desired, the address itself can also be directly retrieved & used as opposed to the reference being used solely as a route to acquire the associated value. The ampersand ```&``` is used as a prefix upon a variable in order to acquire its address. Try executing this program to compare the results when printing ```originalNumber``` & `&originalNumber`:
 
 ```c++
 int main()
@@ -78,7 +80,9 @@ int main()
 }
 ```
 
-#### Copying
+When printing ```originalNumber```, the value of 64 should be printed. However, when printing ```&originalNumber```, the result should be something like ```000000A12ECFF994```. This is the address. The result of printing the address may change in each instance depending upon the location of the value.
+
+### Copying
 In C++, when you copy a variable, you have the option to either copy it entirely (copy by value / deep copy) or only copy its address (copy by reference / shallow copy). Since the reference points to the same value as the preceding variable, the same result will be acquired. In order to hold a reference, the use of the ampersand ```&``` as a suffix to the variable type is used.
 
 ```c++
@@ -110,8 +114,8 @@ int main()
 
 When ```originalNumber``` is modified, ```referenceToNumber``` mirrors this change. However, ```copyOfNumber``` does not. This is because the former points to the original value, whereas the latter points to a new, copied value.
 
-#### Passing
-When declaring a function, any parameters must also specify whether to copy by reference or value. For example, the code below achieves the same result as in the previous example, however ```originalNumber``` is now passed through a function. As one might expect, passing by reference through a function is faster than passing by value.
+### Passing
+When declaring a function, any parameters must also specify whether to copy by reference or value. For example, the code below achieves the same result as in the previous example, however ```originalNumber``` is now passed through a function. As one might expect, passing by reference through a function is faster than passing by value as less must be transferred. If a reference is passed, the original variable is brought into the function's scope & therefore can be operated upon normally.
 
 ```c++
 int main()
@@ -123,21 +127,25 @@ int main()
 void Hello(int& number0In, int number1In)
 {
     originalNumber = 128;
-    cout << "Copy by Reference: " << number0In << "\n";
+    cout << "Copy by Reference: " << number0In << "\n"; //No '&' needed
     cout << "Copy by Value: " << number1In << "\n";
 }
 ```
 
 ### Pointers
-As opposed to a reference, a pointer is a variable that contains a value that represents the address contained within another variable. The pointer type must also correspond to the type that it points to. To create a pointer variable, the address of the variable that it points to must be assigned:
+#### Overview
+As opposed to a reference, a pointer is a variable that contains a value that represents the address contained within another variable. To declare a pointer variable, the data type of the variable that it points to must be used, along with an asterisk ```*``` suffix to the type specifier. Alternatively, the ```*``` may be applied as a prefix to the variable name. To instantiate the pointer, the address of the variable that it points to must be assigned. Execute the following code to see what is printed:
 ```c++
 int main()
 {
     int originalNumber = 64;
     int* pointerToNumber = &originalNumber;
+    cout << pointerToNumber << "\n";
 }
 ```
-//=================
+
+When ```pointerToNumber``` is printed, the address of ```originalNumber``` should be displayed. However, in order to use the pointer's value as an address to locate & print the value of ```originalNumber```, the pointer must be dereferenced. To dereference a pointer, the ```*``` must be used as a prefix on the pointer's name. Execute the following code & compare what is printed by ```pointerToNumber``` & ```*pointerToNumber```:
+
 ```c++
 int main()
 {
@@ -147,3 +155,33 @@ int main()
     cout << *pointerToNumber << "\n";
 }
 ```
+
+### Allocation
+When creating a new object, there are two options: static or dynamic allocation of memory. Static memory allocation uses the relatively small stack memory, whilst dynamic memory allocation uses the relatively large heap memory.
+
+Stack memory is allocated when a program is executed and is deallocated upon its closure. For this reason, all statically assigned objects will persist until the program ends & do not require manual deallocation. However, heap memory is allocated during the runtime of the given program & therefore must also be manually deallocated during runtime. In this case, all dynamically assigned objects must be manually allocated & deallocated during a program's lifetime.
+
+```c++
+int main()
+{
+    Dragon NewDragon1("TrueDragon");
+    Dragon* NewDragon2 = new Dragon("Wyvern");
+}
+```
+
+When using a pointer to an object, there is a syntactical difference when attempting to retrieve member variables or call member functions of the given object.
+
+```c++
+int main()
+{
+    Dragon NewDragon1("TrueDragon");
+    cout << NewDragon1.type << "\n";
+    NewDragon1.Roar();
+
+    Dragon* NewDragon2 = new Dragon("Wyvern");
+    cout << NewDragon2->type << "\n";
+    NewDragon2->Roar();
+}
+```
+### Deletion
+Unlike passing or accessing by reference, pointers are variables. Therefore, their lifetime may persist beyond the existence of the variable that it points to.
