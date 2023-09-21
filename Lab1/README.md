@@ -150,7 +150,6 @@ void Hello(int& number0In, int number1In)
 ```
 
 ### Pointers
-#### Overview
 As opposed to a reference, a pointer is a variable that contains a value that represents the address contained within another variable. To declare a pointer variable, the data type of the variable that it points to must be used, along with an asterisk ```*``` suffix to the type specifier. Alternatively, the ```*``` may be applied as a prefix to the variable name. To instantiate the pointer, the address of the variable that it points to must be assigned. Execute the following code to see what is printed:
 ```c++
 int main()
