@@ -69,6 +69,16 @@ int main()
 ### References
 All data is stored in memory as a combination of a value & an address. The purpose of the address is to know the location of its associated value in memory. Therefore, whenever a variable is read or written to, the variable's address is accessed first to direct the program to the value.
 
+```c++
+int main()
+{
+    int originalNumber = 64;
+    cout << "Value: " << originalNumber << "\n";
+    cout << "Reference: " << &originalNumber << "\n";
+}
+```
+
+#### Copying
 In C++, when you copy a variable, you have the option to either copy it entirely (copy by value / deep copy) or only copy its address (copy by reference / shallow copy). Since the reference points to the same value as the preceding variable, the same result will be acquired. In order to hold a reference, the use of the ampersand ```&``` as a suffix to the variable type is used.
 
 ```c++
@@ -100,6 +110,7 @@ int main()
 
 When ```originalNumber``` is modified, ```referenceToNumber``` mirrors this change. However, ```copyOfNumber``` does not. This is because the former points to the original value, whereas the latter points to a new, copied value.
 
+#### Passing
 When declaring a function, any parameters must also specify whether to copy by reference or value. For example, the code below achieves the same result as in the previous example, however ```originalNumber``` is now passed through a function. As one might expect, passing by reference through a function is faster than passing by value.
 
 ```c++
@@ -118,3 +129,21 @@ void Hello(int& number0In, int number1In)
 ```
 
 ### Pointers
+As opposed to a reference, a pointer is a variable that contains a value that represents the address contained within another variable. The pointer type must also correspond to the type that it points to. To create a pointer variable, the address of the variable that it points to must be assigned:
+```c++
+int main()
+{
+    int originalNumber = 64;
+    int* pointerToNumber = &originalNumber;
+}
+```
+//=================
+```c++
+int main()
+{
+    int originalNumber = 64;
+    int* pointerToNumber = &originalNumber;
+    cout << pointerToNumber << "\n";
+    cout << *pointerToNumber << "\n";
+}
+```
