@@ -136,6 +136,14 @@ When ```originalNumber``` is modified, ```referenceToNumber``` mirrors this chan
 ### Passing
 When declaring a function, any parameters must also specify whether to copy by reference or value. For example, the code below achieves the same result as in the previous example, however ```originalNumber``` is now passed through a function. As one might expect, passing by reference through a function is faster than passing by value as less must be transferred. If a reference is passed, the original variable is brought into the function's scope & therefore can be operated upon normally.
 
+**Header**
+```c++
+#pragma once
+void Hello(int& number0In, int number1In);
+int originalNumber;
+```
+
+**CPP**
 ```c++
 int main()
 {
@@ -181,6 +189,21 @@ Stack memory is allocated when a program is executed and is deallocated upon its
 
 In the example shown, two instances of the class `Dragon` are created. ```Dragon1``` is statically assigned & ```Dragon2``` is dynamically assigned. Static allocation allows for the retrieval of the object itself, whereas dynamic allocation requires that a pointer to the object is instantiated instead. Additionally, ```Dragon2``` must be deleted with the ```delete``` keyword after its use ceases, in order to avoid a memory leak.
 
+**Header**
+```c++
+#pragma once
+
+#include <string>
+using namespace std;
+
+class Dragon
+{
+public:
+    Dragon(string typeIn);
+    string type;
+};
+```
+**CPP**
 ```c++
 int main()
 {
@@ -192,6 +215,19 @@ int main()
 
 A pointer to a dynamically assigned object can be used in order to retrieve a member of the object. In this case, the use of the arrow ```->``` is required, whereas the dot ```.``` is used for retrieving members of statically assigned objects.
 
+**Header**
+```c++
+class Dragon
+{
+public:
+    Dragon(string typeIn);
+    string type;
+
+    void Roar();
+};
+```
+
+**CPP**
 ```c++
 int main()
 {
@@ -208,6 +244,19 @@ int main()
 ### Null Pointers
 Unlike passing or accessing by reference, pointers are variables. Therefore, their lifetime may persist beyond the existence of the variable that it points to. This is problematic in the case of dynamically allocated memory. If a pointer that no longer points to another variable is accessed, it is referred to as a null pointer. Displayed is an example of how a null pointer can be generated:
 
+**Header**
+```c++
+class Dragon
+{
+public:
+    Dragon(string typeIn);
+    string type;
+
+    void Die();
+};
+```
+
+**CPP**
 ```c++
 int main()
 {
