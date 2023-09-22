@@ -7,6 +7,8 @@ All labs will utilise Visual Studio 2019 or 2022 with Windows 10 or 11. Run Visu
 
 If this does not appear, then run the Visual Studio Installer. Find the relevant Visual Studio installation, select 'Modify.' Next, select the 'Desktop development with C++' package & select 'Modify' at the bottom right of the window in order to add the package. Once the package is installed, proceed to run Visual Studio to create the relevant project.
 
+If your project contains no sample code, nor has a .cpp file, navigate to this repository's equivalent project in Lab1/Solutions/Output & use it instead.
+
 **Create Empty C++ Project**
 ![Create New Project](createNewProject.png)
 
@@ -177,7 +179,7 @@ When creating a new object, there are two options: static or dynamic allocation 
 
 Stack memory is allocated when a program is executed and is deallocated upon its closure. For this reason, all statically assigned objects will persist throughout the program's lifetime & do not require manual deallocation. However, heap memory is allocated during the runtime of the given program & therefore dynamically assigned objects must be manually & appropriately deallocated during runtime.
 
-In the example shown, two instances of the class `Dragon` are created. ```Dragon1``` is statically assigned & ```Dragon2``` is dynamically assigned. Static allocation allows for the retrieval of the object itself, whereas dynamic allocation requires that a pointer to the object is instantiated instead. Additionally, ```Dragon2``` must be deleted with the ```delete``` keyword after its use ceases to avoid a memory leak.
+In the example shown, two instances of the class `Dragon` are created. ```Dragon1``` is statically assigned & ```Dragon2``` is dynamically assigned. Static allocation allows for the retrieval of the object itself, whereas dynamic allocation requires that a pointer to the object is instantiated instead. Additionally, ```Dragon2``` must be deleted with the ```delete``` keyword after its use ceases, in order to avoid a memory leak.
 
 ```c++
 int main()
