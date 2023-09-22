@@ -182,6 +182,26 @@ int main()
 }
 ```
 
+#### Array Indexing
+Pointers can also be used as an index to access an array. This is because when a pointer to an array is created, it assumes the address of its first index. Data within an array is stored linearly in memory. Therefore, the pointer can be incremented in order to shift its memory address to the next element of the array it points to. The example below loops through an array normally. Your task is to modify this code in order to use a pointer to index through the array:
+
+```c++
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    const int numbersSize = 4;
+    int numbers[numbersSize] = { 64, 128, 256, 512 };
+
+    for (int i = 0; i < numbersSize; i++)
+    {
+        cout << numbers[i] << "\n";
+    }
+}
+```
+
 ### Allocation
 When creating a new object, there are two options: static or dynamic allocation of memory. Static memory allocation uses the relatively small stack memory, whilst dynamic memory allocation uses the relatively large heap memory.
 
