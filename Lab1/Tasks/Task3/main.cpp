@@ -14,8 +14,8 @@ int main()
     cout << "Input health for dragon 1:" << "\n";
     int health;
     cin >> health;
-    Dragon1->health = health;
-    Dragon1->DisplayAttributes();
+    Dragon1.health = &health;
+    Dragon1.DisplayAttributes();
     delete Dragon1;
 
     cout << "Input name for dragon 2:" << "\n";
@@ -25,8 +25,8 @@ int main()
     cout << "Input health for dragon 2:" << "\n";
     health;
     cin >> health;
-    Dragon2->health = health;
-    Dragon2->DisplayAttributes();
+    Dragon2.health = &health;
+    Dragon2.DisplayAttributes();
     CompareDragons(Dragon1, Dragon2);
     delete Dragon2;
 }

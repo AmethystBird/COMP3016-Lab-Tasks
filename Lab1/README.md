@@ -346,4 +346,4 @@ void Dragon::Die()
 ```
 
 ### Task 3
-The code in [Task 3](/Lab1/Tasks/Task3/) is broken. Currently, pointers, memory addresses & memory allocation are not being used or handled correctly. Your task is to fix these errors so that the code builds & runs as intended.
+The code in [Task 3](/Lab1/Tasks/Task3/) is broken. Currently, pointers, memory addresses & memory allocation are not being used or handled correctly. Your task is to fix these errors so that the code builds & runs as intended. The program should ask the user for the names & health of two dragons & display them with ```DisplayAttributes()``` once the input has been given. Lastly, the two dragon's health will be compared with the ```CompareDragons()``` function.
