@@ -92,7 +92,7 @@ Intellisense is able to narrow the search for method names that belong to the `s
 > We will also see this later when defining methods (known in C++ as member functions) that are members of a class
 
 ### Default
-For the case where a particular namespace is being used more frequently than another within a cpp file, the namespace can be effectively hidden if one declares it as the default namespace for that cpp file. While the use of the namespace prefix may still be used for the given namespace, it no longer has to be used. Of course, this can only be done with one namespace per file, otherwise this would defeat the purpose of them as naming collisions could occur:
+For the case where a particular namespace is being used more frequently than another within a cpp file, the namespace can be effectively hidden if one declares it as the default namespace for that cpp file. While the use of the namespace prefix may still be used for the given namespace, it no longer has to be used. Of course, you introduce risk of naming collisions:
 
 ```c++
 #include <iostream>
