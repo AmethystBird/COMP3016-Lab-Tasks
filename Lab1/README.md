@@ -36,6 +36,17 @@ int main()
 }
 ```
 
+| Task | |
+| - | - |
+| 1. | Create new C++ Hello World Console Application in Visual Studio |
+| 2. | Modify the main function as shown above |
+| 3. | Build and run so confirm it is working |
+| 4. | Add a second line to underline the string above it |
+| 5. | Set a breakpoint on the first line and step through the code |
+| | 
+
+Learning to use the debugger in Visual Studio is an important skill. 
+
 ### Input
 To allow the user to input text to a console, the ```cin``` object can be used. Using ```cin``` will halt the program from running until a user gives input to the console and presses enter:
 
@@ -64,8 +75,21 @@ int main()
     namespace2::Hello();
 }
 ```
+Namespaces also help avoid *name collisions*. Another library (with it's own namespace) could have a method called `cout`
 
-Without namespaces, this would not be possible due to the C++ compiler being unable to disambiguify which name refers to what. The code would fail to compile as a result.
+Without namespaces, this would not be possible due to the C++ compiler (and linker) being unable to resolve the full method name. The code would fail to build as a result.
+
+| Experiment |
+| - |
+| Try removing the namespace `std::` from code above so that it reads `cout << "Provide a number!\n";` | 
+| What happens when you build? |
+| On a separate line, type `std::` and observe the behavior of the editor |
+
+Intellisense is able to narrow the search for method names that belong to the `std`  namespace.
+
+> The `::` symbol is known as the *scoping operator*
+>
+> We will also see this later when defining methods (known in C++ as member functions) that are members of a class
 
 ### Default
 For the case where a particular namespace is being used more frequently than another within a cpp file, the namespace can be effectively hidden if one declares it as the default namespace for that cpp file. While the use of the namespace prefix may still be used for the given namespace, it no longer has to be used. Of course, this can only be done with one namespace per file, otherwise this would defeat the purpose of them as naming collisions could occur:
