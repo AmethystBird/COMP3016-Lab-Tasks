@@ -6,9 +6,8 @@ int main()
 {
     const int numbersSize = 4;
     int numbers[numbersSize] = { 64, 128, 256, 512 };
-
-    for (int i = 0; i < numbersSize; i++)
-    {
-        cout << numbers[i] << "\n";
-    }
+    int* position = numbers;
+    cout << *position << "\n"; //prints the first index of the 'numbers' array
+    position++;
+    cout << *position << "\n"; //prints the second index
 }

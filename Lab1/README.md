@@ -81,6 +81,10 @@ All data is stored in memory as a combination of a value & an address. The purpo
 If desired, the address itself can also be directly retrieved & used as opposed to the reference being used solely as a route to acquire the associated value. The ampersand ```&``` is used as a prefix upon a variable in order to acquire its address. Try executing this program to compare the results when printing ```originalNumber``` & `&originalNumber`:
 
 ```c++
+#include <iostream>
+
+using namespace std;
+
 int main()
 {
     int originalNumber = 64;
@@ -95,6 +99,10 @@ When printing ```originalNumber```, the value of 64 should be printed. However, 
 In C++, when you copy a variable, you have the option to either copy it entirely (copy by value / deep copy) or only copy its address (copy by reference / shallow copy). Since the reference points to the same value as the preceding variable, the same result will be acquired. In order to hold a reference, the use of the ampersand ```&``` as a suffix to the variable type is used:
 
 ```c++
+#include <iostream>
+
+using namespace std;
+
 int main()
 {
     int originalNumber = 64;
@@ -108,6 +116,10 @@ int main()
 One benefit of copying by reference is that it is faster than copying by value, as only the address must be copied as opposed to the entire variable. However, copying by reference is not always applicable. If the value that an address points to is modified, all references will point to the modified one. This is because there is only one value to point to. Try executing the following code to compare the difference between what ```referenceToNumber``` & ```copyOfNumber``` print:
 
 ```c++
+#include <iostream>
+
+using namespace std;
+
 int main()
 {
     int originalNumber = 64;
@@ -135,6 +147,12 @@ int originalNumber;
 
 **CPP**
 ```c++
+#include "main.h"
+
+#include <iostream>
+
+using namespace std;
+
 int main()
 {
     originalNumber = 64; //Assigned as an object variable for purpose of demonstration
@@ -153,6 +171,10 @@ void Hello(int& number0In, int number1In)
 #### Overview
 As opposed to a reference, a pointer is a variable that contains a value that represents the address contained within another variable. To declare a pointer variable, the data type of the variable that it points to must be used, along with an asterisk ```*``` suffix to the type specifier. Alternatively, the ```*``` may be applied as a prefix to the variable name. To instantiate the pointer, the address of the variable that it points to must be assigned. Execute the following code to see what is printed:
 ```c++
+#include <iostream>
+
+using namespace std;
+
 int main()
 {
     int originalNumber = 64;
@@ -164,6 +186,10 @@ int main()
 When ```pointerToNumber``` is printed, the address of ```originalNumber``` should be displayed. However, in order to use the pointer's value as an address to locate & print the value of ```originalNumber```, the pointer must be dereferenced. To dereference a pointer, the ```*``` must be used as a prefix on the pointer's name. Execute the following code & compare what is printed by ```pointerToNumber``` & ```*pointerToNumber```:
 
 ```c++
+#include <iostream>
+
+using namespace std;
+
 int main()
 {
     int originalNumber = 64;
@@ -174,7 +200,28 @@ int main()
 ```
 
 #### Array Indexing
-Pointers can also be used as an index to access an array. This is because when a pointer to an array is created, it assumes the address of its first index. Data within an array is stored linearly in memory. Therefore, the pointer can be incremented in order to shift its memory address to the next element of the array it points to. The example below loops through an array normally. Your task is to modify this code in order to use a pointer to index through the array:
+Pointers can also be used as an index to access an array. This is because when a pointer to an array is created, it assumes the address of its first index. Data within an array is stored linearly in memory. Notably, this is also the case for multi-dimensional arrays, as they are map to memory as though they are one-dimensional.
+
+A pointer to an array can be incremented in order to shift its memory address to the next element of the array it points to. The example below demonstrates the assignment of an array's index to a pointer & the index's incrementation:
+
+```c++
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    const int numbersSize = 4;
+    int numbers[numbersSize] = { 64, 128, 256, 512 };
+    int* position = numbers;
+    cout << *position << "\n"; //prints the first index of the 'numbers' array
+    position++;
+    cout << *position << "\n"; //prints the second index
+}
+```
+
+#### Task 2
+The code in [Task 2](/Lab1/Tasks/Task2/) uses standard array indexing. Your task is to implement the equivalent code underneath with the use of pointer indexing.
 
 ```c++
 #include <iostream>
