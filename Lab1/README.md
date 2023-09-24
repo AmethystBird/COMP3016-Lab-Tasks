@@ -315,7 +315,7 @@ void Dragon::Roar()
 }
 ```
 ### Null Pointers
-Unlike passing or accessing by reference, pointers are variables. Therefore, their lifetime may persist beyond the existence of the variable that it points to. This is problematic in the case of dynamically allocated memory. If a pointer that no longer points to another variable is accessed, it is referred to as a null pointer. Try running this program & observe how it functions incorrectly:
+Unlike passing or accessing by reference, pointers are variables. Therefore, their lifetime may persist beyond the existence of the variable that they point to. This is problematic in the case of dynamically allocated memory. If a pointer that no longer points to another variable is accessed, it is referred to as a null pointer. Try running the [NullPointer](/Lab1/Examples/NullPointer/) program & observe how it functions incorrectly:
 
 **Header**
 ```c++
@@ -344,3 +344,6 @@ void Dragon::Die()
     delete this; //deallocation of itself (Dragon2)
 }
 ```
+
+### Task 3
+The code in [Task 3](/Lab1/Tasks/Task3/) is broken. Currently, pointers, memory addresses & memory allocation are not being used or handled correctly. Your task is to fix these errors so that the code builds & runs as intended.
