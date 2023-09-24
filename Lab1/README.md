@@ -52,7 +52,7 @@ int main()
 Without namespaces, this would not be possible due to the C++ compiler being unable to disambiguify which name refers to what. The code would fail to compile as a result.
 
 ### Default
-For the case where a particular namespace is being used more frequently than another within a cpp file, the namespace can be effectively hidden if one declares it as the default namespace for that cpp file. While the use of the namespace prefix may still be used for the given namespace, it no longer has to be used. Of course, this can only be done with one namespace per file, otherwise this would defeat the purpose of them as naming collisions could occur:
+For the case where a particular namespace is being used more frequently than another within a cpp file, the namespace can be effectively hidden if one declares it as the default namespace for that cpp file. While the use of the namespace prefix may still be used for the given namespace, it no longer has to be used:
 
 ```c++
 #include <iostream>
@@ -68,6 +68,9 @@ int main()
     cout << "Your number: " << number << "\n";
 }
 ```
+
+More than one default namespace can also be set, however as one might expect, this runs the risk of naming collisions occuring. If there are no naming collisions however, this allows for easier code legibility & the compiler will deem it acceptable.
+
 ## Memory
 ### Addresses and Values
 All data is stored in memory as a combination of a value & an address. The purpose of the address is to know the location of its associated value in memory. Therefore, whenever a variable is read or written to, the variable's address is accessed first to direct the program to the value.
