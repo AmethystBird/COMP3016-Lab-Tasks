@@ -78,7 +78,7 @@ Remove your current project's C++ files & import the files located in [Task 1](T
 ### Addresses and Values
 All data is stored in memory as a combination of a value & an address. The purpose of the address is to know the location of its associated value in memory. Therefore, whenever a variable is read or written to, the variable's address is accessed first to direct the program to the value.
 
-If desired, the address itself can also be directly retrieved & used as opposed to the reference being used solely as a route to acquire the associated value. The ampersand ```&``` is used as a prefix upon a variable in order to acquire its address. Try executing this program to compare the results when printing ```originalNumber``` & `&originalNumber`:
+If desired, the address itself can also be directly retrieved & used as opposed to the reference being used solely as a route to acquire the associated value. The ampersand ```&``` is used as a prefix upon a variable in order to acquire its address. Try executing the program in [AddressesAndValues](/Lab1/Examples/AddressesAndValues/) to compare the results when printing ```originalNumber``` & `&originalNumber`:
 
 ```c++
 #include <iostream>
@@ -113,7 +113,7 @@ int main()
 }
 ```
 
-One benefit of copying by reference is that it is faster than copying by value, as only the address must be copied as opposed to the entire variable. However, copying by reference is not always applicable. If the value that an address points to is modified, all references will point to the modified one. This is because there is only one value to point to. Try executing the following code to compare the difference between what ```referenceToNumber``` & ```copyOfNumber``` print:
+One benefit of copying by reference is that it is faster than copying by value, as only the address must be copied as opposed to the entire variable. However, copying by reference is not always applicable. If the value that an address points to is modified, all references will point to the modified one. This is because there is only one value to point to. Try executing the following code in [Copying](/Lab1/Examples/Copying2/) to compare the difference between what ```referenceToNumber``` & ```copyOfNumber``` print:
 
 ```c++
 #include <iostream>
@@ -169,7 +169,7 @@ void Hello(int& number0In, int number1In)
 
 ### Pointers
 #### Overview
-As opposed to a reference, a pointer is a variable that contains a value that represents the address contained within another variable. To declare a pointer variable, the data type of the variable that it points to must be used, along with an asterisk ```*``` suffix to the type specifier. Alternatively, the ```*``` may be applied as a prefix to the variable name. To instantiate the pointer, the address of the variable that it points to must be assigned. Execute the following code to see what is printed:
+As opposed to a reference, a pointer is a variable that contains a value that represents the address contained within another variable. To declare a pointer variable, the data type of the variable that it points to must be used, along with an asterisk ```*``` suffix to the type specifier. Alternatively, the ```*``` may be applied as a prefix to the variable name. To instantiate the pointer, the address of the variable that it points to must be assigned. Execute the following code from [Pointers1](/Lab1/Examples/Pointers1/) to see what is printed:
 ```c++
 #include <iostream>
 
@@ -183,7 +183,7 @@ int main()
 }
 ```
 
-When ```pointerToNumber``` is printed, the address of ```originalNumber``` should be displayed. However, in order to use the pointer's value as an address to locate & print the value of ```originalNumber```, the pointer must be dereferenced. To dereference a pointer, the ```*``` must be used as a prefix on the pointer's name. Execute the following code & compare what is printed by ```pointerToNumber``` & ```*pointerToNumber```:
+When ```pointerToNumber``` is printed, the address of ```originalNumber``` should be displayed. However, in order to use the pointer's value as an address to locate & print the value of ```originalNumber```, the pointer must be dereferenced. To dereference a pointer, the ```*``` must be used as a prefix on the pointer's name. Execute the following code from [Pointers2](/Lab1/Examples/Pointers2/) & compare what is printed by ```pointerToNumber``` & ```*pointerToNumber```:
 
 ```c++
 #include <iostream>
@@ -221,7 +221,7 @@ int main()
 ```
 
 #### Task 2
-The code in [Task 2](/Lab1/Tasks/Task2/) uses standard array indexing. Your task is to implement the equivalent code underneath with the use of pointer indexing.
+The code in [Task 2](/Lab1/Tasks/Task2/) uses standard array indexing. Your task is to implement the equivalent code underneath the existing, with the use of pointer indexing instead:
 
 ```c++
 #include <iostream>
