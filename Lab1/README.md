@@ -11,7 +11,7 @@ In order for your .cpp file to be able to make use of your .h file, you must typ
 
 ## Input & Output
 ### Output
-To print text to a console, the ```cout``` object can be used. The example project you created in [Setup](#setup) should already demonstrate this as such:
+To print text to a console, the ```cout``` object can be used. The example project you created in [Lab 0](../Lab0/README.md) should already demonstrate this as such:
 
 ```c++
 int main()
@@ -70,6 +70,9 @@ int main()
 ```
 
 More than one default namespace can also be set, however as one might expect, this runs the risk of naming collisions occuring. If there are no naming collisions however, this allows for easier code legibility & the compiler will deem it acceptable.
+
+### Task 1
+Remove your current project's C++ files & import the files located in [Task 1](Tasks/Task1/). Inside, there are various functions, some referring to a player & some referring to a dragon. However, the code is broken due to multiple name collisions. Your task is to fix the code by creating a ```Dragon``` namespace in order for the name collisions to cease.
 
 ## Memory
 ### Addresses and Values
@@ -225,6 +228,11 @@ A pointer to a dynamically assigned object can be used in order to retrieve a me
 
 **Header**
 ```c++
+#pragma once
+
+#include <string>
+using namespace std;
+
 class Dragon
 {
 public:
@@ -247,6 +255,16 @@ int main()
     cout << Dragon2->type << "\n";
     Dragon2->Roar();
     delete Dragon2;
+}
+
+Dragon::Dragon(string typeIn)
+{
+    type = typeIn;
+}
+
+void Dragon::Roar()
+{
+    cout << "Roar!" << "\n";
 }
 ```
 ### Null Pointers
