@@ -2,7 +2,7 @@
 ## Files
 ### Reading & Writing
 #### Overview
-Files can be created, written to & read from in C++. There are three objects in the standard library ```std``` that can be used for operating upon files. The ```ofstream``` object can be used to create & output a file, the ```ifstream``` object for reading from a file & lastly ```fstream```, which can be used for both purposes:
+Files can be created, written to & read from in C++. There are three objects in the standard library ```std``` that can be used for operating upon files. The ```ofstream``` object can be used to create & output a file, the ```ifstream``` object for reading from a file & lastly ```fstream```, which can be used for both purposes. Below is an example from [ReadingAndWriting](/Lab2/Examples/ReadingAndWriting/) of these file operations together:
 ```c++
 #include <iostream>
 #include <fstream>
@@ -35,7 +35,7 @@ In [Task 1](/Lab2/Tasks/Task1/), code similar to the above is present, except th
 The program in [Task 2](/Lab2/Tasks/Task2/), asks the user for the user's name & favourite fruit. However, the code is unfinished. The code needs to write the information that the user inputs to a file, then read the file & lastly print the information from the file to the terminal. Your task is to implement the rest of this program.
 
 ### Position Pointers
-Files use file-position pointers to determine where they are currently being operated on. By default, the file-position pointer starts at the beginning of the file's contents. However, in order to read text from files from specific points, the use of the ```seekg()``` function can be used to shift the file-position pointer. In the code demonstrated below, only the second line of the file is printed:
+Files use file-position pointers to determine where they are currently being operated on. By default, the file-position pointer starts at the beginning of the file's contents. However, in order to read text from files from specific points, the use of the ```seekg()``` function can be used to shift the file-position pointer. In the code from [PositionPointers1](/Lab2/Examples/PositionPointers1/) demonstrated below, only the second line of the file is printed:
 
 ```c++
 #include <iostream>
@@ -65,7 +65,7 @@ int main()
 }
 ```
 
-There are additional ways in which to operate on file-position pointers. In the example below, ```ios::end``` first positions the pointer at the end of the file. Next, the pointer is decremented by 27 characters:
+There are additional ways in which to operate on file-position pointers. In the example from [PositionPointers2](/Lab2/Examples/PositionPointers2/) below, ```ios::end``` first positions the pointer to the end of the file. Next, the pointer is decremented by 27 characters in relation to this:
 
 ```c++
 #include <iostream>
@@ -102,15 +102,17 @@ C++ is an object-oriented programming language. The purpose of object-orientatio
 
 Object-oriented programming makes use of two concepts, known as classes & objects. Classes can be described as self-contained blueprints of interdependent code. However, since classes act as blueprints, they themselves do not interact with other areas of the program they exist in. Instead, they exist as concepts. Objects, in contrast to classes, are physically existing implementations of a particular class. Objects therefore logically reflect the class they are derived from, while also existing within & influencing the rest of the program.
 
-Notably, many objects deriving from the same class also may exist. A major benefit of this is for reducing code repetition. For example, if a procedural program contained 10 apples, the same code for 10 different apples would need to be hardcoded into the program. In an object-oriented program however, one class named ```Apple``` would be created & 10 ```objects``` of type ```Apple``` could be instantiated:
+Notably, many objects deriving from the same class also may exist. A major benefit of this is for reducing code repetition. For example, if a procedural program contained 10 apples, the same code for 10 different apples would need to be hardcoded into the program. In an object-oriented program however, one class named ```Apple``` would be created & 10 ```objects``` of type ```Apple``` could be instantiated, as in the example from [ClassesAndObjects](/Lab2/Examples/ClassesAndObjects/) below:
 
 **Header**
 ```c++
 #pragma once
 
+//Declaration of 'Apple' class
 class Apple {
 };
 ```
+
 **CPP**
 ```c++
 #include "main.h"
@@ -121,6 +123,7 @@ using namespace std;
 
 int main()
 {
+	//Instantiating two new objects, both of which are derived from the 'Apple' class
 	Apple* RedApple1 = new Apple(); //apple #1
 	Apple* RedApple2 = new Apple(); //apple #2
     delete RedApple1;
@@ -128,8 +131,28 @@ int main()
 }
 ```
 
+It is **important** to note that if multiple classes are declared on the same file, that **classes declared above others will be unaware of the existence of the classes below them**, but not vice versa. If not taken into account, this can present errors if a class needs access to another in some way.
+
 ### Members
 In a class, a member is any function or variable that exists at the scope of the entire class. Therefore, a member variable or function is accessable from at least anywhere from within the class that it is contained in. Importantly, it is best practice that class declarations, as well as all of a class's members are placed within an appropriate header file. All implementations of member functions & instantiations of member variables should be contained within an appropriate CPP file.
+
+**Header**
+```c++
+class Apple {
+	void Eat();
+	bool isOnlyCoreLeft;
+};
+```
+
+**CPP**
+```c++
+//function implementations always require class prefix, followed by '::' behind name
+void Apple::Eat()
+{
+	cout << "This apple has been eaten." << "\n";
+	isOnlyCoreLeft = true;
+}
+```
 
 ### Constructors
 Sometimes, when an object is instantiated, certain tasks must be completed or certain additional inputs must be given. This can be done through a class constructor, which is a class's member function that must run on the instantiation of any object of that class. Constructors are always named after the class itself:
@@ -146,7 +169,6 @@ class Apple {
 
 **CPP**
 ```c++
-//function implementations always require class prefix, followed by '::' behind name
 Apple::Apple(int replenishmentIn)
 {
 	replenishment = replenishmentIn;
@@ -154,9 +176,11 @@ Apple::Apple(int replenishmentIn)
 ```
 ### Scope
 #### Access Specifiers
-By default, member functions & variables contained within an object can be accessed from outside of the object. However, accessibility can be & should be restricted where appropriate. The purpose of doing so is to prevent accidental & unintentional operations on members of objects from areas of code that would never need to be able to do so. This helps to prevent the accumulation of bugs.
+By default, member functions & variables contained within an object cannot be read from or written to from outside of the object. The purpose of restricting access to variables & functions within an object from outside of the object is to prevent accidental & unintentional operations on members of objects from areas of code that would never need to be able to do so. This helps to prevent the accumulation of bugs. However, accessibility can be & should be flexible where appropriate.
 
-The ability to change the scope by which members can be accessed is done through access specifiers. There are three main types, ```public```, ```protected``` & ```private```. The public specifier is the default setting, allows for read & write access outside the class. The private specifier, in contrast, prevents all access from outside the class. The protected specifier is a kind of middle ground, as it prevents access from outside the class, however it allows for access from subclasses. For clarification on subclasses, see the [Inheritance](#inheritance) section.
+The ability to change the scope by which members can be accessed is done through access specifiers. There are three main types, ```public```, ```protected``` & ```private```. The private specifier is the default setting, denying any direct access from outside the class. The public specifier, in contrast, allows complete direct access from outside the class. Lastly, the protected specifier exists as a kind of middle ground. It prevents direct access from outside the class, however it allows for direct access from [subclasses](#inheritance).
+
+Below is an example from [AccessSpecifiers](/Lab2/Examples/AccessSpecifiers/) demonstrating access specification. For clarification on subclasses however, see the [Inheritance](#inheritance) section.
 
 **Header**
 ```c++
@@ -208,7 +232,7 @@ void Apple::Eat()
 ```
 
 #### Task 3
-The code located in [Task 3](/Lab2/Tasks/Task3/) is broken. The reasons for the code not functioning correctly are not related to the contents of the functions, but rather due to incorrect implementation of object-orientation. This is for multiple reasons, one of which being due to incorrect acess specification of class members. Your task is to fix these errors so that the code compiles.
+The code located in [Task 3](/Lab2/Tasks/Task3/) is broken. The reasons for the code not functioning correctly are not related to the contents of the functions, but rather due to various errors in the program's implementation of object-orientation. Your task is to fix these errors so that the code compiles.
 
 #### Getters & Setters
 While not the case with member functions, it is best practice to keep all member variables private to a class to restrict all direct access from outside. However, the reason that this is done is not because access to these variables should never be given, but due to the use of getters & setters to utilise indirect access instead. In doing so, one can better restrict in what capacity member variables can be accessed.
@@ -290,7 +314,7 @@ Multiple types of classes can be defined in order to allow for multiple types of
 
 By using inheritance, classes can be given relations to other classes in a hierarchical form. If a class inherits from another, the inheriting class is referred to as a subclass & the class being inherited from is referred to as the superclass or the parent class. The subclass will acquire all of the members of the superclass, however this is not applied vice versa.
 
-In the code displayed below, there are three classes, the superclass named ```Fruit``` & the subclasses named ```Apple``` & ```Lemon```. All edible fruit have the attribute of being consumable, therefore ```Fruit``` has a ```replenishment``` value. Apples & lemons are fruits, therefore they can both be consumed. However, apples are eaten & lemons instead are usually juiced to be drunk instead:
+In the code displayed below, there are three classes, the superclass named ```Fruit``` & the subclasses named ```Apple``` & ```Lemon```. All edible fruit have the attribute of being consumable, therefore ```Fruit``` has a ```replenishment``` variable. Apples & lemons are fruits, therefore they can both be consumed. However, apples are eaten & lemons instead are usually juiced to be drunk instead:
 
 **Header**
 ```c++
@@ -396,7 +420,7 @@ void Lemon::hasLemonBeenSqueezed()
 }
 ```
 ### Multiple Inheritance
-In certain cases, a class may share share commonalities with not just one, but multiple other classes. For example, the grapefruit is a species of citrus fruit that is a hybrid of both oranges & pomelos. For this reason, it shares certain characteristics of both oranges & pomelos. In cases such as this, multiple inheritance can be used in order to allow for a class to derive from many superclasses. The example code below displays how this can be achieved:
+In certain cases, a class may share commonalities with not just one, but multiple other classes. For example, the grapefruit is a species of citrus fruit that is a hybrid of both oranges & pomelos. For this reason, it shares certain characteristics of both oranges & pomelos. In cases such as this, multiple inheritance can be used in order to allow for a class to derive from many superclasses. The example code below displays how this can be achieved:
 
 **Header**
 ```c++
