@@ -2,7 +2,7 @@
 ## Files
 ### Reading & Writing
 #### Overview
-Files can be created, written to & read in C++. There are three objects in the standard library ```std``` that can be used for operating with files. The ```ofstream``` object can be used to create & output a file, the ```ifstream``` object for reading from a file & lastly ```fstream```, which can be used for both purposes:
+Files can be created, written to & read from in C++. There are three objects in the standard library ```std``` that can be used for operating upon files. The ```ofstream``` object can be used to create & output a file, the ```ifstream``` object for reading from a file & lastly ```fstream```, which can be used for both purposes:
 ```c++
 #include <iostream>
 #include <fstream>
@@ -65,7 +65,7 @@ int main()
 }
 ```
 
-There are different ways in which to operate on file-position pointers. In the example below, ```ios::end``` first positions the pointer at the end of the file. Next, the pointer is moved backwards by 27 characters:
+There are additional ways in which to operate on file-position pointers. In the example below, ```ios::end``` first positions the pointer at the end of the file. Next, the pointer is decremented by 27 characters:
 
 ```c++
 #include <iostream>
@@ -77,20 +77,21 @@ using namespace std;
 int main()
 {
     ofstream fileToWrite("myFile.txt");
-
-    fileToWrite << "This first line won't be printed.\nHowever, this line will be.";
-
+    fileToWrite << "This first line won't be printed.\nHowever, this line will be.\n";
     fileToWrite.close();
-
     string fileOutput;
-
     ifstream fileToRead("myFile.txt");
+    cout << "Position: " << fileToRead.tellg() << "\n";
 
-    fileToRead.seekg(-27, ios::end); //Shifts backwards by 27 characters from the last position
+	//Shifts backwards by 27 characters from the last position
+    fileToRead.seekg(-29, ios::end);
+    cout << "Position: " << fileToRead.tellg() << "\n";
 
+	//When getline() is called, the file-position pointer moves to the end of the acquired line (the start of the next line)
     getline(fileToRead, fileOutput);
-    cout << fileOutput << "\n";
+    cout << "Position: " << fileToRead.tellg() << "\n";
 
+    cout << fileOutput << "\n";
     fileToRead.close();
 }
 ```
@@ -99,9 +100,9 @@ int main()
 ### Classes & Objects
 C++ is an object-oriented programming language. The purpose of object-orientation is to be able to divide & organise code into inter-related groups. In doing so, this also reduces code repetition.
 
-Object-oriented programming makes use of two concepts, known as classes & objects. Classes can be described as self-contained blueprints of interdependent code. However, since classes act as blueprints, they themselves do not interact with other areas of the program they exist in. Instead, they exist as concepts. Objects, in contrast to classes, are physically existing implementations of a particular class. Objects therefore logically reflect the class they are derived from. Many objects deriving from the same class also may exist.
+Object-oriented programming makes use of two concepts, known as classes & objects. Classes can be described as self-contained blueprints of interdependent code. However, since classes act as blueprints, they themselves do not interact with other areas of the program they exist in. Instead, they exist as concepts. Objects, in contrast to classes, are physically existing implementations of a particular class. Objects therefore logically reflect the class they are derived from, while also existing within & influencing the rest of the program.
 
-Notably, this is beneficial for reducing code repetition. For example, if a procedural program contained 10 apples, the same code for 10 different apples would need to be hardcoded in the program. In an object-oriented program however, one class named ```Apple``` would be created & 10 ```objects``` of type ```Apple``` could be instantiated:
+Notably, many objects deriving from the same class also may exist. A major benefit of this is for reducing code repetition. For example, if a procedural program contained 10 apples, the same code for 10 different apples would need to be hardcoded into the program. In an object-oriented program however, one class named ```Apple``` would be created & 10 ```objects``` of type ```Apple``` could be instantiated:
 
 **Header**
 ```c++
@@ -205,6 +206,9 @@ void Apple::Eat()
 	}
 }
 ```
+
+#### Task 3
+The code located in [Task 3](/Lab2/Tasks/Task3/) is broken. The reasons for the code not functioning correctly are not related to the contents of the functions, but rather due to incorrect implementation of object-orientation. This is for multiple reasons, one of which being due to incorrect acess specification of class members. Your task is to fix these errors so that the code compiles.
 
 #### Getters & Setters
 While not the case with member functions, it is best practice to keep all member variables private to a class to restrict all direct access from outside. However, the reason that this is done is not because access to these variables should never be given, but due to the use of getters & setters to utilise indirect access instead. In doing so, one can better restrict in what capacity member variables can be accessed.
@@ -457,5 +461,3 @@ Grapefruit::Grapefruit(string variationIn)
 	}
 }
 ```
-
-### Polymorphism
