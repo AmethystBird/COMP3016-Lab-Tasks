@@ -237,7 +237,7 @@ The code located in [Task 3](/Lab2/Tasks/Task3/) is broken. The reasons for the 
 #### Getters & Setters
 While not the case with member functions, it is best practice to keep all member variables private to a class to restrict all direct access from outside. However, the reason that this is done is not because access to these variables should never be given, but due to the use of getters & setters to utilise indirect access instead. In doing so, one can better restrict in what capacity member variables can be accessed.
 
-Getters & setters are public functions that allow one to read from (get) & write to (set) private member variables. Since they are functions, they can also control the implications of reading & writing. This is important for instances where one member variable's value is dependent upon another member variable. In this case, if one variable's value changes, the other also must change. By using getters & setters, this automates & enforces these requirements.
+Getters & setters are public functions that allow one to read from (get) & write to (set) private member variables. Since they are functions, they can also control the implications of reading & writing. This is important for instances where one member variable's value is dependent upon another member variable. In this case, if one variable's value changes, the other also must change. By using getters & setters, this automates & enforces these requirements. An example of how getters & setters can be used from [GettersAndSetters](/Lab2/Examples/GettersAndSetters/) is shown below:
 
 **Header**
 ```c++
@@ -314,7 +314,7 @@ Multiple types of classes can be defined in order to allow for multiple types of
 
 By using inheritance, classes can be given relations to other classes in a hierarchical form. If a class inherits from another, the inheriting class is referred to as a subclass & the class being inherited from is referred to as the superclass or the parent class. The subclass will acquire all of the members of the superclass, however this is not applied vice versa.
 
-In the code displayed below, there are three classes, the superclass named ```Fruit``` & the subclasses named ```Apple``` & ```Lemon```. All edible fruit have the attribute of being consumable, therefore ```Fruit``` has a ```replenishment``` variable. Apples & lemons are fruits, therefore they can both be consumed. However, apples are eaten & lemons instead are usually juiced to be drunk instead:
+In the code displayed below from [Inheritance](/Lab2/Examples/Inheritance/), there are three classes; the superclass named ```Fruit``` & the subclasses named ```Apple``` & ```Lemon```. All edible fruit have the attribute of being consumable, therefore ```Fruit``` has a ```replenishment``` variable. Apples & lemons are fruits, therefore they can both be consumed. However, apples are eaten & lemons instead are usually juiced to be drunk instead:
 
 **Header**
 ```c++
@@ -420,7 +420,7 @@ void Lemon::hasLemonBeenSqueezed()
 }
 ```
 ### Multiple Inheritance
-In certain cases, a class may share commonalities with not just one, but multiple other classes. For example, the grapefruit is a species of citrus fruit that is a hybrid of both oranges & pomelos. For this reason, it shares certain characteristics of both oranges & pomelos. In cases such as this, multiple inheritance can be used in order to allow for a class to derive from many superclasses. The example code below displays how this can be achieved:
+In certain cases, a class may share commonalities with not just one, but multiple other classes. For example, the grapefruit is a species of citrus fruit that is a hybrid of both oranges & pomelos. For this reason, it shares certain characteristics of both oranges & pomelos. In cases such as this, multiple inheritance can be used in order to allow for a class to derive from many superclasses. The example code from [MultipleInheritance](/Lab2/Examples/MultipleInheritance/) below displays how this can be achieved:
 
 **Header**
 ```c++
