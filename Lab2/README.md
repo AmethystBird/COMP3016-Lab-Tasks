@@ -419,6 +419,21 @@ void Lemon::hasLemonBeenSqueezed()
 	else { cout << "Lemon has not been squeezed." << "\n"; }
 }
 ```
+### Superclass Constructors
+Unlike most members of classes, constructors do not follow the specifications set by access specifiers. Constructors must be public, since if they do exist, they must be called from outside of the class they are a member of in order to instantiate an object of said class.
+
+In the case of subclasses, the constructors of any of the above superclasses will always be private & are not inherited by default. However, there is a workaround to this. A subclass can define its own constructor & call upon its superclass constructor.
+
+[EXAMPLE NEEDED]
+
+**Header**
+```c++
+```
+
+**CPP**
+```c++
+```
+
 ### Multiple Inheritance
 In certain cases, a class may share commonalities with not just one, but multiple other classes. For example, the grapefruit is a species of citrus fruit that is a hybrid of both oranges & pomelos. For this reason, it shares certain characteristics of both oranges & pomelos. In cases such as this, multiple inheritance can be used in order to allow for a class to derive from many superclasses. The example code from [MultipleInheritance](/Lab2/Examples/MultipleInheritance/) below displays how this can be achieved:
 
