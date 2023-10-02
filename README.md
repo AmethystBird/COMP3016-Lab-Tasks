@@ -5,3 +5,5 @@ COMP3016 Lab Tasks
 [Lab 0 - Setup](/Lab0/README.md)
 
 [Lab 1 - C++ Fundamentals](/Lab1/README.md)
+
+[Lab 2 - Object Orientation #1](/Lab2/README.md)
