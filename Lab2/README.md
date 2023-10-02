@@ -1,4 +1,4 @@
-# Lab 2 - Object Orientation in C++
+# Lab 2 - Object Orientation in C++ Part 1
 ## Files
 ### Reading & Writing
 #### Overview
