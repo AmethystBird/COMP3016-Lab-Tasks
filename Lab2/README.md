@@ -231,6 +231,29 @@ void Apple::Eat()
 }
 ```
 
+It is worth noting that for a ```protected``` or ```public``` access specifier to apply to a subclass of another, that the inherited class must also be given the appropriate access specifier:
+
+**Header**
+```c++
+#pragma once
+
+#include <string>
+
+using namespace std;
+
+class Fruit {
+public:
+	Fruit(string nameIn);
+	string name;
+};
+
+//Without 'public Fruit' specification, the 'name' variable would be inaccessible
+class Apple : public Fruit {
+public:
+	Apple(string nameIn) : Fruit(nameIn) {}
+};
+```
+
 #### Task 3
 The code located in [Task 3](/Lab2/Tasks/Task3/) is broken. The reasons for the code not functioning correctly are not related to the contents of the functions, but rather due to various errors in the program's implementation of object-orientation. Your task is to fix these errors so that the code compiles.
 
