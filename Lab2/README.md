@@ -29,7 +29,7 @@ int main()
 }
 ```
 #### Task 1
-In [Task 1](/Lab2/Tasks/Task1/), code similar to the above is present, except that there are multiple lines being written to the file. However, currently only one line is being outputted. Your task is to output all lines of the file elegantly - do not use repetitive code.
+In [Task 1](/Lab2/Tasks/Task1/), code similar to the above is present, except that there are multiple lines being written to the file. However, currently only one line is being outputted. Your task is to output all lines of the file elegantly by using appropriate loop iteration.
 
 #### Task 2
 The program in [Task 2](/Lab2/Tasks/Task2/), asks the user for the user's name & favourite fruit. However, the code is unfinished. The code needs to write the information that the user inputs to a file, then read the file & lastly print the information from the file to the terminal. Your task is to implement the rest of this program.
@@ -237,7 +237,9 @@ The code located in [Task 3](/Lab2/Tasks/Task3/) is broken. The reasons for the 
 #### Getters & Setters
 While not the case with member functions, it is best practice to keep all member variables private to a class to restrict all direct access from outside. However, the reason that this is done is not because access to these variables should never be given, but due to the use of getters & setters to utilise indirect access instead. In doing so, one can better restrict in what capacity member variables can be accessed.
 
-Getters & setters are public functions that allow one to read from (get) & write to (set) private member variables. Since they are functions, they can also control the implications of reading & writing. This is important for instances where one member variable's value is dependent upon another member variable. In this case, if one variable's value changes, the other also must change. By using getters & setters, this automates & enforces these requirements. An example of how getters & setters can be used from [GettersAndSetters](/Lab2/Examples/GettersAndSetters/) is shown below:
+Getters & setters are public functions that allow one to read from (get) & write to (set) private member variables. Since they are functions, they can allow for indirect access to reading & writing of variables or the calling of functions that would normally be out of scope, but that are within the scope of the getter or setter.
+
+Getters & setters are important for instances where one member variable's value is dependent upon other variable conditions. Using getters & setters can automate & enforce these requirements. An example of how getters & setters can be used from [GettersAndSetters](/Lab2/Examples/GettersAndSetters/) is shown below:
 
 **Header**
 ```c++
@@ -422,16 +424,28 @@ void Lemon::hasLemonBeenSqueezed()
 ### Superclass Constructors
 Unlike most members of classes, constructors do not follow the specifications set by access specifiers. Constructors must be public, since if they do exist, they must be called from outside of the class they are a member of in order to instantiate an object of said class.
 
-In the case of subclasses, the constructors of any of the above superclasses will always be private & are not inherited by default. However, there is a workaround to this. A subclass can define its own constructor & call upon its superclass constructor.
-
-[EXAMPLE NEEDED]
+In the case of subclasses, the constructors of any of the above superclasses will always be private & are not inherited by default. However, there is a workaround to this. A subclass can define its own constructor & call upon its superclass constructor. In this case, the CPP file contains no implemented constructor for the subclass:
 
 **Header**
 ```c++
-```
+#pragma once
 
-**CPP**
-```c++
+#include <string>
+
+using namespace std;
+
+class Animal {
+public:
+	Animal(string nameIn);
+	string name;
+};
+
+//Inherited from 'Animal' & calls 'Animal' constructor.
+class Chicken : Animal {
+public:
+	Chicken(string nameIn) : Animal(nameIn) {}
+	void LayEgg();
+};
 ```
 
 ### Multiple Inheritance
@@ -500,3 +514,6 @@ Grapefruit::Grapefruit(string variationIn)
 	}
 }
 ```
+
+### Task 4
+There are various classes declared in [Task 4](/Lab2/Tasks/Task%204/) with commenting to describe their relations to each other & whether to call superclass constructors from a subclass. Your task is to implement the correct class hereditary, as well as to apply the calling of superclass constructors in subclasses where deemed appropriate.
