@@ -3,7 +3,7 @@
 ### Overview
 The term 'polymorphism' literally means 'many forms.' In the context of object-oriented programming, it is applied to refer to any scenario in which a class, an object or an object's members are accessed in an ambiguous form. Different types of polymorphism are beneficial for different reasons.
 ### Inheritance
-Members of a subclass can be given identical names to that of other equivalent members in a superclass. In these instances, the subclass implementation will by default override the superclass implementation. However, one can specify to use a superclass implementation of a member by using the class name, followed by ```::``` & lastly the member. The [PolymorphismInheritance](/Lab3/Examples/PolymorphismInheritance/) example demonstrates this kind of polymorphism & how to explicit about the use of the superclass members:
+Members of a subclass can be given identical names to that of other equivalent members in a superclass. In these instances, the subclass implementation will by default override the superclass implementation. However, one can specify to use a superclass implementation of a member by using the class name, followed by ```::``` & lastly the member. The [PolymorphismInheritance](/Lab3/Examples/PolymorphismInheritance/) example demonstrates this kind of polymorphism & how to be explicit about the use of the superclass members:
 
 **Header**
 ```c++
