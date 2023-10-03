@@ -193,7 +193,23 @@ The code in [Task 3](/Lab3/Tasks/Task3/) is incomplete. Currently existing is th
 
 Your task is to implement the missing components of the code.
 
+## Static Members
+Normally, when objects are instantiated from a common class, the objects share identical structure while existing entirely independently. For example, ...
+
 ## Virtual Functions
+When using polymorphism to access a function of an object's inherited class, that function is considered an implementation within the superclass as opposed to the subclass. However, there are cases where the function may need to differ to some extent depending upon the subclass in question. In order to do this, the function in the superclass can be overriden from within the subclass. When this is done, a new implementation of the function must be created:
+
+**Header**
+```c++
+
+```
+
+**CPP**
+```c++
+
+```
+
 ## Virtual Classes
-## Static Classes
+Unlike singular inheritance, multiple inheritance can pose the issue of ambiguity in the class hierarchy. For example, if one has a base class ...
+
 ## Interfaces
