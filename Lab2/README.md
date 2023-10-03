@@ -1,103 +1,6 @@
 # Lab 2 - Object Orientation in C++ Part 1
-## Files
-### Reading & Writing
-#### Overview
-Files can be created, written to & read from in C++. There are three objects in the standard library ```std``` that can be used for operating upon files. The ```ofstream``` object can be used to create & output a file, the ```ifstream``` object for reading from a file & lastly ```fstream```, which can be used for both purposes. Below is an example from [ReadingAndWriting](/Lab2/Examples/ReadingAndWriting/) of these file operations together:
-```c++
-#include <iostream>
-#include <fstream>
-#include <string>
-
-using namespace std;
-
-int main()
-{
-    ofstream fileToWrite("myFile.txt"); //Creates file in project directory
-
-    fileToWrite << "Welcome to Lab 2!";
-
-    fileToWrite.close(); //Closes file
-
-    string fileOutput;
-
-    ifstream fileToRead("myFile.txt"); //Reopens file for reading
-
-    getline(fileToRead, fileOutput); //Acquires the first line of 'myFile.txt' & sets the 'fileOutput' variable's value to it
-    cout << fileOutput << "\n";
-
-    fileToRead.close();
-}
-```
-#### Task 1
-In [Task 1](/Lab2/Tasks/Task1/), code similar to the above is present, except that there are multiple lines being written to the file. However, currently only one line is being outputted. Your task is to output all lines of the file elegantly by using appropriate loop iteration.
-
-#### Task 2
-The program in [Task 2](/Lab2/Tasks/Task2/), asks the user for the user's name & favourite fruit. However, the code is unfinished. The code needs to write the information that the user inputs to a file, then read the file & lastly print the information from the file to the terminal. Your task is to implement the rest of this program.
-
-### Position Pointers
-Files use file-position pointers to determine where they are currently being operated on. By default, the file-position pointer starts at the beginning of the file's contents. However, in order to read text from files from specific points, the use of the ```seekg()``` function can be used to shift the file-position pointer. In the code from [PositionPointers1](/Lab2/Examples/PositionPointers1/) demonstrated below, only the second line of the file is printed:
-
-```c++
-#include <iostream>
-#include <fstream>
-#include <string>
-
-using namespace std;
-
-int main()
-{
-    ofstream fileToWrite("myFile.txt");
-
-    fileToWrite << "This first line won't be printed.\nHowever, this line will be.";
-
-    fileToWrite.close();
-
-    string fileOutput;
-
-    ifstream fileToRead("myFile.txt");
-
-    fileToRead.seekg(35); //Shifts by 35 characters from starting position
-
-    getline(fileToRead, fileOutput);
-    cout << fileOutput << "\n";
-
-    fileToRead.close();
-}
-```
-
-There are additional ways in which to operate on file-position pointers. In the example from [PositionPointers2](/Lab2/Examples/PositionPointers2/) below, ```ios::end``` first positions the pointer to the end of the file. Next, the pointer is decremented by 27 characters in relation to this:
-
-```c++
-#include <iostream>
-#include <fstream>
-#include <string>
-
-using namespace std;
-
-int main()
-{
-    ofstream fileToWrite("myFile.txt");
-    fileToWrite << "This first line won't be printed.\nHowever, this line will be.\n";
-    fileToWrite.close();
-    string fileOutput;
-    ifstream fileToRead("myFile.txt");
-    cout << "Position: " << fileToRead.tellg() << "\n";
-
-	//Shifts backwards by 27 characters from the last position
-    fileToRead.seekg(-29, ios::end);
-    cout << "Position: " << fileToRead.tellg() << "\n";
-
-	//When getline() is called, the file-position pointer moves to the end of the acquired line (the start of the next line)
-    getline(fileToRead, fileOutput);
-    cout << "Position: " << fileToRead.tellg() << "\n";
-
-    cout << fileOutput << "\n";
-    fileToRead.close();
-}
-```
-
-## Object-Orientation
-### Classes & Objects
+**Note: Content on file reading & writing has been moved to Lab 3.**
+## Classes & Objects
 C++ is an object-oriented programming language. The purpose of object-orientation is to be able to divide & organise code into inter-related groups. In doing so, this also reduces code repetition.
 
 Object-oriented programming makes use of two concepts, known as classes & objects. Classes can be described as self-contained blueprints of interdependent code. However, since classes act as blueprints, they themselves do not interact with other areas of the program they exist in. Instead, they exist as concepts. Objects, in contrast to classes, are physically existing implementations of a particular class. Objects therefore logically reflect the class they are derived from, while also existing within & influencing the rest of the program.
@@ -133,7 +36,7 @@ int main()
 
 It is **important** to note that if multiple classes are declared on the same file, that **classes declared above others will be unaware of the existence of the classes below them**, but not vice versa. If not taken into account, this can present errors if a class needs access to another in some way.
 
-### Members
+## Members
 In a class, a member is any function or variable that exists at the scope of the entire class. Therefore, a member variable or function is accessable from at least anywhere from within the class that it is contained in. Importantly, it is best practice that class declarations, as well as all of a class's members are placed within an appropriate header file. All implementations of member functions & instantiations of member variables should be contained within an appropriate CPP file.
 
 **Header**
@@ -154,7 +57,7 @@ void Apple::Eat()
 }
 ```
 
-### Constructors
+## Constructors
 Sometimes, when an object is instantiated, certain tasks must be completed or certain additional inputs must be given. This can be done through a class constructor, which is a class's member function that must run on the instantiation of any object of that class. Constructors are always named after the class itself:
 
 **Header**
@@ -174,8 +77,8 @@ Apple::Apple(int replenishmentIn)
 	replenishment = replenishmentIn;
 }
 ```
-### Scope
-#### Access Specifiers
+## Scope
+### Access Specifiers
 By default, member functions & variables contained within an object cannot be read from or written to from outside of the object. The purpose of restricting access to variables & functions within an object from outside of the object is to prevent accidental & unintentional operations on members of objects from areas of code that would never need to be able to do so. This helps to prevent the accumulation of bugs. However, accessibility can be & should be flexible where appropriate.
 
 The ability to change the scope by which members can be accessed is done through access specifiers. There are three main types, ```public```, ```protected``` & ```private```. The private specifier is the default setting, denying any direct access from outside the class. The public specifier, in contrast, allows complete direct access from outside the class. Lastly, the protected specifier exists as a kind of middle ground. It prevents direct access from outside the class, however it allows for direct access from [subclasses](#inheritance).
@@ -254,10 +157,10 @@ public:
 };
 ```
 
-#### Task 3
-The code located in [Task 3](/Lab2/Tasks/Task3/) is broken. The reasons for the code not functioning correctly are not related to the contents of the functions, but rather due to various errors in the program's implementation of object-orientation. Your task is to fix these errors so that the code compiles.
+### Task 2
+The code located in [Task 2](/Lab2/Tasks/Task2/) is broken. The reasons for the code not functioning correctly are not related to the contents of the functions, but rather due to various errors in the program's implementation of object-orientation. Your task is to fix these errors so that the code compiles.
 
-#### Getters & Setters
+### Getters & Setters
 While not the case with member functions, it is best practice to keep all member variables private to a class to restrict all direct access from outside. However, the reason that this is done is not because access to these variables should never be given, but due to the use of getters & setters to utilise indirect access instead. In doing so, one can better restrict in what capacity member variables can be accessed.
 
 Getters & setters are public functions that allow one to read from (get) & write to (set) private member variables. Since they are functions, they can allow for indirect access to reading & writing of variables or the calling of functions that would normally be out of scope, but that are within the scope of the getter or setter.
@@ -334,7 +237,7 @@ void Apple::SetType(string typeIn)
 }
 ```
 
-### Inheritance
+## Inheritance
 Multiple types of classes can be defined in order to allow for multiple types of objects to be instantiated. However, sometimes objects may in part share identical code, but in other respects may differentiate. As in the situation where classes are not used, this would cause unwanted repetition of code. To avoid this, ```inheritance``` can be used.
 
 By using inheritance, classes can be given relations to other classes in a hierarchical form. If a class inherits from another, the inheriting class is referred to as a subclass & the class being inherited from is referred to as the superclass or the parent class. The subclass will acquire all of the members of the superclass, however this is not applied vice versa.
@@ -444,7 +347,7 @@ void Lemon::hasLemonBeenSqueezed()
 	else { cout << "Lemon has not been squeezed." << "\n"; }
 }
 ```
-### Superclass Constructors
+## Superclass Constructors
 Unlike most members of classes, constructors do not follow the specifications set by access specifiers. Constructors must be public, since if they do exist, they must be called from outside of the class they are a member of in order to instantiate an object of said class.
 
 In the case of subclasses, the constructors of any of the above superclasses will always be private & are not inherited by default. However, there is a workaround to this. A subclass can define its own constructor & call upon its superclass constructor. In this case, the CPP file contains no implemented constructor for the subclass:
@@ -471,7 +374,7 @@ public:
 };
 ```
 
-### Multiple Inheritance
+## Multiple Inheritance
 In certain cases, a class may share commonalities with not just one, but multiple other classes. For example, the grapefruit is a species of citrus fruit that is a hybrid of both oranges & pomelos. For this reason, it shares certain characteristics of both oranges & pomelos. In cases such as this, multiple inheritance can be used in order to allow for a class to derive from many superclasses. The example code from [MultipleInheritance](/Lab2/Examples/MultipleInheritance/) below displays how this can be achieved:
 
 **Header**
@@ -538,5 +441,5 @@ Grapefruit::Grapefruit(string variationIn)
 }
 ```
 
-### Task 4
-There are various classes declared in [Task 4](/Lab2/Tasks/Task%204/) with commenting to describe their relations to each other & whether to call superclass constructors from a subclass. Your task is to implement the correct class hereditary, as well as to apply the calling of superclass constructors in subclasses where deemed appropriate.
+## Task 3
+There are various classes declared in [Task 3](/Lab2/Tasks/Task3/) with commenting to describe their relations to each other & whether to call superclass constructors from a subclass. Your task is to implement the correct class hereditary, as well as to apply the calling of superclass constructors in subclasses where deemed appropriate.

@@ -4,27 +4,56 @@
 
 using namespace std;
 
-class Food {
+//Base
+class Entity {
 public:
-	Food(string typeIn);
-	bool GetNutritionalValue();
-private:
-	string type;
+	string name;
 };
 
-class Parrot {
+//Inherited from 'Entity' with its own constructor.
+class MythicalCreature : Entity {
 public:
-	Parrot(string nameIn, int maxHungerIn, int maxStaminaIn);
-	void DisplayStats();
-	void Eat(Food* FoodIn);
-	bool HasNoHunger();
-	void Fly();
-	void Walk();
-	bool HasNoEnergy();
-private:
+	MythicalCreature(string nameIn);
 	string name;
-	int hunger;
-	int maxHunger;
-	int stamina;
-	int maxStamina;
+};
+
+//Inherited from 'Entity' with its own constructor.
+class Creature : public Entity {
+public:
+	Creature(string nameIn);
+};
+
+//Inherited from 'Creature' & calls 'Creature' constructor.
+class Chicken : Creature {
+public:
+	Chicken(string nameIn) : Creature(nameIn) {}
+	void Walk();
+	void LayEgg();
+};
+
+//Inherited from 'MythicalCreature' & calls 'MythicalCreature' constructor.
+class TrueDragon : public MythicalCreature {
+public:
+	TrueDragon(string nameIn) : MythicalCreature(nameIn) {}
+	void Walk();
+	void Fly();
+	void BreatheFire();
+};
+
+//Inherited from 'TrueDragon' & calls 'TrueDragon' constructor.
+class Wyvern : public TrueDragon {
+public:
+	Wyvern(string nameIn) : TrueDragon(nameIn) {}
+	void Run();
+	void SpitVenom();
+};
+
+/*
+Inherits directly from both 'Chicken' & 'Wyvern' & calls 'Chicken' & 'Wyvern' constructors.
+Optionally, could create new constructor, stating "A regular-mythical creature has been spawned!" as opposed to both other messages being printed.
+*/
+class Cockatrice : public Chicken, public Wyvern {
+public:
+	Cockatrice(string nameIn) : Chicken(nameIn), Wyvern(nameIn) {}
+	void DeathStare();
 };

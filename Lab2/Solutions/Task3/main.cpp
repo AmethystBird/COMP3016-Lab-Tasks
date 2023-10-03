@@ -4,93 +4,74 @@
 
 int main()
 {
-	Parrot* ScarletMacaw = new Parrot("Derick", 20, 20);
-	ScarletMacaw->Fly();
-	ScarletMacaw->Walk();
-	Food* Seeds = new Food("Seeds");
-	ScarletMacaw->Eat(Seeds);
-	ScarletMacaw->DisplayStats();
+	Chicken* NewChicken = new Chicken("Bruce");
+	TrueDragon* NewDragon = new TrueDragon("Felix");
+	Wyvern* NewWyvern = new Wyvern("Greg");
+	Cockatrice* NewCockatrice = new Cockatrice("Derick");
+
+	NewCockatrice->DeathStare();
+	delete NewCockatrice;
+	
+	NewWyvern->SpitVenom();
+	NewWyvern->Fly();
+	delete NewWyvern;
+
+	NewDragon->Fly();
+	NewDragon->BreatheFire();
+	delete NewDragon;
+
+	NewChicken->LayEgg();
+	delete NewChicken;
 }
 
-Food::Food(string typeIn)
-{
-	type = typeIn;
-}
-
-bool Food::GetNutritionalValue()
-{
-	if (type == "Seeds")
-	{
-		return 1;
-	}
-	else if (type == "Nut")
-	{
-		return 2;
-	}
-	return 0;
-}
-
-Parrot::Parrot(string nameIn, int maxHungerIn, int maxStaminaIn)
+MythicalCreature::MythicalCreature(string nameIn)
 {
 	name = nameIn;
-
-	maxHunger = maxHungerIn;
-	hunger = maxHunger;
-
-	maxStamina = maxStaminaIn;
-	stamina = maxStamina;
+	cout << "A mythical creature has been spawned!\n";
 }
 
-void Parrot::DisplayStats()
+Creature::Creature(string nameIn)
 {
-	cout << name << " has " << hunger << " hunger & " << stamina << " stamina." << "\n";
+	name = nameIn;
+	cout << "A regular creature has been spawned!\n";
 }
 
-void Parrot::Eat(Food* FoodIn)
+void Chicken::Walk()
 {
-	int nutritionalValue = FoodIn->GetNutritionalValue();
-	if (nutritionalValue == 1)
-	{
-		hunger = hunger + 4;
-		stamina = stamina + 4;
-	}
-	else if (nutritionalValue == 2)
-	{
-		hunger = hunger + 8;
-		stamina = stamina + 8;
-	}
-
-	if (hunger > maxHunger)
-	{
-		hunger == maxHunger;
-	}
-	if (stamina > maxStamina)
-	{
-		stamina == maxStamina;
-	}
+	cout << name << " started walking.\n";
 }
 
-bool Parrot::HasNoHunger()
+void Chicken::LayEgg()
 {
-	if (hunger <= 0) { return true; }
-	else { return false; };
+	cout << name << " laid an egg!\n";
 }
 
-void Parrot::Fly()
+void TrueDragon::Walk()
 {
-	cout << "Parrot started flying." << "\n";
-	hunger = hunger -= 2;
-	stamina = stamina -= 4;
+	cout << name << " started walking.\n";
 }
 
-void Parrot::Walk()
+void TrueDragon::Fly()
 {
-	cout << "Parrot started walking." << "\n";
-	hunger = hunger -= 1;
+	cout << name << " started flying.\n";
 }
 
-bool Parrot::HasNoEnergy()
+void TrueDragon::BreatheFire()
 {
-	if (stamina <= 0) { return true; }
-	else { return false; };
+	cout << name << " started breathing fire!\n";
+}
+
+void Wyvern::Run()
+{
+	cout << name << " started running.\n";
+}
+
+void Wyvern::SpitVenom()
+{
+	cout << name << " spat venom!\n";
+}
+
+void Cockatrice::DeathStare()
+{
+	cout << MythicalCreature::name << " started death staring something!\n";
 }
