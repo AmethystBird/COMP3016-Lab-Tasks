@@ -65,6 +65,7 @@ Sometimes, when an object is instantiated, certain tasks must be completed or ce
 #pragma once
 
 class Apple {
+public: //The 'public' keyword is necessary; explained later
 	Apple(int replenishmentIn);
 	int replenishment;
 };
@@ -76,13 +77,6 @@ Apple::Apple(int replenishmentIn)
 {
 	replenishment = replenishmentIn;
 }
-```
-
-## Task 1
-Text
-
-```c++
-
 ```
 
 ## Scope
@@ -164,6 +158,9 @@ public:
 	Apple(string nameIn) : Fruit(nameIn) {}
 };
 ```
+
+### Task 1
+In [Task 1](/Lab2/Tasks/Task1/), the code is currently broken. This is due to various unimplemented or incomplete object-orientation components that need to be amended for. Your task is to fix the code.
 
 ### Task 2
 The code located in [Task 2](/Lab2/Tasks/Task2/) is broken. The reasons for the code not functioning correctly are not related to the contents of the functions, but rather due to various errors in the program's implementation of object-orientation. Your task is to fix these errors so that the code compiles.
