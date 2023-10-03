@@ -77,6 +77,14 @@ Apple::Apple(int replenishmentIn)
 	replenishment = replenishmentIn;
 }
 ```
+
+## Task 1
+Text
+
+```c++
+
+```
+
 ## Scope
 ### Access Specifiers
 By default, member functions & variables contained within an object cannot be read from or written to from outside of the object. The purpose of restricting access to variables & functions within an object from outside of the object is to prevent accidental & unintentional operations on members of objects from areas of code that would never need to be able to do so. This helps to prevent the accumulation of bugs. However, accessibility can be & should be flexible where appropriate.

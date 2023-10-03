@@ -155,11 +155,29 @@ void Dave::Hello()
 ```
 
 ### Casting
-It is possible to convert the outward appearance of an object's class type into that of another through casting. In doing so, the object becomes treated as though it derives from a different class type in the program. An example of polymorphic casting from [PolymorphismCasting]() is displayed below:
+It is possible to convert the outward appearance of an object's class type into that of another through casting. In doing so, the object becomes treated as though it derives from a different class type in the program. An example of polymorphic casting from [PolymorphismCasting](/Lab3/Examples/PolymorphismCasting/) is displayed below:
 
 **CPP**
 ```c++
+#include "main.h"
 
+#include <iostream>
+
+int main()
+{
+	Colour* AmbiguousColour = new Colour("Ambiguous");
+	Red* TypeofColour = new Red("Red");
+
+	Colour* TechnicallyRed = (Colour*)TypeofColour; //Pointer to 'Red' object is of type 'Colour*'
+
+	delete AmbiguousColour;
+	delete TypeofColour;
+}
+
+Colour::Colour(string typeIn)
+{
+	type = typeIn;
+}
 ```
 
 It is important to note that casting in this way introduces the possibility of errors if not handled correctly. Errors can ensue if an attempt to access an apparent, but non-existent member of an object is attempted; attempts to access members that only exist within the casted derived class that do not derive from the actual derived class will cause errors. For this reason, generally this form of casting is used to make an object appear to be derived from a superclass, rather than an unrelated one.
@@ -167,6 +185,11 @@ It is important to note that casting in this way introduces the possibility of e
 An example of where casting an object's class type is useful is for containers. For example, one may have an array of the class type ```Bird```, however there may be many subclasses of type ```Bird```, such as ```Parrot```, ```Pigeon``` & ```Peacock```. Since the array can only take objects of type ```Bird```, one may ambiguify the objects entering so as to all appear as though they are of type ```Bird``` & then disambiguify/recast them back to their actual existing types once they are accessed.
 
 ### Task 3
+The code in [Task 3](/Lab3/Tasks/Task3/) is incomplete. Currently existing is the ```Item``` class, as well as two subclasses of it, the ```Rock``` & ```Stick``` classes. The code is intended to do as follows:
+- The first for loop is to randomly assign either a ```Rock``` or ```Stick``` to all of the ```Inventory``` array's 9 slots.
+- The second for loop is to recast the array's contents back to their original class types & then execute either the ```Throw()``` or ```Attack()``` function on them based on the given object's type.
+
+Your task is to implement to missing components of the code.
 
 ## Virtual Functions
 ## Virtual Classes
