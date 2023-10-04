@@ -1,4 +1,4 @@
-# Lab 3 - Object-Oriented Programming with C++ Part 2 & Extras
+# Lab 3 - Object-Oriented Programming with C++ Part 2 & Files
 ## Files
 ### Reading & Writing
 Files can be created, written to & read from in C++. There are three objects in the standard library ```std``` that can be used for operating upon files. The ```ofstream``` object can be used to create & output a file, the ```ifstream``` object for reading from a file & lastly ```fstream```, which can be used for both purposes. Below is an example from [ReadingAndWriting](/Lab3/Examples/ReadingAndWriting/) of these file operations together:
@@ -253,23 +253,54 @@ void BigDragon::Roar()
 ```
 
 ## Static Members
-Normally, one cannot directly access a class member but instead must access an instance of one from an object derived from a class. Since normally there may be multiple instances of objects, there are by extension never any common implementations of any object members across all of these objects. However, this can be changed with the use of the ```static``` keyword.
+Normally, one cannot directly access a class member but instead must access an instance of one from an object derived from a class. Since normally there may be multiple instances of objects, there are also independent declarations of object members per object. However it is possible to declare only a single, common member to all objects of the same class. To do this, a class's member must be prefixed with the ```static``` keyword.
 
-By declaring a class's member as ```static```, only one implementation of the member is able to exist & becomes common to all instances of objects derived from the respective class. For this reason, the member becomes accessible from the class directly & cannot be accessed from any derived object.
+By declaring a class's member as ```static```, only one implementation of the member is able to exist & becomes common to all instances of objects derived from the respective class. For this reason, the member must be accessed from the class directly & cannot be accessed from any object derived from it. The syntax for accessing a static member of a class is the class name, followed by ```::``` & lastly the class member: ```Class::Member```.
 
-For example ...
+The example below from [StaticMembers]() shows a use case for using a static function. Only one instance of the function ```RoundIntegerByInteger()``` is necessary, as its purpose is entirely uniform across any particular instance of the class ```Maths```:
 
 **Header**
 ```c++
+#pragma once
 
+#include <string>
+
+using namespace std;
+
+class Maths {
+public:
+    //Prefixed by static keyword
+	static int RoundIntegerByInteger(int valueIn, int stepIn);
+};
 ```
 
 **CPP**
 ```c++
+#include "main.h"
 
+#include <iostream>
+
+int main()
+{
+	int value = 17;
+	int step = 10;
+	int result = Maths::RoundIntegerByInteger(value, step); //Accessed from class
+	cout << result << "\n";
+}
+
+int Maths::RoundIntegerByInteger(int valueIn, int stepIn)
+{
+	int quotient = valueIn / stepIn;
+	int remainder = valueIn % stepIn;
+
+	int lowerValue = quotient * stepIn;
+	int upperValue = (quotient + 1.f) * stepIn;
+
+	return (remainder < (stepIn / 2.f)) ? lowerValue : upperValue;
+}
 ```
 
-It is worth being aware that in some object-oriented languages, classes themselves can be declared as ```static```. Generally, when this is done, the entire class's contents become static. This feature does not exist in C++, however to more or less replicate such a scenario, one can declare all of a class's members as ```static```.
+It is worth being aware that in some object-oriented languages, classes themselves can be declared as ```static```. Generally, when this is done, the entire class's contents becomes static. This feature does not exist in C++, however to more or less replicate such a scenario, one can declare all of a class's members as ```static```.
 
 ## Virtual Classes
 Unlike singular inheritance, multiple inheritance can pose the issue of ambiguity in the class hierarchy. For example, consider the four classes, ```Class Base```, ```Class A```, ```Class B``` & ```Class C```, in the following diagram:
