@@ -1,7 +1,7 @@
 # Lab 3 - Object-Oriented Programming with C++ Part 2 & Extras
 ## Files
 ### Reading & Writing
-Files can be created, written to & read from in C++. There are three objects in the standard library ```std``` that can be used for operating upon files. The ```ofstream``` object can be used to create & output a file, the ```ifstream``` object for reading from a file & lastly ```fstream```, which can be used for both purposes. Below is an example from [ReadingAndWriting](/Lab2/Examples/ReadingAndWriting/) of these file operations together:
+Files can be created, written to & read from in C++. There are three objects in the standard library ```std``` that can be used for operating upon files. The ```ofstream``` object can be used to create & output a file, the ```ifstream``` object for reading from a file & lastly ```fstream```, which can be used for both purposes. Below is an example from [ReadingAndWriting](/Lab3/Examples/ReadingAndWriting/) of these file operations together:
 ```c++
 #include <iostream>
 #include <fstream>
@@ -35,7 +35,7 @@ In [Task 1](/Lab3/Tasks/Task1/), code similar to the above is present, except th
 The program in [Task 2](/Lab3/Tasks/Task2/), asks the user for the user's name & favourite fruit. However, the code is unfinished. The code needs to write the information that the user inputs to a file, then read the file & lastly print the information from the file to the terminal. Your task is to implement the rest of this program.
 
 ### Position Pointers
-Files use file-position pointers to determine where they are currently being operated on. By default, the file-position pointer starts at the beginning of the file's contents. However, in order to read text from files from specific points, the use of the ```seekg()``` function can be used to shift the file-position pointer. In the code from [PositionPointers1](/Lab2/Examples/PositionPointers1/) demonstrated below, only the second line of the file is printed:
+Files use file-position pointers to determine where they are currently being operated on. By default, the file-position pointer starts at the beginning of the file's contents. However, in order to read text from files from specific points, the use of the ```seekg()``` function can be used to shift the file-position pointer. In the code from [PositionPointers1](/Lab3/Examples/PositionPointers1/) demonstrated below, only the second line of the file is printed:
 
 ```c++
 #include <iostream>
@@ -65,7 +65,7 @@ int main()
 }
 ```
 
-There are additional ways in which to operate on file-position pointers. In the example from [PositionPointers2](/Lab2/Examples/PositionPointers2/) below, ```ios::end``` first positions the pointer to the end of the file. Next, the pointer is decremented by 27 characters in relation to this:
+There are additional ways in which to operate on file-position pointers. In the example from [PositionPointers2](/Lab3/Examples/PositionPointers2/) below, ```ios::end``` first positions the pointer to the end of the file. Next, the pointer is decremented by 27 characters in relation to this:
 
 ```c++
 #include <iostream>
@@ -169,7 +169,8 @@ int main()
 	Colour* AmbiguousColour = new Colour("Ambiguous");
 	Red* TypeofColour = new Red("Red");
 
-	Colour* TechnicallyRed = (Colour*)TypeofColour; //Pointer to 'Red' object is of type 'Colour*'
+    //Pointer to 'Red' object is of type 'Colour*,' but holds an object of type 'Red'
+	Colour* TechnicallyRed = (Colour*)TypeofColour;
 
 	delete AmbiguousColour;
 	delete TypeofColour;
@@ -194,6 +195,19 @@ The code in [Task 3](/Lab3/Tasks/Task3/) is incomplete. Currently existing is th
 
 Your task is to implement the missing components of the code.
 
+## Virtual Functions
+When using polymorphism to access a function of an object's inherited class, that function is considered an implementation within the superclass as opposed to the subclass. However, there are cases where the function may need to differ to some extent depending upon the subclass in question. In order to do this, the function can be declared with the ```virtual``` keyword in the class that it is a member of. When this is done, subclasses can re-define the function using the ```override``` keyword. If this is done, then the function can be re-implemented.
+
+**Header**
+```c++
+
+```
+
+**CPP**
+```c++
+
+```
+
 ## Static Members
 Normally, one cannot directly access a class member but instead must access an instance of one from an object derived from a class. Since normally there may be multiple instances of objects, there are by extension never any common implementations of any object members across all of these objects. However, this can be changed with the use of the ```static``` keyword.
 
@@ -212,19 +226,6 @@ For example ...
 ```
 
 It is worth being aware that in some object-oriented languages, classes themselves can be declared as ```static```. Generally, when this is done, the entire class's contents become static. This feature does not exist in C++, however to more or less replicate such a scenario, one can declare all of a class's members as ```static```.
-
-## Virtual Functions
-When using polymorphism to access a function of an object's inherited class, that function is considered an implementation within the superclass as opposed to the subclass. However, there are cases where the function may need to differ to some extent depending upon the subclass in question. In order to do this, the function in the superclass can be overriden from within the subclass. When this is done, a new implementation of the function must be created:
-
-**Header**
-```c++
-
-```
-
-**CPP**
-```c++
-
-```
 
 ## Virtual Classes
 Unlike singular inheritance, multiple inheritance can pose the issue of ambiguity in the class hierarchy. For example, if one has a base class ...
