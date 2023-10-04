@@ -27,6 +27,7 @@ int main()
     fileToRead.close();
 }
 ```
+
 ### Task 1
 In [Task 1](/Lab3/Tasks/Task1/), code similar to the above is present, except that there are multiple lines being written to the file. However, currently only one line is being outputted. Your task is to output all lines of the file elegantly by using appropriate loop iteration.
 
@@ -194,7 +195,23 @@ The code in [Task 3](/Lab3/Tasks/Task3/) is incomplete. Currently existing is th
 Your task is to implement the missing components of the code.
 
 ## Static Members
-Normally, when objects are instantiated from a common class, the objects share identical structure while existing entirely independently. For example, ...
+Normally, one cannot directly access a class member but instead must access an instance of one from an object derived from a class. Since normally there may be multiple instances of objects, there are by extension never any common implementations of any object members across all of these objects. However, this can be changed with the use of the ```static``` keyword.
+
+By declaring a class's member as ```static```, the member becomes accessible from the class directly, as opposed to any object instance derived from that class. Additionally, the static member still exists within all object instances of said class & its implementation & value become common to all of them.
+
+For example ...
+
+**Header**
+```c++
+
+```
+
+**CPP**
+```c++
+
+```
+
+It is worth being aware that in some object-oriented languages, classes themselves can be declared as ```static```. Generally, when this is done, the entire class's contents become static. This feature does not exist in C++, however to more or less replicate such a scenario, one can declare all of a class's members as ```static```.
 
 ## Virtual Functions
 When using polymorphism to access a function of an object's inherited class, that function is considered an implementation within the superclass as opposed to the subclass. However, there are cases where the function may need to differ to some extent depending upon the subclass in question. In order to do this, the function in the superclass can be overriden from within the subclass. When this is done, a new implementation of the function must be created:
