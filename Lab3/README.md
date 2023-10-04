@@ -196,22 +196,66 @@ The code in [Task 3](/Lab3/Tasks/Task3/) is incomplete. Currently existing is th
 Your task is to implement the missing components of the code.
 
 ## Virtual Functions
-When using polymorphism to access a function of an object's inherited class, that function is considered an implementation within the superclass as opposed to the subclass. However, there are cases where the function may need to differ to some extent depending upon the subclass in question. In order to do this, the function can be declared with the ```virtual``` keyword in the class that it is a member of. When this is done, subclasses can re-define the function using the ```override``` keyword. If this is done, then the function can be re-implemented.
+When using polymorphism to access a function of an object's inherited class, that function is considered an implementation within the superclass as opposed to the subclass. However, there are cases where the function may need to differ to some extent depending upon the subclass in question. In order to do this, the function can be declared with the ```virtual``` keyword in the class that it is a member of. When this is done, subclasses can re-define the function using the ```override``` keyword. If this is done, then the function can be re-implemented. This is shown in the [VirtualFunctions](/Lab3/Examples/VirtualFunctions/) example below:
 
 **Header**
 ```c++
+#pragma once
 
+#include <string>
+
+using namespace std;
+
+class Dragon {
+public:
+	Dragon(string nameIn);
+	virtual void Roar(); //Function declared as virtual; allows it to be reimplemented in subclasses
+protected:
+	string name;
+};
+
+class BigDragon : Dragon {
+public:
+	BigDragon(string nameIn) : Dragon(nameIn) {}
+	virtual void Roar() override; //Virtual function from superclass overriden & reimplemented
+};
 ```
 
 **CPP**
 ```c++
+#include "main.h"
 
+#include <iostream>
+
+int main()
+{
+	Dragon* NewDragon = new Dragon("Richard");
+	BigDragon* NewDragon2 = new BigDragon("Michael");
+	NewDragon->Roar();
+	NewDragon2->Roar();
+}
+
+Dragon::Dragon(string nameIn)
+{
+	name = nameIn;
+}
+
+void Dragon::Roar()
+{
+	cout << name << " roared!\n";
+}
+
+//Virtual function from superclass overriden & reimplemented
+void BigDragon::Roar()
+{
+	cout << name << " roared loudly!\n";
+}
 ```
 
 ## Static Members
 Normally, one cannot directly access a class member but instead must access an instance of one from an object derived from a class. Since normally there may be multiple instances of objects, there are by extension never any common implementations of any object members across all of these objects. However, this can be changed with the use of the ```static``` keyword.
 
-By declaring a class's member as ```static```, the member becomes accessible from the class directly, as opposed to any object instance derived from that class. Additionally, the static member still exists within all object instances of said class & its implementation & value become common to all of them.
+By declaring a class's member as ```static```, only one implementation of the member is able to exist & becomes common to all instances of objects derived from the respective class. For this reason, the member becomes accessible from the class directly & cannot be accessed from any derived object.
 
 For example ...
 
@@ -228,6 +272,72 @@ For example ...
 It is worth being aware that in some object-oriented languages, classes themselves can be declared as ```static```. Generally, when this is done, the entire class's contents become static. This feature does not exist in C++, however to more or less replicate such a scenario, one can declare all of a class's members as ```static```.
 
 ## Virtual Classes
-Unlike singular inheritance, multiple inheritance can pose the issue of ambiguity in the class hierarchy. For example, if one has a base class ...
+Unlike singular inheritance, multiple inheritance can pose the issue of ambiguity in the class hierarchy. For example, consider the four classes, ```Class Base```, ```Class A```, ```Class B``` & ```Class C```, in the following diagram:
+
+![Virtual Classes Diagram](/Lab3/Examples/VirtualClasses/VirtualClassesDiagram.png)
+
+```Class Base``` is a base class that both ```Class A``` & ```Class B``` derive from. So far, this presents no particular errors. However, ```Class C``` inherits directly from both ```Class A``` & ```Class C``` through multiple inheritance. Due to this, ```Class C``` acquires not one, but two copies of ```Class Base```. This is problematic because if an instance of ```Class C``` attempts to make use of any members from either ```Class Base```, the program will not compile as it will be unable to differentiate between which ```Class Base``` is or needs to be accessed.
+
+[Change this]
+To solve this, inheritance of ```Base Class``` can be prefixed with the keyword ```virtual```. Note, this is not related to the concept of [Virtual Functions](#virtual-functions), as explained earlier in this lab. This is demonstrated in the code from [VirtualClasses](/Lab3/Examples/VirtualClasses/) below:
+
+**Header**
+```c++
+#pragma once
+
+#include <string>
+
+using namespace std;
+
+class Base {
+public:
+	Base(string nameIn);
+	void Hello();
+protected:
+	string name;
+};
+
+//Inherits class 'Base' virtually
+class A : virtual public Base {
+public:
+	A(string nameIn) : Base(nameIn) {}
+};
+
+//Inherits class 'Base' virtually
+class B : virtual public Base {
+public:
+	B(string nameIn) : Base(nameIn) {}
+};
+
+//Inherits both class 'A' & 'B' that both inherit the 'Base' class virtually; result is only one 'Base' class is inherited by class 'C'
+class C : public A, public B {
+public:
+	//Must also initialise a single 'Base' class constructor, along with the constructors of Class 'A' & 'B'
+	C(string nameIn) : Base(nameIn), A(nameIn), B(nameIn) {}
+};
+```
+
+**CPP**
+```c++
+#include "main.h"
+
+#include <iostream>
+
+int main()
+{
+	C* Felix = new C("Felix");
+	Felix->Hello();
+}
+
+Base::Base(string nameIn)
+{
+	name = nameIn;
+}
+
+void Base::Hello()
+{
+	cout << "Hello! " << "my name is " << name << "\n";
+}
+```
 
 ## Interfaces
