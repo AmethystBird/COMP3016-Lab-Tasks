@@ -1,4 +1,4 @@
-# Lab 3 - Object Orientation Part 2 & Extras
+# Lab 3 - Object-Oriented Programming with C++ Part 2 & Extras
 ## Files
 ### Reading & Writing
 Files can be created, written to & read from in C++. There are three objects in the standard library ```std``` that can be used for operating upon files. The ```ofstream``` object can be used to create & output a file, the ```ifstream``` object for reading from a file & lastly ```fstream```, which can be used for both purposes. Below is an example from [ReadingAndWriting](/Lab2/Examples/ReadingAndWriting/) of these file operations together:
