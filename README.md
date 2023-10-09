@@ -1,5 +1,5 @@
 # COMP3016-Labs
-COMP3016 Lab Tasks
+Labs for COMP3016 are comprised of READMEs that contain inline & linked code examples & code tasks. Note that if a lab appears to exist within this repository but is not linked by the [Table of Contents](#table-of-contents) below, that is because it is not yet finished.
 
 ## Table of Contents
 [Lab 0 - Setup](/Lab0/README.md)
