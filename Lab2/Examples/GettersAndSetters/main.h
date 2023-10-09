@@ -4,17 +4,23 @@
 
 using namespace std;
 
-class Apple {
+class Player {
 public:
-	Apple(int replenishmentIn);
+	Player();
 
-	int GetReplenishment();
-	void SetReplenishment(int replenishmentIn);
+	void Walk();
+	void Run();
 
-	string GetType();
-	void SetType(string typeIn);
-protected:
-	int replenishment;
+	//Public getters & setters for private variables.
+	int GetHunger();
+	void SetHunger(int hungerIn);
+	int GetSpeed();
+	void SetSpeed(int speedIn);
+
 private:
-	string type;
+	void Exhausted(string movementModeIn);
+
+	//Private. Variables depend upon each other; changing one without changing the other can produce issues
+	int hunger;
+	int speed;
 };

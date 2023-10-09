@@ -1,4 +1,4 @@
-# Lab 2 - Object Orientation in C++ Part 1
+# Lab 2 - Object-Oriented Programming with C++ Part 1
 **Note: Content on file reading & writing has been moved to Lab 3.**
 ## Classes & Objects
 C++ is an object-oriented programming language. The purpose of object-orientation is to be able to divide & organise code into inter-related groups. In doing so, this also reduces code repetition.
@@ -180,19 +180,25 @@ Getters & setters are important for instances where one member variable's value 
 
 using namespace std;
 
-class Apple {
+class Player {
 public:
-	Apple(int replenishmentIn);
+	Player();
 
-	int GetReplenishment();
-	void SetReplenishment(int replenishmentIn);
+	void Walk();
+	void Run();
 
-	string GetType();
-	void SetType(string typeIn);
-protected:
-	int replenishment;
+	//Public getters & setters for private variables.
+	int GetHunger();
+	void SetHunger(int hungerIn);
+	int GetSpeed();
+	void SetSpeed(int speedIn);
+
 private:
-	string type;
+	void Exhausted(string movementModeIn);
+
+	//Private. Variables depend upon each other; changing one without changing the other can produce issues
+	int hunger;
+	int speed;
 };
 ```
 
@@ -204,41 +210,83 @@ private:
 
 int main()
 {
-	Apple* GreenApple = new Apple(3);
-	cout << "Replenishment value: " << GreenApple->GetReplenishment() << "\n";
-	GreenApple->SetReplenishment(2);
-    delete GreenApple;
+	Player* Boris = new Player();
+	Boris->Run();
+	Boris->Walk();
+
+	Boris->SetHunger(4); //This will also set Boris's speed to 1
+	Boris->Run();
+	Boris->Walk();
+
+	Boris->SetSpeed(2); //This will not set Boris's speed to 2, since his hunger level does not allow it
+	cout << "Boris's current speed: " << Boris->GetSpeed() << "\n";
+	Boris->Run();
 }
 
-Apple::Apple(int replenishmentIn)
+Player::Player()
 {
-	SetReplenishment(replenishmentIn);
+	hunger = 20;
+	speed = 2;
 }
 
-int Apple::GetReplenishment()
+void Player::Walk()
 {
-	return replenishment;
+	if (speed >= 1)
+	{
+		cout << "Player walked.\n";
+	}
+	else if (speed == 0)
+	{
+		Exhausted("walk");
+	}
 }
 
-void Apple::SetReplenishment(int replenishmentIn)
+void Player::Run()
 {
-	replenishment = replenishmentIn;
-
-	if (replenishment == 2) { SetType("Red"); } //should be red
-	else if (replenishment == 3) { SetType("Green"); } //should be green
+	if (speed == 2)
+	{
+		cout << "Player ran!\n";
+	}
+	else if (speed <= 1)
+	{
+		Exhausted("run");
+	}
 }
 
-string Apple::GetType()
+int Player::GetHunger()
 {
-	return type;
+	return hunger;
 }
 
-void Apple::SetType(string typeIn)
+void Player::SetHunger(int hungerIn)
 {
-	type = typeIn;
+	hunger = hungerIn;
 
-	if (type == "red") { SetReplenishment(2); } //should give 2 health
-	else if (type == "green") { SetReplenishment(3); } //should give 3 health
+	//If necessary, lowers speed to level that hunger allows
+	if (hunger <= 5 && GetSpeed() == 2)
+	{
+		SetSpeed(1);
+	}
+}
+
+int Player::GetSpeed()
+{
+	return speed;
+}
+
+void Player::SetSpeed(int speedIn) 
+{
+	//Checks if speed level can be set, requiring that hunger level allows it
+	if (speedIn == 2 && GetHunger() < 5)
+	{
+		return;
+	}
+	speed = speedIn;
+}
+
+void Player::Exhausted(string movementModeIn)
+{
+	cout << "Player is too exhausted to " << movementModeIn << "\n";
 }
 ```
 

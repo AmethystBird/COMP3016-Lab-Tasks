@@ -4,39 +4,81 @@
 
 int main()
 {
-	Apple* GreenApple = new Apple(3);
-	cout << "Replenishment value: " << GreenApple->GetReplenishment() << "\n";
-	GreenApple->SetReplenishment(2);
-	delete GreenApple;
+	Player* Boris = new Player();
+	Boris->Run();
+	Boris->Walk();
+
+	Boris->SetHunger(4); //This will also set Boris's speed to 1
+	Boris->Run();
+	Boris->Walk();
+
+	Boris->SetSpeed(2); //This will not set Boris's speed to 2, since his hunger level does not allow it
+	cout << "Boris's current speed: " << Boris->GetSpeed() << "\n";
+	Boris->Run();
 }
 
-Apple::Apple(int replenishmentIn)
+Player::Player()
 {
-	SetReplenishment(replenishmentIn);
+	hunger = 20;
+	speed = 2;
 }
 
-int Apple::GetReplenishment()
+void Player::Walk()
 {
-	return replenishment;
+	if (speed >= 1)
+	{
+		cout << "Player walked.\n";
+	}
+	else if (speed == 0)
+	{
+		Exhausted("walk");
+	}
 }
 
-void Apple::SetReplenishment(int replenishmentIn)
+void Player::Run()
 {
-	replenishment = replenishmentIn;
-
-	if (replenishment == 2) { SetType("Red"); } //should be red
-	else if (replenishment == 3) { SetType("Green"); } //should be green
+	if (speed == 2)
+	{
+		cout << "Player ran!\n";
+	}
+	else if (speed <= 1)
+	{
+		Exhausted("run");
+	}
 }
 
-string Apple::GetType()
+int Player::GetHunger()
 {
-	return type;
+	return hunger;
 }
 
-void Apple::SetType(string typeIn)
+void Player::SetHunger(int hungerIn)
 {
-	type = typeIn;
+	hunger = hungerIn;
 
-	if (type == "red") { SetReplenishment(2); } //should give 2 health
-	else if (type == "green") { SetReplenishment(3); } //should give 3 health
+	//If necessary, lowers speed to level that hunger allows
+	if (hunger <= 5 && GetSpeed() == 2)
+	{
+		SetSpeed(1);
+	}
+}
+
+int Player::GetSpeed()
+{
+	return speed;
+}
+
+void Player::SetSpeed(int speedIn) 
+{
+	//Checks if speed level can be set, requiring that hunger level allows it
+	if (speedIn == 2 && GetHunger() < 5)
+	{
+		return;
+	}
+	speed = speedIn;
+}
+
+void Player::Exhausted(string movementModeIn)
+{
+	cout << "Player is too exhausted to " << movementModeIn << "\n";
 }
