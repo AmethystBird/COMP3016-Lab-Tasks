@@ -156,6 +156,7 @@ void Dave::Hello()
 ```
 
 ### Casting
+#### Overview
 It is possible to convert the outward appearance of an object's class type into that of another through casting. In doing so, the object becomes treated as though it derives from a different class type in the program. An example of polymorphic casting from [PolymorphismCasting](/Lab3/Examples/PolymorphismCasting/) is displayed below:
 
 **CPP**
@@ -182,13 +183,15 @@ Colour::Colour(string typeIn)
 }
 ```
 
+#### Errors
 It is important to note that casting in this way introduces the possibility of errors if not handled correctly. Errors can ensue if an attempt to access an apparent, but non-existent member of an object is attempted; attempts to access members that only exist within the casted derived class that do not derive from the actual derived class will cause errors. For this reason, generally this form of casting is used to make an object appear to be derived from a superclass, rather than an unrelated one.
 
+#### Use Cases
 An example of where casting an object's class type is useful is for containers. For example, one may have an array of the class type ```Bird```, however there may be many subclasses of type ```Bird```, such as ```Parrot```, ```Pigeon``` & ```Peacock```. Since the array can only take objects of type ```Bird```, one may ambiguify the objects entering so as to all appear as though they are of type ```Bird``` & then disambiguify/recast them back to their actual existing types once they are accessed.
 
 Additionally, where a function's parameter may need to take various types of objects, the parameter may be set to take a generic object so as to allow for other objects to be casted to it in order to be passed through.
 
-### Task 3
+#### Task 3
 The code in [Task 3](/Lab3/Tasks/Task3/) is incomplete. Currently existing is the ```Item``` class, as well as two subclasses of it, the ```Rock``` & ```Stick``` classes. The code is intended to do as follows:
 - The first for loop is to randomly assign either a ```Rock``` or ```Stick``` to all of the ```Inventory``` array's 9 slots.
 - The second for loop is to recast the array's contents back to their original class types & then execute either the ```Throw()``` or ```Attack()``` function on them based on the given object's type.
@@ -307,10 +310,9 @@ Unlike singular inheritance, multiple inheritance can pose the issue of ambiguit
 
 ![Virtual Classes Diagram](/Lab3/Examples/VirtualClasses/VirtualClassesDiagram.png)
 
-```Class Base``` is a base class that both ```Class A``` & ```Class B``` derive from. So far, this presents no particular errors. However, ```Class C``` inherits directly from both ```Class A``` & ```Class C``` through multiple inheritance. Due to this, ```Class C``` acquires not one, but two copies of ```Class Base```. This is problematic because if an instance of ```Class C``` attempts to make use of any members from either ```Class Base```, the program will not compile as it will be unable to differentiate between which ```Class Base``` is or needs to be accessed.
+```Class Base``` is a base class that both ```Class A``` & ```Class B``` derive from. So far, this presents no particular errors. However, ```Class C``` inherits directly from both ```Class A``` & ```Class B``` through multiple inheritance. Due to this, ```Class C``` acquires not one, but two copies of ```Class Base```. This is problematic because if an instance of ```Class C``` attempts to make use of any members from either ```Class Base```, the program will not compile as it will be unable to differentiate between which ```Class Base``` is or needs to be accessed.
 
-[Change this]
-To solve this, inheritance of ```Base Class``` can be prefixed with the keyword ```virtual```. Note, this is not related to the concept of [Virtual Functions](#virtual-functions), as explained earlier in this lab. This is demonstrated in the code from [VirtualClasses](/Lab3/Examples/VirtualClasses/) below:
+To solve this, the inheritance of ```Base Class``` can be prefixed with the keyword ```virtual```. Note, this is not related to the concept of [Virtual Functions](#virtual-functions), as explained earlier in this lab. By virtually inheriting a class, only one copy of the class is inherited by any number of other subclasses. Therefore, ```Class C``` will find no ambiguity in retrieving ```Base Class```. This is demonstrated in the code from [VirtualClasses](/Lab3/Examples/VirtualClasses/) below:
 
 **Header**
 ```c++
