@@ -199,6 +199,7 @@ The code in [Task 3](/Lab3/Tasks/Task3/) is incomplete. Currently existing is th
 Your task is to implement the missing components of the code.
 
 ## Virtual Functions
+### Overview
 When using polymorphism to access a function of an object's inherited class, that function is considered an implementation within the superclass as opposed to the subclass. However, there are cases where the function may need to differ to some extent depending upon the subclass in question. In order to do this, the function can be declared with the ```virtual``` keyword in the class that it is a member of. When this is done, subclasses can re-define the function using the ```override``` keyword. If this is done, then the function can be re-implemented. This is shown in the [VirtualFunctions](/Lab3/Examples/VirtualFunctions/) example below:
 
 **Header**
@@ -254,6 +255,9 @@ void BigDragon::Roar()
 	cout << name << " roared loudly!\n";
 }
 ```
+
+### Task 4
+The code in [Task 4](/Lab3/Tasks/Task4/) does not work as intended. This is because both the ```Sword``` & ```Battleaxe``` classes contain functions that must be overriden for different functionality to be able to be executed. Your task is to fix the code.
 
 ## Static Members
 Normally, one cannot directly access a class member but instead must access an instance of one from an object derived from a class. Since normally there may be multiple instances of objects, there are also independent declarations of object members per object. However it is possible to declare only a single, common member to all objects of the same class. To do this, a class's member must be prefixed with the ```static``` keyword.
