@@ -15,6 +15,7 @@ int main()
 	Boris->SetSpeed(2); //This will not set Boris's speed to 2, since his hunger level does not allow it
 	cout << "Boris's current speed: " << Boris->GetSpeed() << "\n";
 	Boris->Run();
+	delete Boris;
 }
 
 Player::Player()
