@@ -6,6 +6,6 @@ Labs for COMP3016 are comprised of READMEs that contain inline & linked code exa
 
 [Lab 1 - C++ Fundamentals](/Lab1/README.md)
 
-[Lab 2 - Object Orientation #1](/Lab2/README.md)
+[Lab 2 - Object-Orientation #1](/Lab2/README.md)
 
 [Lab 3 - Object-Orientation #2](/Lab3/README.md)
