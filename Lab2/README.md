@@ -39,9 +39,16 @@ It is **important** to note that if multiple classes are declared on the same fi
 ## Members
 In a class, a member is any function or variable that exists at the scope of the entire class. Therefore, a member variable or function is accessable from at least anywhere from within the class that it is contained in. Importantly, it is best practice that class declarations, as well as all of a class's members are placed within an appropriate header file. All implementations of member functions & instantiations of member variables should be contained within an appropriate CPP file.
 
+The example below from [Members](/Lab2/Examples/AccessSpecifiers/) demonstrates how to implement member variables & functions. However, note the use of the ```public``` keyword. This is necessary & its use is explained further in this lab in the [Access Specifiers](#access-specifiers) section.
+
 **Header**
 ```c++
+#pragma once
+
+using namespace std;
+
 class Apple {
+public: //The 'public' keyword is necessary; explained later
 	void Eat();
 	bool isOnlyCoreLeft;
 };
@@ -49,20 +56,41 @@ class Apple {
 
 **CPP**
 ```c++
+#include "main.h"
+
+#include <iostream>
+
+int main()
+{
+	Apple* PickedApple = new Apple();
+	PickedApple->Eat();
+	PickedApple->Eat();
+	delete PickedApple;
+}
+
 //function implementations always require class prefix, followed by '::' behind name
 void Apple::Eat()
 {
-	cout << "This apple has been eaten." << "\n";
-	isOnlyCoreLeft = true;
+	if (isOnlyCoreLeft == false)
+	{
+		cout << "This apple has been eaten." << "\n";
+		isOnlyCoreLeft = true;
+	}
+	else
+	{
+		cout << "You can't eat apple cores! The seeds have cyanide in them.\n";
+	}
 }
 ```
 
 ## Constructors
-Sometimes, when an object is instantiated, certain tasks must be completed or certain additional inputs must be given. This can be done through a class constructor, which is a class's member function that must run on the instantiation of any object of that class. Constructors are always named after the class itself:
+Sometimes, when an object is instantiated, certain tasks must be completed or certain additional inputs must be given. This can be done through a class constructor, which is a class's member function that must run on the instantiation of any object of that class. Constructors are always named after the class itself. The example below from [Constructors](/Lab2/Examples/Constructors/) demonstrates using a constructor:
 
 **Header**
 ```c++
 #pragma once
+
+using namespace std;
 
 class Apple {
 public: //The 'public' keyword is necessary; explained later
@@ -73,6 +101,17 @@ public: //The 'public' keyword is necessary; explained later
 
 **CPP**
 ```c++
+#include "main.h"
+
+#include <iostream>
+
+int main()
+{
+	Apple* PickedApple = new Apple(4);
+	cout << "Apple replenishment value: " << PickedApple->replenishment << "\n";
+	delete PickedApple;
+}
+
 Apple::Apple(int replenishmentIn)
 {
 	replenishment = replenishmentIn;
@@ -85,7 +124,7 @@ By default, member functions & variables contained within an object cannot be re
 
 The ability to change the scope by which members can be accessed is done through access specifiers. There are three main types, ```public```, ```protected``` & ```private```. The private specifier is the default setting, denying any direct access from outside the class. The public specifier, in contrast, allows complete direct access from outside the class. Lastly, the protected specifier exists as a kind of middle ground. It prevents direct access from outside the class, however it allows for direct access from [subclasses](#inheritance).
 
-Below is an example from [AccessSpecifiers](/Lab2/Examples/AccessSpecifiers/) demonstrating access specification. For clarification on subclasses however, see the [Inheritance](#inheritance) section.
+Below is an example from [AccessSpecifiers1](/Lab2/Examples/AccessSpecifiers1/) demonstrating access specification. For clarification on subclasses however, see the [Inheritance](#inheritance) section.
 
 **Header**
 ```c++
@@ -136,7 +175,7 @@ void Apple::Eat()
 }
 ```
 
-It is worth noting that for a ```protected``` or ```public``` access specifier to apply to a subclass of another, that the inherited class must also be given the appropriate access specifier:
+It is worth noting that for a ```protected``` or ```public``` access specifier to apply to a subclass of another, that the inherited class must also be given the appropriate access specifier. This is shown in the [AccessSpecifiers2](/Lab2/Examples/AccessSpecifiers2/) example:
 
 **Header**
 ```c++
@@ -157,6 +196,25 @@ class Apple : public Fruit {
 public:
 	Apple(string nameIn) : Fruit(nameIn) {}
 };
+```
+
+**CPP**
+```c++
+#include "main.h"
+
+#include <iostream>
+
+int main()
+{
+	Apple* PickedApple = new Apple("Red Apple");
+	cout << "Player picked a " << PickedApple->name << ".\n";
+	delete PickedApple;
+}
+
+Fruit::Fruit(string nameIn)
+{
+	name = nameIn;
+}
 ```
 
 ### Task 1
@@ -403,7 +461,7 @@ void Lemon::hasLemonBeenSqueezed()
 ## Superclass Constructors
 Unlike most members of classes, constructors do not follow the specifications set by access specifiers. Constructors must be public, since if they do exist, they must be called from outside of the class they are a member of in order to instantiate an object of said class.
 
-In the case of subclasses, the constructors of any of the above superclasses will always be private & are not inherited by default. However, there is a workaround to this. A subclass can define its own constructor & call upon its superclass constructor. In this case, the CPP file contains no implemented constructor for the subclass:
+In the case of subclasses, the constructors of any of the above superclasses will always be private & are not inherited by default. However, there is a workaround to this. A subclass can define its own constructor & call upon its superclass constructor. In this case, as in the [SuperclassConstructors](/Lab2/Examples/SuperclassConstructors/) example, the CPP file contains no implemented constructor for the subclass:
 
 **Header**
 ```c++
@@ -422,9 +480,37 @@ public:
 //Inherited from 'Animal' & calls 'Animal' constructor.
 class Chicken : Animal {
 public:
+	//The 'Chicken' class implements the 'Animal' constructor
 	Chicken(string nameIn) : Animal(nameIn) {}
 	void LayEgg();
 };
+```
+
+**CPP**
+```c++
+#include "main.h"
+
+#include <iostream>
+
+int main()
+{
+	Animal* Dmitri = new Animal("Dmitri");
+	Chicken* Rufus = new Chicken("Rufus");
+	Rufus->LayEgg();
+	delete Dmitri;
+	delete Rufus;
+}
+
+Animal::Animal(string nameIn)
+{
+	name = nameIn;
+}
+
+//Only the 'Chicken' class needs an implemented constructor
+void Chicken::LayEgg()
+{
+	cout << name << " laid an egg!\n";
+}
 ```
 
 ## Multiple Inheritance
