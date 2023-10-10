@@ -95,6 +95,7 @@ glViewport(0, 0, 1280, 720);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 ```
 
+**CPP**
 ```c++
 //STD
 #include <iostream>
@@ -156,6 +157,72 @@ while (glfwWindowShouldClose(window) == false)
 glfwTerminate();
 ```
 
-### Input (Maybe scrap)
+### Input
+**Header**
+```c++
+void processInput(GLFWwindow* window);
+```
 
-## Triangle
+**CPP main()**
+```c++
+while (glfwWindowShouldClose(window) == false)
+{
+    //Input
+	processInput(window);
+
+    //Refreshing
+	glfwSwapBuffers(window);
+	glfwPollEvents();
+}
+```
+
+**CPP processInput()**
+```c++
+void processInput(GLFWwindow* window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, true);
+	}
+}
+```
+
+### Rendering
+**CPP**
+```c++
+while (glfwWindowShouldClose(window) == false)
+{
+	//Input
+	processInput(window);
+
+	//Rendering
+	glClearColor(0.25f, 0.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	//Refreshing
+	glfwSwapBuffers(window);
+	glfwPollEvents();
+}
+```
+
+## Drawing
+### CPU Instantiation
+**CPP Render**
+
+Below ```glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);``` vv
+```c++
+float vertices[] = {
+	-0.5f, -0.5f, 0.0f,
+	0.5f, -0.5f, 0.0f,
+	0.0f, 0.5f, 0.0f
+};
+```
+Above ```while (glfwWindowShouldClose(window) == false)``` ^^
+
+### Vertex Buffer Objects
+```c++
+unsigned int vertexBufferObject;
+glGenBuffers(1, &vertexBufferObject);
+glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
+glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+```
