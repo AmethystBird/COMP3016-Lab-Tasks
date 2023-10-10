@@ -17,7 +17,14 @@
 - Add library directory `C:\Users\Public\OpenGL\lib`
 - Unfold Linker, select Input & add both 'glfw3.lib' & 'opengl32.lib' to Additional Dependencies
 - ```#include <GLFW/glfw3.h>``` in main.cpp
-### GLAD
+
+### GLEW
+- Download from https://glew.sourceforge.net/
+- Navigate to glew include folder & copy GL folder into `C:\Users\Public\OpenGL\include`
+- Navigate to glew lib/Release/x64 folder & copy both `glew32.lib` & `glew32s.lib` to `C:\Users\Public\OpenGL\lib` alongside GLFW library files
+- Navigate to glew bin/Release/x64 & copy glew32.dll into VS project directory; no need to 'add existing file' to project
+
+### GLAD (Optional)
 - https://glad.dav1d.de/
 - Language C++, OpenGL Version 3.3>, Core, Generate a loader
 - Download zip, go to glad/include & place 'glad' & 'KHR' folders in `C:\Users\Public\OpenGL\include`
@@ -67,14 +74,10 @@ glfwMakeContextCurrent(window);
 return 0;
 ```
 
-### GLAD
+### GLEW
 **CPP**
 ```c++
-if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-{
-	cout << "GLAD did not initialise\n";
-	return -1;
-}
+glewInit();
 ```
 
 ### Viewport
@@ -89,7 +92,7 @@ glViewport(0, 0, 1280, 720);
 ```c++
 #pragma once
 
-//framebuffer_size_callback() needs GlFW, so include moved here
+//framebuffer_size_callback() needs GLFW, so include moved here
 #include <GLFW/glfw3.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -126,11 +129,7 @@ int main()
 
 	glfwMakeContextCurrent(window);
 
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		cout << "GLAD did not initialise\n";
-		return -1;
-	}
+	glewInit();
 
 	glViewport(0, 0, 1280, 720);
 
@@ -219,10 +218,95 @@ float vertices[] = {
 ```
 Above ```while (glfwWindowShouldClose(window) == false)``` ^^
 
-### Vertex Buffer Objects
+### CPU-GPU Conversion
+#### Vertex Buffer Objects
+**CPP**
+
+Below ```float vertices[]``` vv
 ```c++
 unsigned int vertexBufferObject;
 glGenBuffers(1, &vertexBufferObject);
 glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+glEnableVertexAttribArray(0);
 ```
+Above ```while (glfwWindowShouldClose(window) == false)``` ^^
+
+#### Vertex Array Objects
+**CPP Globals**
+```c++
+enum VAO_IDs {Triangles, Indices, Colours, Textures, NumVAOs = 2};
+GLuint VAOs[NumVAOs];
+
+enum Buffer_IDs { ArrayBuffer, NumBuffers = 4};
+GLuint Buffers[NumBuffers];
+```
+
+**CPP main()**
+
+Below ```float vertices[]``` vv
+```c++
+glGenVertexArrays(NumVAOs, VAOs);
+glBindVertexArray(VAOs[0]);
+
+glGenBuffers(NumBuffers, Buffers);
+
+glBindBuffer(GL_ARRAY_BUFFER, Buffers[Triangles]);
+glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+glEnableVertexAttribArray(0);
+
+//Unbinding
+glBindVertexArray(0);
+glBindBuffer(GL_ARRAY_BUFFER, 0);
+```
+Above ```while (glfwWindowShouldClose(window) == false)``` ^^
+
+### GPU
+#### Vertex Shader
+**vertexShader.vert**
+```GLSL
+#version 460
+layout (location = 0) in vec3 position;
+
+void main()
+{
+    gl_Position = vec4(position.x, position.y, position.z, 1.0);
+}
+```
+
+#### Fragment Shader
+**fragmentShader.vert**
+```GLSL
+#version 460
+out vec4 FragColor;
+
+void main()
+{
+    FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+}
+```
+#### Retrieval
+**CPP Globals**
+```c++
+GLuint program;
+```
+
+//NOTE: Go back to check if LoadShaders is needed
+
+**CPP main()**
+Below ```glewInit();``` vv
+```c++
+ShaderInfo shaders[] =
+{
+	{ GL_VERTEX_SHADER, "shaders/vertexShader.vert" },
+	{ GL_FRAGMENT_SHADER, "shaders/fragmentShader.frag" },
+	{ GL_NONE, NULL }
+};
+
+program = LoadShaders(shaders);
+glUseProgram(program);
+```
+Above ```glViewport(0, 0, 1280, 720);``` ^^
