@@ -2,7 +2,7 @@
 ## Overview
 OpenGL is a cross-platform application programming interface (API) specification. What this means is that OpenGL consists of a set of language & hardware independent functions that by itself is unable to interact with any system. For this reason, OpenGL serves as a standard that graphics drivers will then utilise & in some cases extend upon for additional functionality.
 
-OpenGL is limited only to rendering, providing no features such as input, audio or even the ability to utilise a window to render to. For this reason, additional libraries will be needed in this lab. The installation process for them is detailed in the [Setup](#Setup) section.
+OpenGL is limited only to rendering, providing no features such as input, audio or even the ability to utilise a window to render to. For this reason, additional libraries will be needed in this lab. The download process for them is detailed in the [Setup](#Setup) section.
 
 A good resource for learning OpenGL is [LearnOpenGL](https://learnopengl.com/Introduction). The LearnOpenGL material will bare similarity to the material in these labs, however different libraries are used, so proceed with caution.
 
@@ -56,7 +56,7 @@ Lastly, in your Visual Studio Project's main.cpp file, add the ```#include <GL/g
 - Navigate to glew lib/Release/x64 folder & copy both `glew32.lib` & `glew32s.lib` to `C:\Users\Public\OpenGL\lib` alongside GLFW library files
 - Navigate to glew bin/Release/x64 & copy glew32.dll into VS project directory; no need to 'add existing file' to project
 
-### GLAD Alternative
+### GLAD Alternative to GLEW
 #### Overview
 In the [LearnOpenGL](https://learnopengl.com/Introduction) tutorial, the GLAD library is used as opposed to GLEW. If you are following the LearnOpenGL material, **you may wish to use GLAD, however I do not recommend this** either way, since this will require one to follow LearnOpenGL's error-prone system of implementing GLSL shaders into projects, which are needed at a basic level in this module & as the focus of the COMP3015 module. The `LoadShaders` header & cpp files in [Files](/Lab5/Files/) use GLEW & will allow for easier implementing of GLSL shaders. If you still wish to use GLAD, the process of retrieval is still available below.
 
@@ -75,7 +75,9 @@ In your `main.cpp` file, add the ```//#include <glad/glad.h>``` include. If Visu
 - Add glad.c as existing file to source of VS project
 - ```#include <glad/glad.h>``` above GLFW include in main.cpp
 
-### GLM
+### OpenGL Mathematics (GLM)
+The GLM library provides extended mathematics for OpenGL. GLM's functions also follow the same naming conventions & functionality as GLSL. While GLM is specifically intended for use with OpenGL, it is also able to be utilised with other third parties.
+
 - Go to https://github.com/g-truc/glm & download release .zip
 - Navigate into glm & move the glm subfolder to `C:\Users\Public\OpenGL\include`
 ## Initialisation
