@@ -26,22 +26,6 @@ Open a file explorer & navigate to `C:\Users\Public\OpenGL` & open a second file
 
 In the GLFW folder in the `Downloads` folder, many `lib-vc` folders exist. These library folders correspond to different versions of Visual C++. Open the `lib-vc2022` folder & move all the files into the `lib` folder in the `OpenGL` directory. In your main.cpp file, insert the ```#include <GLFW/glfw3.h>``` include. If Visual Studio fails to retrieve `glfw3.h`, then something has gone wrong in any of the aforementioned processes.
 
-- https://www.glfw.org/download.html
-- 64-bit Windows binaries
-- Decompress
-- Navigate to C:\Users\Public
-- Create folder named 'OpenGL' & create subfolder named 'GLFW'
-- Enter downloaded GLFW folder & move files from 'include' to new 'GLFW' folder
-- In downloaded GLFW folder, move 'lib-vc2022' to new 'OpenGL' folder & rename to 'lib'
-- Open Visual Studio
-- Create Empty C++ Project
-- In solution explorer, right click project & select properties at bottom
-- Unfold Configuration Properties & select VC++ Properties
-- Add include directory `C:\Users\Public\OpenGL\include`
-- Add library directory `C:\Users\Public\OpenGL\lib`
-- Unfold Linker, select Input & add both 'glfw3.lib' & 'opengl32.lib' to Additional Dependencies
-- ```#include <GLFW/glfw3.h>``` in main.cpp
-
 ### OpenGL Extension Wrangler Library (GLEW)
 #### Overview
 GLEW is an extension loading library. It provides checks to determine what extensions are able to be supported on any particular targeted platform. To download it, go to the [GLEW Download Page](https://glew.sourceforge.net/) & select the GLEW Binaries for Windows 32-bit & 64-bit. After this, you will be redirected to another site where you will have to wait a few seconds for your download to start.
@@ -50,11 +34,6 @@ GLEW is an extension loading library. It provides checks to determine what exten
 Once you have downloaded GLEW, navigate to your `Downloads` folder. Open the `include` folder & move the `GL` folder into your `C:\Users\Public\OpenGL\include` directory. Additionally, in the GLEW folder, navigate to the `Release/x64` folder & move the files into the `C:\Users\Public\OpenGL\lib` directory. Then, in the GLEW folder, navigate to `bin/Release/x64` & move the `glew32.dll` file into your Visual Studio project's directory where your `main.cpp` file is located.
 
 Lastly, in your Visual Studio Project's main.cpp file, add the ```#include <GL/glew.h>``` include. If Visual Studio fails to retrieve `glew.h`, then something has gone wrong in any of the aforementioned processes.
-
-- Download from https://glew.sourceforge.net/
-- Navigate to glew include folder & copy GL folder into `C:\Users\Public\OpenGL\include`
-- Navigate to glew lib/Release/x64 folder & copy both `glew32.lib` & `glew32s.lib` to `C:\Users\Public\OpenGL\lib` alongside GLFW library files
-- Navigate to glew bin/Release/x64 & copy glew32.dll into VS project directory; no need to 'add existing file' to project
 
 ### GLAD Alternative to GLEW
 #### Overview
@@ -67,19 +46,11 @@ In the `Downloads` folder, open the `glad` folder & navigate to the `include` su
 
 In your `main.cpp` file, add the ```//#include <glad/glad.h>``` include. If Visual Studio fails to retrieve `glad.h`, then something has gone wrong in any of the aforementioned processes.
 
-### GLAD (Optional)
-- https://glad.dav1d.de/
-- Language C++, OpenGL Version 3.3>, Core, Generate a loader
-- Download zip, go to glad/include & place 'glad' & 'KHR' folders in `C:\Users\Public\OpenGL\include`
-- Go to glad/src & move or copy glad.c to VS project
-- Add glad.c as existing file to source of VS project
-- ```#include <glad/glad.h>``` above GLFW include in main.cpp
-
 ### OpenGL Mathematics (GLM)
 The GLM library provides extended mathematics for OpenGL. GLM's functions also follow the same naming conventions & functionality as GLSL. While GLM is specifically intended for use with OpenGL, it is also able to be utilised with other third parties.
 
-- Go to https://github.com/g-truc/glm & download release .zip
-- Navigate into glm & move the glm subfolder to `C:\Users\Public\OpenGL\include`
+Navigate to the [GLM Repository](https://github.com/g-truc/glm) & download the latest release in zip format. In the `Downloads` folder, open the `glm` folder & move the internal `glm` folder to the `C:\Users\Public\OpenGL\include` include directory. No glm ```#include``` directives are needed in your Visual Studio project for this lab. It will be specified as to whether you require them in future labs.
+
 ## Initialisation
 ### GLFW
 **CPP**
