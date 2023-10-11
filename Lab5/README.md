@@ -57,8 +57,9 @@ The GLM library provides extended mathematics for OpenGL. GLM's functions also f
 Navigate to the [GLM Repository](https://github.com/g-truc/glm) & download the latest release in zip format. In the `Downloads` folder, open the `glm` folder & move the internal `glm` folder to the `C:\Users\Public\OpenGL\include` include directory. No glm ```#include``` directives are needed in your Visual Studio project for this lab. It will be specified as to whether you require them in future labs.
 
 ## Initialisation
-### GLFW
-In order to begin, a window must be instantiated. Since GLFW will be used for this, it must be initialised with `glfwInit()`. Then, to instantiate a window, the ```GLFWwindow``` object is initialised with the `glfwCreateWindow()` constructor. The dimensions in the following example are 1280x720 & the name of the window is `Lab5`. The fourth parameter specifies which window to fullscreen on & the last parameter specifies which window's context to share resources with. These last two parameters can be kept as `NULL`. ```window``` is then checked to see if it has been successfully instantiated & if so ```glfwMakeContextCurrent()``` is called to bind OpenGL to the window:
+### Window
+#### GLFW
+In order to begin, a window must be instantiated. Since GLFW will be used for this, it must be initialised with `glfwInit()`. Then, to instantiate a window, the ```GLFWwindow``` object is initialised with the `glfwCreateWindow()` constructor. The dimensions in the following example are 1280x720 & the name of the window is `Lab5`. The fourth parameter specifies which monitor to fullscreen on & the last parameter specifies which window's context to share resources with. These last two parameters can be kept as `NULL`. ```window``` is then checked to see if it has been successfully instantiated & if so ```glfwMakeContextCurrent()``` is called to bind OpenGL to the window:
 
 **CPP**
 ```c++
@@ -75,7 +76,7 @@ using namespace std;
 
 int main()
 {
-	//Initialisation of glfw
+	//Initialisation of GLFW
     glfwInit();
 	//Initialisation of 'GLFWwindow' object
     GLFWwindow* window = glfwCreateWindow(1280, 720, "Lab5", NULL, NULL);
@@ -95,133 +96,121 @@ int main()
 }
 ```
 
-### GLEW
-**CPP**
-```c++
-glewInit();
-```
+#### GLEW
+In order to render to the newly instantiated window, we need to set the GLEW viewport dimensions within the window. To do this, GLEW must first be initialised with the ```glewInit()``` function. Next, the viewport dimensions can be defined with the ```glViewport()``` function; the first two parameters specify the position of the window & the last two parameters specify the dimensions:
 
-### Viewport
-#### Size
 **CPP**
 ```c++
+//Initialisation of GLEW
+glewInit();
+
+//Sets the viewport size within the window to match the window size of 1280x720
 glViewport(0, 0, 1280, 720);
 ```
 
-#### Resizing
+#### Dynamic Window Dimensions
+The window's rendering dimensions currently cannot be modified during runtime, which means expanding & contracting the window will produce odd results. In order to allow for dynamic adjustment, the function ```framebuffer_size_callback()``` needs to be created. After this, the function needs to be set as the callback for the GLFW window resizing event with the ```glfwSetFramebufferSizeCallback()``` function. The first parameter is the window & the second is the function to call on a window resize:
+
 **Header**
 ```c++
 #pragma once
 
-//framebuffer_size_callback() needs GLFW, so include moved here
+//framebuffer_size_callback() needs GlFW, so include moved here
 #include <GLFW/glfw3.h>
 
+//Called on window resize
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-```
-
-**CPP**
-```c++
-//STD
-#include <iostream>
-
-//GLAD
-#include <glad/glad.h>
-
-#include "main.h"
-
-using namespace std;
-
-int main()
-{
-	glfwInit();
-
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	GLFWwindow* window = glfwCreateWindow(1280, 720, "Lab5", NULL, NULL);
-
-	if (window == NULL)
-	{
-		cout << "GLFW Window did not instantiate\n";
-		glfwTerminate();
-		return -1;
-	}
-
-	glfwMakeContextCurrent(window);
-
-	glewInit();
-
-	glViewport(0, 0, 1280, 720);
-
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-	return 0;
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
-```
-
-### Render Loop
-**CPP**
-```c++
-while (glfwWindowShouldClose(window) == false)
-{
-	glfwSwapBuffers(window);
-	glfwPollEvents();
-}
-
-glfwTerminate();
-```
-
-### Input
-**Header**
-```c++
-void processInput(GLFWwindow* window);
 ```
 
 **CPP main()**
 ```c++
+//Sets the framebuffer_size_callback() function as the callback for the window resizing event
+glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+```
+
+**CPP framebuffer_size_callback()**
+```c++
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    //Resizes window based on contemporary width & height values
+    glViewport(0, 0, width, height);
+}
+```
+
+### Render Loop
+In order to prevent the program from closing immediately & to allow for perpetual rendering, we need to create the render loop. In order to do this, we check if the window is set to close with the ```glfwWindowShouldClose() function```. This becomes true when the ```x``` button at the top right of the window is clicked.
+
+Inside of the render loop, the ```glfwSwapBuffers()``` function is called in order to perpetually swap the colour buffer being rendered to the window. The colour buffer is a 2-dimensional buffer that contains colour values per pixel for the window it is dedicated to rendering to. The ```glfwPollEvents()``` function queries for whether any GLFW events have been triggered, such as the ```framebuffer_size_callback()``` function.
+
+Lastly, once the render loop is exited, the ```glfwTerminate()``` function is called in order to terminate GLFW safely:
+
+**CPP**
+```c++
+//Render loop
 while (glfwWindowShouldClose(window) == false)
 {
-    //Input
-	processInput(window);
+	glfwSwapBuffers(window); //Swaps the colour buffer
+	glfwPollEvents(); //Queries all GLFW events
+}
 
-    //Refreshing
-	glfwSwapBuffers(window);
-	glfwPollEvents();
+//Safely terminates GLFW
+glfwTerminate();
+```
+
+### Input
+In order to take & process user input, we need to create a ```ProcessUserInput()``` function. This function needs to take in a ```GLFWwindow``` object pointer in order to acquire the input that was applied to said window. The ```glfwGetKey()``` function can be used to check if a key was interacted with within a window's context. We want to check if a key was pressed with ```GLFW_PRESS``` & that the key in question is the escape key, so in this case we check for ```GLFW_KEY_ESCAPE```. In order to perpetually check for user input, the ```ProcessUserInput()``` function needs to be called within the render loop:
+
+
+**Header**
+```c++
+//Processes user input on a particular window
+void ProcessUserInput(GLFWwindow* WindowIn);
+```
+
+**CPP main()**
+```c++
+//Render loop
+while (glfwWindowShouldClose(window) == false)
+{
+	//Input
+    ProcessUserInput(window); //Takes user input
+
+	//Refreshing
+    glfwSwapBuffers(window); //Swaps the colour buffer
+    glfwPollEvents(); //Queries all GLFW events
 }
 ```
 
 **CPP processInput()**
 ```c++
-void processInput(GLFWwindow* window)
+void ProcessUserInput(GLFWwindow* WindowIn)
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    //Closes window on 'exit' key press
+	if (glfwGetKey(WindowIn, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
-		glfwSetWindowShouldClose(window, true);
+		glfwSetWindowShouldClose(WindowIn, true);
 	}
 }
 ```
 
 ### Rendering
+We are able to render a colour to the window by clearing the window's colour buffer & setting a default colour. In order to do this, within the render loop we need to first call the ```glClearColor()``` function in order to specify the colour to default to. The parameters are RGBA; red, green, blue & alpha. For clarification on what 'alpha' refers to, that is transparency, so a value of ```1.0f``` would set the screen to be entirely opaque. Lastly, the ```glClear()``` functions must be called in order to clear a specific window buffer. We need to clear the colour buffer, so the function's parameter needs to be set to ```GL_COLOR_BUFFER_BIT```:
+
 **CPP**
 ```c++
+//Render loop
 while (glfwWindowShouldClose(window) == false)
 {
-	//Input
-	processInput(window);
+    //Input
+    ProcessUserInput(window); //Takes user input
 
-	//Rendering
-	glClearColor(0.25f, 0.0f, 1.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+    //Rendering
+    glClearColor(0.25f, 0.0f, 1.0f, 1.0f); //Colour to display on cleared window
+    glClear(GL_COLOR_BUFFER_BIT); //Clears the colour buffer
 
-	//Refreshing
-	glfwSwapBuffers(window);
-	glfwPollEvents();
+    //Refreshing
+    glfwSwapBuffers(window); //Swaps the colour buffer
+    glfwPollEvents(); //Queries all GLFW events
 }
 ```
 
