@@ -7,14 +7,14 @@ OpenGL is limited only to rendering, providing no features such as input, audio 
 A good resource for learning OpenGL is [LearnOpenGL](https://learnopengl.com/Introduction). The LearnOpenGL material will bare similarity to the material in these labs, however different libraries are used, so proceed with caution.
 
 ## Setup
-### OpenGL
-It should not be necessary to install OpenGL, since it comes preinstalled on Windows, MacOS & Linux. However, if there are issues with OpenGL drivers, the [OpenGL Getting Started](https://www.khronos.org/opengl/wiki/Getting_Started) page will direct to the appropriate graphics driver sites. However, you must ensure that Visual Studio can locate OpenGL on your computer & therefore you must add it as an additional dependency.
-
-In Visual Studio, right click your project file, select `Properties`, unfold `Linker`, select `Input` & edit `Additional Dependencies` by adding `opengl32.lib`.
-
 ### Project
 #### Prerequisites
 In Visual Studio, create an `Empty Project` that uses C++. Next, create a new file named main.cpp in the `Source Files` filter. For GLSL shader functionality, you will also need to acquire the `LoadShaders` header & cpp files from [Files](/Lab5/Files/). Once they have been downloaded, right click your project file in the `Solution Explorer` & select `Open folder in File Explorer`. Create a new folder named 'shaders' & place the `LoadShaders` header & cpp files inside it. Next, go back to Visual Studio, right click the project file, select `Add` & then select `New Filter`. Name this filter `shaders`. Lastly, right click the `shaders` filter, hover over `Add` & select `Existing Item`. In the popup window, navigate to both of the `LoadShaders` files & select them.
+
+#### OpenGL
+It should not be necessary to install OpenGL, since it comes preinstalled on Windows, MacOS & Linux. However, if there are issues with OpenGL drivers, the [OpenGL Getting Started](https://www.khronos.org/opengl/wiki/Getting_Started) page will direct to the appropriate graphics driver sites.
+
+In order to use OpenGL, you must ensure that Visual Studio can locate OpenGL on your computer & therefore you must add it as an additional dependency. In Visual Studio, right click your project file, select `Properties`, unfold `Linker`, select `Input` & edit `Additional Dependencies` by adding `opengl32.lib`.
 
 #### Linking
 Library & include files that will be downloaded in this lab will need to be placed in a new subfolder in the `C:\Users\Public` directory. Create a folder in this directory named `OpenGL` & inside this folder create two folders named `include` & `lib`.
@@ -38,7 +38,7 @@ GLEW is an extension loading library. It provides checks to determine what exten
 ##### Extraction
 Once you have downloaded GLEW, navigate to your `Downloads` folder. Open the `include` folder & move the `GL` folder into your `C:\Users\Public\OpenGL\include` directory. Additionally, in the GLEW folder, navigate to the `Release/x64` folder & move the files into the `C:\Users\Public\OpenGL\lib` directory. Then, in the GLEW folder, navigate to `bin/Release/x64` & move the `glew32.dll` file into your Visual Studio project's directory where your `main.cpp` file is located.
 
-In Visual Studio, right click your project file, select `Properties`, unfold `Linker`, select `Input` & edit `Additional Dependencies` by adding `glew32.lib` & `glew32s.lib`. Lastly, in your Visual Studio Project's main.cpp file, add the ```#include <GL/glew.h>``` include. If Visual Studio fails to retrieve `glew.h`, then something has gone wrong in any of the aforementioned processes.
+In Visual Studio, right click your project file, select `Properties`, unfold `Linker`, select `Input` & edit `Additional Dependencies` by adding `glew32.lib` & `glew32s.lib`. Lastly, in your Visual Studio Project's main.cpp file, add the ```#include <GL/glew.h>``` include. In this instance, make sure that the ```#include``` is located above all other OpenGL related includes, since GLEW must run before all other OpenGL related libraries. If Visual Studio fails to retrieve `glew.h`, then something has gone wrong in any of the aforementioned processes.
 
 #### GLAD Alternative to GLEW
 ##### Overview
@@ -49,7 +49,7 @@ GLAD can be downloaded from the [GLAD Loader-Generator Web Service](https://glad
 
 In the `Downloads` folder, open the `glad` folder & navigate to the `include` subfolder. Move both the internal `glad` & `KHR` folders to the `C:\Users\Public\OpenGL\include` folder. Then, in the `glad` folder's `lib` folder, move the `glad.c` file into your Visual Studio Project's project directory where your `main.cpp` file is located.
 
-In your `main.cpp` file, add the ```//#include <glad/glad.h>``` include. If Visual Studio fails to retrieve `glad.h`, then something has gone wrong in any of the aforementioned processes.
+In your `main.cpp` file, add the ```//#include <glad/glad.h>``` include. Like with GLEW, make sure that the ```#include``` is located above all other OpenGL related includes, since GLAD must run before all other OpenGL related libraries. If Visual Studio fails to retrieve `glad.h`, then something has gone wrong in any of the aforementioned processes.
 
 #### OpenGL Mathematics (GLM)
 The GLM library provides extended mathematics for OpenGL. GLM's functions also follow the same naming conventions & functionality as GLSL. While GLM is specifically intended for use with OpenGL, it is also able to be utilised with other third parties.
@@ -58,41 +58,41 @@ Navigate to the [GLM Repository](https://github.com/g-truc/glm) & download the l
 
 ## Initialisation
 ### GLFW
+In order to begin, a window must be instantiated. Since GLFW will be used for this, it must be initialised with `glfwInit()`. Then, to instantiate a window, the ```GLFWwindow``` object is initialised with the `glfwCreateWindow()` constructor. The dimensions in the following example are 1280x720 & the name of the window is `Lab5`. The fourth parameter specifies which window to fullscreen on & the last parameter specifies which window's context to share resources with. These last two parameters can be kept as `NULL`. ```window``` is then checked to see if it has been successfully instantiated & if so ```glfwMakeContextCurrent()``` is called to bind OpenGL to the window:
+
 **CPP**
 ```c++
-//GLAD
-#include <glad/glad.h>
+//STD
+#include <iostream>
+
+//GLEW
+#include <GL/glew.h>
 
 //GLFW
 #include <GLFW/glfw3.h>
 
+using namespace std;
+
 int main()
 {
-	glfwInit();
+	//Initialisation of glfw
+    glfwInit();
+	//Initialisation of 'GLFWwindow' object
+    GLFWwindow* window = glfwCreateWindow(1280, 720, "Lab5", NULL, NULL);
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	//Checks if window has been successfully instantiated
+    if (window == NULL)
+    {
+        cout << "GLFW Window did not instantiate\n";
+        glfwTerminate();
+        return -1;
+    }
 
-	return 0;
+	//Binds OpenGL to window
+    glfwMakeContextCurrent(window);
+
+    return 0;
 }
-```
-
-### Window
-**CPP**
-```c++
-GLFWwindow* window = glfwCreateWindow(1280, 720, "Lab5", NULL, NULL);
-
-if (window == NULL)
-{
-    cout << "GLFW Window did not instantiate\n";
-    glfwTerminate();
-    return -1;
-}
-
-glfwMakeContextCurrent(window);
-
-return 0;
 ```
 
 ### GLEW
