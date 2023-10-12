@@ -56,7 +56,7 @@ int main()
 		}
 		else if (action == "Block")
 		{
-			if (weaponType == "Battleaxe")
+			if (weaponType == "Sword")
 			{
 				if (NewSword->Block() == true)
 				{
