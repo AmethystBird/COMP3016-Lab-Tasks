@@ -250,7 +250,11 @@ bool Battleaxe::Block(Enemy* EnemyIn)
 	else if (success > 0 && success < 2)
 	{
 		cout << "Successfully blocked attack!\n";
-		Weapon::Block();
+		
+		if (Weapon::Block())
+		{
+			return true;
+		}
 	}
 	else
 	{
