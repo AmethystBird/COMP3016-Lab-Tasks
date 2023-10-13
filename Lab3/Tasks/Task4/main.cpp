@@ -56,7 +56,7 @@ int main()
 		}
 		else if (action == "Block")
 		{
-			if (weaponType == "Battleaxe")
+			if (weaponType == "Sword")
 			{
 				if (NewSword->Block() == true)
 				{
@@ -250,7 +250,11 @@ bool Battleaxe::Block(Enemy* EnemyIn)
 	else if (success > 0 && success < 2)
 	{
 		cout << "Successfully blocked attack!\n";
-		Weapon::Block();
+		
+		if (Weapon::Block())
+		{
+			return true;
+		}
 	}
 	else
 	{

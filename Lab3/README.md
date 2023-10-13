@@ -376,5 +376,3 @@ void Base::Hello()
 	cout << "Hello! " << "my name is " << name << "\n";
 }
 ```
-
-## Interfaces
