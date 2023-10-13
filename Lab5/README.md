@@ -215,34 +215,60 @@ while (glfwWindowShouldClose(window) == false)
 ```
 
 ## Drawing
+### Overview
+From a high level perspective, there are 3 stages that must take place in order to render objects in 3D space to a window.
+- The instantiation of spacial information in C++ | CPU
+- The transition of data from the CPU to the GPU with OpenGL | CPU -->> GPU
+- The rendering stage with GLSL (OpenGL Shading Language) | GPU
+
 ### CPU Instantiation
-**CPP Render**
+First, we must instantiate any coordinates in C++ that will ultimately be rendered to a window in some form. These coordinates must be contained within floating point arrays. For this reason, at this stage it is ambiguous as to what these coordinates relate to. Their purpose is only defined upon being converted into vertex buffer objects (VBOs). The coordinates in question could be manifested as the vertices of an object, its colours or other things. To keep things simple, we are only going to be instantiating the vertices at this stage:
+
+**CPP**
 
 Below ```glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);``` vv
 ```c++
 float vertices[] = {
-	-0.5f, -0.5f, 0.0f,
-	0.5f, -0.5f, 0.0f,
-	0.0f, 0.5f, 0.0f
+	-0.5f, -0.5f, 0.0f, //pos 0 | x, y, z
+	0.5f, -0.5f, 0.0f, //pos 1
+	0.0f, 0.5f, 0.0f //pos 2
 };
 ```
 Above ```while (glfwWindowShouldClose(window) == false)``` ^^
 
 ### CPU-GPU Conversion
 #### Vertex Buffer Objects
+The vertices array is currently mapped to CPU memory, as opposed to GPU memory. For this reason, we need to convert the vertices array into OpenGL vertex buffer objects (VBOs) so that they can be sent to the GPU. VBOs are able to store a large number of vertices, which allows for a significant amount of data to be sent to the GPU at once. This is beneficial as this reduces the relatively significant bottleneck of transitioning CPU memory to GPU memory.
+
+First, a VBO must be created & assigned a buffer index with the ```glGenBuffers()``` function. Next, the ```glBindBuffer()``` function must be called in order to determine what buffer to assign the VBO to. In this case, we want to assign it to the ```GL_ARRAY_BUFFER```, since this is the buffer that contains vertices, as opposed say to colours. Then, we need to allocate memory for the vertices that we have sent to the VBO, which we do with the ```glBufferData()``` function:
+
 **CPP**
-
-Below ```float vertices[]``` vv
 ```c++
+//Declaration of index of VBO
 unsigned int vertexBufferObject;
+//Sets index of VBO
 glGenBuffers(1, &vertexBufferObject);
+//Binds VBO to array buffer for drawing vertices
 glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
+//Allocates buffer memory for the vertices
 glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+```
 
+Lastly, we need to give our vertex shader on the GPU access to the VBO. In order to do this, we need to assign memory for a vertex attribute pointer on the GPU with the ```glVertexAttribPointer()``` function. There are many parameters that this function needs to take:
+- #1: Vertex attribute index
+- #2: Vertex attribute size, which equates to the size of one element of the vertices array
+- #3: Type of data, so a float
+- #4: Whether to normalise the data; this can be useful for integers, but not for floats
+- #5: The stride, which determines the space between each vertex attribute; in our case the size of 3 floating point numbers
+- #6: The offset of where the coordinate data should begin in the buffer; position 0 is the start of the VBO
+
+**CPP**
+```c++
+//Allocates vertex attribute memory for vertex shader
 glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+//Index of vertex attribute for vertex shader
 glEnableVertexAttribArray(0);
 ```
-Above ```while (glfwWindowShouldClose(window) == false)``` ^^
 
 #### Vertex Array Objects
 **CPP Globals**
