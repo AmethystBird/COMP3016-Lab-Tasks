@@ -4,7 +4,7 @@ OpenGL is a cross-platform application programming interface (API) specification
 
 OpenGL is limited only to rendering, providing no features such as input, audio or even the ability to utilise a window to render to. For this reason, additional libraries will be needed in this lab. The download process for them is detailed in the [Setup](#Setup) section.
 
-A good resource for learning OpenGL is [LearnOpenGL](https://learnopengl.com/Introduction). The LearnOpenGL material will bare similarity to the material in these labs, however different libraries are used, so proceed with caution.
+A good resource for learning OpenGL is [LearnOpenGL](https://learnopengl.com/Introduction). The LearnOpenGL material will bare similarity to the material in these labs, however not all libraries used are the same, so proceed with caution.
 
 ## Setup
 ### Project
@@ -59,17 +59,17 @@ In Visual Studio, right click your project file, select `Properties`, unfold `Li
 
 #### GLAD Alternative to GLEW
 ##### Overview
-In the [LearnOpenGL](https://learnopengl.com/Introduction) tutorial, the GLAD library is used as opposed to GLEW. If you are following the LearnOpenGL material, **you may wish to use GLAD, however I do not recommend this** either way, since this will require one to follow LearnOpenGL's error-prone system of implementing GLSL shaders into projects, which are needed at a basic level in this module & as the focus of the COMP3015 module. The `LoadShaders` header & cpp files in [Files](/Lab5/Files/) use GLEW & will allow for easier implementing of GLSL shaders. If you still wish to use GLAD, the process of retrieval is still available below.
+In the [LearnOpenGL](https://learnopengl.com/Introduction) tutorial, the GLAD library is used as opposed to GLEW. If you are following the LearnOpenGL material, **you may wish to use GLAD, however I do not recommend this** even if you are following said tutorial. This is because GLAD will require one to follow LearnOpenGL's error-prone system of implementing GLSL shaders into projects, which are needed at a basic level in this module & are the focus of the succeeding COMP3015 module. The `LoadShaders` header & cpp files in [Files](/Lab5/Files/) use GLEW & will allow for easier implementing of GLSL shaders. If you still wish to use GLAD, the process of retrieval is still available below.
 
 ##### Retrieval
 GLAD can be downloaded from the [GLAD Loader-Generator Web Service](https://glad.dav1d.de/) in multiple different forms depending upon the individual's requirements. If one is to use GLAD for this lab, set the `Language` to `C++`, the `gl` to an OpenGL version of at least `Version 3.3` & lastly set the `Profile` to `Core`.
 
 In the `Downloads` folder, open the `glad` folder & navigate to the `include` subfolder. Move both the internal `glad` & `KHR` folders to the `C:\Users\Public\OpenGL\include` folder. Then, in the `glad` folder's `lib` folder, move the `glad.c` file into your Visual Studio Project's project directory where your `main.cpp` file is located.
 
-In your `main.cpp` file, add the ```//#include <glad/glad.h>``` include. Like with GLEW, make sure that the ```#include``` is located above all other OpenGL related includes, since GLAD must run before all other OpenGL related libraries. If Visual Studio fails to retrieve `glad.h`, then something has gone wrong in any of the aforementioned processes.
+In your `main.cpp` file, add the ```#include <glad/glad.h>``` include. Like with GLEW, make sure that the ```#include``` is located above all other OpenGL related includes, since GLAD must run before all other OpenGL related libraries. If Visual Studio fails to retrieve `glad.h`, then something has gone wrong in any of the aforementioned processes.
 
 #### OpenGL Mathematics (GLM)
-The GLM library provides extended mathematics for OpenGL. GLM's functions also follow the same naming conventions & functionality as GLSL. While GLM is specifically intended for use with OpenGL, it is also able to be utilised with other third parties.
+The GLM library provides extended mathematics for OpenGL. GLM's functions also follow the same naming conventions & functionality as GLSL. While GLM is specifically intended for use with OpenGL, it is also able to be utilised elsewhere.
 
 Navigate to the [GLM Repository](https://github.com/g-truc/glm) & download the latest release in zip format. In the `Downloads` folder, open the `glm` folder & move the internal `glm` folder to the `C:\Users\Public\OpenGL\include` include directory. No glm ```#include``` directives are needed in your Visual Studio project for this lab. It will be specified as to whether you require them in future labs.
 
@@ -78,7 +78,7 @@ Navigate to the [GLM Repository](https://github.com/g-truc/glm) & download the l
 ## Initialisation
 ### Window
 #### GLFW
-In order to begin, a window must be instantiated. Since GLFW will be used for this, it must be initialised with `glfwInit()`. Then, to instantiate a window, the ```GLFWwindow``` object is initialised with the `glfwCreateWindow()` constructor. The dimensions in the following example are 1280x720 & the name of the window is `Lab5`. The fourth parameter specifies which monitor to fullscreen on & the last parameter specifies which window's context to share resources with. These last two parameters can be kept as `NULL`. ```window``` is then checked to see if it has been successfully instantiated & if so ```glfwMakeContextCurrent()``` is called to bind OpenGL to the window:
+In order to begin, a window must be instantiated. Since GLFW will be used for this, it must be initialised with `glfwInit()`. Then, to instantiate a window, the ```GLFWwindow``` object is initialised with the `glfwCreateWindow()` constructor. The dimensions in the following example are 1280x720 & the name of the window is `Lab5`. The fourth parameter specifies which monitor to fullscreen on & the last parameter specifies which window's context to share resources with. These last two parameters do not need to be manually specified & therefore both can be set to `NULL`. ```window``` is then checked to see if it has been successfully instantiated & if so ```glfwMakeContextCurrent()``` is called to bind OpenGL to the window:
 
 **CPP**
 ```c++
@@ -237,7 +237,7 @@ while (glfwWindowShouldClose(window) == false)
 ### Overview
 From a high level perspective, there are 3 stages that must take place in order to render objects in 3D space to a window.
 - The instantiation of spacial information in C++ | CPU
-- The transition of data from the CPU to the GPU with OpenGL | CPU -->> GPU
+- The transition of data to the shader with OpenGL | CPU -->> GPU
 - The rendering stage with GLSL (OpenGL Shading Language) | GPU
 
 ### CPU Instantiation
@@ -273,12 +273,12 @@ glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 ```
 
-Lastly, we need to give our vertex shader on the GPU access to the VBO. In order to do this, we need to assign memory for a vertex attribute pointer on the GPU with the ```glVertexAttribPointer()``` function. There are many parameters that this function needs to take:
+Lastly, we need to give our vertex shader on the GPU access to the VBO. In order to do this, we need to assign memory for a vertex attribute array that will be sent to the GPU. This is done with the ```glVertexAttribPointer()``` function. There are many parameters that this function needs to take:
 - #1: Vertex attribute index
 - #2: Vertex attribute size, which equates to the size of one element of the vertices array
 - #3: Type of data, so a float
 - #4: Whether to normalise the data; this can be useful for integers, but not for floats
-- #5: The stride, which determines the space between each vertex attribute; in our case the size of 3 floating point numbers
+- #5: The stride, which determines the space between each vertex attribute in the array; in our case the size of 3 floating point numbers
 - #6: The offset of where the coordinate data should begin in the buffer; position 0 is the start of the VBO
 
 **CPP**
@@ -307,7 +307,7 @@ enum Buffer_IDs { ArrayBuffer, NumBuffers = 4 };
 GLuint Buffers[NumBuffers];
 ```
 
-The setup process for VAOs is similar to VBOs. First, we call ```glGenVertexArrays()``` in order to setup the VAO. Next, we call the ```glBindVertexArray()``` function to bind the VAO to OpenGL & lastly we index our buffer objects against our buffer wit hthe ```glGenBuffers()``` function.
+The setup process for VAOs is similar to VBOs. First, we call ```glGenVertexArrays()``` in order to setup the VAO. Next, we call the ```glBindVertexArray()``` function to bind the VAO to OpenGL & lastly we index our buffer objects against our buffer with the ```glGenBuffers()``` function.
 
 In order to setup the desired VBO within our VAO, we have to call ```glBindBuffer()``` & in this case access the ```Triangles``` buffer object. Then, like before we allocate memory to the VBO based on the vertices array, setup our vertex attribute array & lastly unbind our VAO & VBO:
 
@@ -373,11 +373,11 @@ Shaders do not run serially as most code would on a CPU. Instead, many instances
 Open our vertex shader. Shaders are written in GLSL, the syntax of which is based on the C programming language, therefore also baring a resemblance to C++. Note that Visual Studio does not support GLSL syntax highlighting by default, however there are extensions for this. Regardless, it is easy to install GLSL syntax highlighting extensions within Visual Studio Code, so it may be beneficial to use Visual Studio Code for GLSL.
 
 #### Vertex Shader
-The vertex shader determines all the positions of the vertices of an object. Therefore, each instance of a running vertex shader correspondents to one particular vertice. To get started, first we should specify our GLSL version at the top of the file.
+The vertex shader determines all the positions of the vertices of an object. Therefore, each instance of a running vertex shader is responsible for one particular vertice. To get started, first we should specify our GLSL version at the top of the file.
 
 Notice the type of our variable ```position```. The ```layout``` qualifier allows for a variable's value to be either retrieved from the stage coming before (as with the use of ```in```), or to be sent to the stage coming after (with the use of ```out```). This can be done throughout the graphics pipeline's stages that we have access to. However, since the vertex shader is the first stage of the pipeline, we are also able to retrieve code from the CPU, as this comes directly before the vertex shader runs. This is what we are doing in this instance.
 
-The ```location``` determines an index for our vertex shader variable ```position``` that an equivalent vertex attribute variable generated on the CPU is expected to match. The index is 0, as we set the vertex attribute index to be 0 as the first parameter of the ```glVertexAttribPointer()``` function in [Vertex Buffer Objects](#vertex-buffer-objects). Lastly, ```vec3``` is the actual type of the variable, which is a 3-dimensional vector:
+The ```location``` determines an index for our vertex shader variable ```position``` that an equivalent vertex attribute variable generated on the CPU is expected to match. The index is 0, as we set the vertex attribute index to be 0 through the first parameter of the ```glVertexAttribPointer()``` function in the [Vertex Buffer Objects](#vertex-buffer-objects) section. Lastly, ```vec3``` is the actual type of the variable, which is a 3-dimensional vector:
 
 **Globals**
 ```GLSL
@@ -386,29 +386,31 @@ The ```location``` determines an index for our vertex shader variable ```positio
 layout (location = 0) in vec3 position;
 ```
 
-We need a ```main()``` function within the vertex shader in order to automatically allow the shader to be run. The ```gl_Position``` variable is predefined & is used to set the shader's output. This is automatically sent to the next stage of the graphics pipeline. The input we need to give ```gl_Position``` is the ```position``` variable's x, y & z values. An alpha value is also necessary for transparency. We are going to be rendering an opaque triangle, so we need to set the value to ```1.0```:
+We need a ```main()``` function within the vertex shader in order to automatically allow the shader to be run. The ```gl_Position``` variable is predefined & is used to set the shader's output. This is automatically sent to the next stage of the graphics pipeline. The input we need to give ```gl_Position``` is the ```position``` variable's x, y & z values. We also need to provide the w value as the fourth parameter, which in this case will be hardcoded as opposed to provided by the ```position``` variable. The w value is used for perspective division, which is not discussed in this lab:
 
 **main()**
 ```GLSL
 void main()
 {
-    //Triangle vertices sent through gl_Position to next stage
+    //Triangle vertice sent through gl_Position to next stage
     gl_Position = vec4(position.x, position.y, position.z, 1.0);
 }
 ```
 
 #### Fragment Shader
-The fragment shader is responsible for mapping the correct colours to the correct pixels. Therefore, each instance of a running fragment shader is responsible for one pixel & its specific colour.
+The fragment shader is responsible for mapping the correct colours to the correct pixels after rasterisation has taken place. Therefore, each instance of a running fragment shader is responsible for one pixel & its specific colour.
 
-In order to make use of the fragment shader, we need to create a variable named ```FragColor```. This variable will be outputted to the next stage of the graphics pipeline, therefore we need to specify ```out``` behind it. The next stage will expect it to contain four float values, therefore we need its type to be ```vec4```. Within the ```main()``` function, we are simply going to specify our RGBA values. The colour set in the code below should create a white triangle:
+In order to make use of the fragment shader, we need to create a variable named ```FragColor```. This variable will be outputted to the next stage of the graphics pipeline, therefore we need to specify ```out``` behind its type. The next stage will expect it to contain four float values, therefore we need its type to be ```vec4```. Within the ```main()``` function, we are simply going to specify our RGBA values. The colour set in the code below should always be white:
 
 **fragmentShader.vert**
 ```GLSL
 #version 460
+//Colour value to send to next stage
 out vec4 FragColor;
 
 void main()
 {
+    //RGBA values
     FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 ```
