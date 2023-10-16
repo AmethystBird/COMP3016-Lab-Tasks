@@ -349,15 +349,16 @@ Above ```glViewport(0, 0, 1280, 720);``` ^^
 
 ### GPU
 #### Overview
-Text
-#### Vertex Shader
+Shaders do not run serially as most code would on a CPU. Instead, many instances of them run in parallel on the GPU. However, while each instance of a particular type of shader shares the same logic, they do not necessarily share the same values. Each shader running on the GPU is responsible for one component of a stage of the rendering process.
+
 Open our vertex shader. Shaders are written in GLSL, the syntax of which is based on the C programming language, therefore also baring a resemblance to C++. Note that Visual Studio does not support GLSL syntax highlighting by default, however there are extensions for this. Regardless, it is easy to install GLSL syntax highlighting extensions within Visual Studio Code, so it may be beneficial to use Visual Studio Code for GLSL.
 
-The vertex shader determines all the positions of the vertices of an object. Notice the type of our variable ```position```. The ```layout``` qualifier allows for a variable's value to be either retrieved from the stage coming before (as with the use of ```in```), or to be sent to the stage coming after (with the use of ```out```). This can be done throughout the graphics pipeline's stages that we have access to. However, since the vertex shader is the first stage of the pipeline, we are also able to retrieve code from the CPU, as this comes directly before the vertex shader runs. This is what we are doing in this instance.
+#### Vertex Shader
+The vertex shader determines all the positions of the vertices of an object. Therefore, each instance of a running vertex shader correspondents to one particular vertice. To get started, first we should specify our GLSL version at the top of the file.
 
-The ```location``` determines an index for our vertex shader variable ```position``` that an equivalent vertex attribute variable generated on the CPU is expected to match. The index is 0, as we set the vertex attribute index to be 0 as the first parameter of the ```glVertexAttribPointer()``` function in [Vertex Buffer Objects](#vertex-buffer-objects).
+Notice the type of our variable ```position```. The ```layout``` qualifier allows for a variable's value to be either retrieved from the stage coming before (as with the use of ```in```), or to be sent to the stage coming after (with the use of ```out```). This can be done throughout the graphics pipeline's stages that we have access to. However, since the vertex shader is the first stage of the pipeline, we are also able to retrieve code from the CPU, as this comes directly before the vertex shader runs. This is what we are doing in this instance.
 
-Lastly, ```vec3``` is the actual type of the variable, which is a 3-dimensional vector. Also notice that above the ```position``` variable, we specify our GLSL version.
+The ```location``` determines an index for our vertex shader variable ```position``` that an equivalent vertex attribute variable generated on the CPU is expected to match. The index is 0, as we set the vertex attribute index to be 0 as the first parameter of the ```glVertexAttribPointer()``` function in [Vertex Buffer Objects](#vertex-buffer-objects). Lastly, ```vec3``` is the actual type of the variable, which is a 3-dimensional vector:
 
 **Globals**
 ```GLSL
@@ -378,7 +379,9 @@ void main()
 ```
 
 #### Fragment Shader
-The we need to create a variable named ```FragColor```. This variable will be outputted to the next stage of the graphics pipeline, therefore we need to specify ```out``` behind it. The next stage will expect it to contain four float values, therefore we need its type to be ```vec4```. Within the ```main()``` function, we are simply going to specify our RGBA values. The colour set in the code below should create a white triangle:
+The fragment shader is responsible for mapping the correct colours to the correct pixels. Therefore, each instance of a running fragment shader is responsible for one pixel & its specific colour.
+
+In order to make use of the fragment shader, we need to create a variable named ```FragColor```. This variable will be outputted to the next stage of the graphics pipeline, therefore we need to specify ```out``` behind it. The next stage will expect it to contain four float values, therefore we need its type to be ```vec4```. Within the ```main()``` function, we are simply going to specify our RGBA values. The colour set in the code below should create a white triangle:
 
 **fragmentShader.vert**
 ```GLSL
