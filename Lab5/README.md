@@ -316,8 +316,7 @@ glBindVertexArray(0);
 glBindBuffer(GL_ARRAY_BUFFER, 0);
 ```
 
-### GPU
-#### Retrieval
+#### Shader Retrieval
 In order to render our attribute arrays to a window, we need to send them through the OpenGL Graphics Pipeline. Depending upon the stage in the pipeline, we ourselves either cannot implement, have the option to, or must implement how the rendering is achieved. The stages that we need to implement are the vertex & fragment shaders.
 
 In order to do this, we need to create two files, which we will place inside the `shaders` folder & Visual Studio `shaders` filter. They will be named `vertexShader.vert` & `fragmentShader.frag`, however the names & extensions can be anything.
@@ -348,12 +347,17 @@ glUseProgram(program);
 ```
 Above ```glViewport(0, 0, 1280, 720);``` ^^
 
+### GPU
+#### Overview
+Text
 #### Vertex Shader
 Open our vertex shader. Shaders are written in GLSL, the syntax of which is based on the C programming language, therefore also baring a resemblance to C++. Note that Visual Studio does not support GLSL syntax highlighting by default, however there are extensions for this. Regardless, it is easy to install GLSL syntax highlighting extensions within Visual Studio Code, so it may be beneficial to use Visual Studio Code for GLSL.
 
 The vertex shader determines all the positions of the vertices of an object. Notice the type of our variable ```position```. The ```layout``` qualifier allows for a variable's value to be either retrieved from the stage coming before (as with the use of ```in```), or to be sent to the stage coming after (with the use of ```out```). This can be done throughout the graphics pipeline's stages that we have access to. However, since the vertex shader is the first stage of the pipeline, we are also able to retrieve code from the CPU, as this comes directly before the vertex shader runs. This is what we are doing in this instance.
 
-The ```location``` determines an index for our vertex shader variable ```position``` that an equivalent variable on the CPU is expected to match. ```vec3``` is the actual type of the variable, which is a 3-dimensional vector. Also notice that above the ```position``` variable, we specify our GLSL version.
+The ```location``` determines an index for our vertex shader variable ```position``` that an equivalent vertex attribute variable generated on the CPU is expected to match. The index is 0, as we set the vertex attribute index to be 0 as the first parameter of the ```glVertexAttribPointer()``` function in [Vertex Buffer Objects](#vertex-buffer-objects).
+
+Lastly, ```vec3``` is the actual type of the variable, which is a 3-dimensional vector. Also notice that above the ```position``` variable, we specify our GLSL version.
 
 **Globals**
 ```GLSL
@@ -374,6 +378,8 @@ void main()
 ```
 
 #### Fragment Shader
+The we need to create a variable named ```FragColor```. This variable will be outputted to the next stage of the graphics pipeline, therefore we need to specify ```out``` behind it. The next stage will expect it to contain four float values, therefore we need its type to be ```vec4```. Within the ```main()``` function, we are simply going to specify our RGBA values. The colour set in the code below should create a white triangle:
+
 **fragmentShader.vert**
 ```GLSL
 #version 460
@@ -384,3 +390,27 @@ void main()
     FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 ```
+
+Lastly, in our `main.cpp` file, we need to call two functions within the render loop in order to state that we wish to draw to the window. The first function is the ```glBindVertexArray()``` function, which determines which vertex array we wish to bind to & therefore are able to draw. In order to draw our triangle, we call the ```glDrawArrays()``` function. We specify ```GL_TRIANGLES``` so that our vertices are able to connect & for a surface to be drawn within them. For example, as opposed to a wireframe. The next parameter is the starting index & the last parameter is the amount of vertices to render. Make sure that the last parameter is set to at least the amount we need to render.
+
+```c++
+//Render loop
+while (glfwWindowShouldClose(window) == false)
+{
+    //Input
+    ProcessUserInput(window); //Takes user input
+
+    //Rendering
+    glClearColor(0.25f, 0.0f, 1.0f, 1.0f); //Colour to display on cleared window
+    glClear(GL_COLOR_BUFFER_BIT); //Clears the colour buffer
+
+    glBindVertexArray(VAOs[0]); //Bind buffer object to render
+    glDrawArrays(GL_TRIANGLES, 0, 3); //Render buffer object
+
+    //Refreshing
+    glfwSwapBuffers(window); //Swaps the colour buffer
+    glfwPollEvents(); //Queries all GLFW events
+}
+```
+
+Now, you should be able to run your program & an indigo background with a white triangle should appear!
