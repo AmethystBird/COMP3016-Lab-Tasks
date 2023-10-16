@@ -375,9 +375,11 @@ Open our vertex shader. Shaders are written in GLSL, the syntax of which is base
 #### Vertex Shader
 The vertex shader determines all the positions of the vertices of an object. Therefore, each instance of a running vertex shader is responsible for one particular vertice. To get started, first we should specify our GLSL version at the top of the file.
 
-Notice the type of our variable ```position```. The ```layout``` qualifier allows for a variable's value to be either retrieved from the stage coming before (as with the use of ```in```), or to be sent to the stage coming after (with the use of ```out```). This can be done throughout the graphics pipeline's stages that we have access to. However, since the vertex shader is the first stage of the pipeline, we are also able to retrieve code from the CPU, as this comes directly before the vertex shader runs. This is what we are doing in this instance.
+Notice the type of our variable ```position```. The ```layout``` qualifier allows for a variable's value to be retrieved from a vertex attribute from OpenGL. This is possible because the vertex shader is the first stage of the pipeline, meaning the previous stage was OpenGL. Therefore, we are able to use the ```layout``` qualifier to retrieve data from the CPU.
 
-The ```location``` determines an index for our vertex shader variable ```position``` that an equivalent vertex attribute variable generated on the CPU is expected to match. The index is 0, as we set the vertex attribute index to be 0 through the first parameter of the ```glVertexAttribPointer()``` function in the [Vertex Buffer Objects](#vertex-buffer-objects) section. Lastly, ```vec3``` is the actual type of the variable, which is a 3-dimensional vector:
+The ```location``` determines an index for our vertex shader variable ```position``` that an equivalent vertex attribute variable generated on the CPU is expected to match. The index is 0, as we set the vertex attribute index to be 0 through the first parameter of the ```glVertexAttribPointer()``` function in the [Vertex Buffer Objects](#vertex-buffer-objects) section.
+
+The use of ```in``` asserts that the value must be retrieved from the last stage. The use of ```in``` is not limited only to ```layout``` qualified variables & can be used with user defined variables. Lastly, ```vec3``` is the actual type of the variable, which is a 3-dimensional vector:
 
 **Globals**
 ```GLSL
@@ -400,7 +402,9 @@ void main()
 #### Fragment Shader
 The fragment shader is responsible for mapping the correct colours to the correct pixels after rasterisation has taken place. Therefore, each instance of a running fragment shader is responsible for one pixel & its specific colour.
 
-In order to make use of the fragment shader, we need to create a variable named ```FragColor```. This variable will be outputted to the next stage of the graphics pipeline, therefore we need to specify ```out``` behind its type. The next stage will expect it to contain four float values, therefore we need its type to be ```vec4```. Within the ```main()``` function, we are simply going to specify our RGBA values. The colour set in the code below should always be white:
+In order to make use of the fragment shader, we need to create a variable named ```FragColor```. This variable will be outputted to the next stage of the graphics pipeline, therefore we need to specify ```out``` behind its type so that its value is sent to the next stage in the pipeline. Like with ```in```, ```out``` may be used with any user defined variable.
+
+The next stage will expect ```FragColor``` to have sent four float values, therefore we need its type to be ```vec4```. Within the ```main()``` function, we are simply going to specify our RGBA values. The colour set in the code below should always be white:
 
 **fragmentShader.vert**
 ```GLSL
