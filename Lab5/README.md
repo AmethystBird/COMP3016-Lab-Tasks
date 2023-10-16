@@ -271,44 +271,104 @@ glEnableVertexAttribArray(0);
 ```
 
 #### Vertex Array Objects
+Like VBOs, vertex array objects (VAOs) can be bound to an OpenGL buffer. VAOs are arrays of vertex attributes. For this reason, they can be used to store related vertex arrays & therefore are able to contain all the spacial information related to one object. For example, a VAO could contain a vertex attribute array for an object's coordinates, as well as another for its colours.
+
+The benefit of using VAOs is that you only need to bind to one of them when setting up multiple vertex attribute arrays. A VBO is only able to contain one vertex attribute array.
+
 **CPP Globals**
 ```c++
-enum VAO_IDs {Triangles, Indices, Colours, Textures, NumVAOs = 2};
+//VAO vertex attribute positions in correspondence to vertex attribute type
+enum VAO_IDs { Triangles, Indices, Colours, Textures, NumVAOs = 2 };
+//VAOs
 GLuint VAOs[NumVAOs];
 
-enum Buffer_IDs { ArrayBuffer, NumBuffers = 4};
+//Buffer types
+enum Buffer_IDs { ArrayBuffer, NumBuffers = 4 };
+//Buffer objects
 GLuint Buffers[NumBuffers];
 ```
 
+The setup process for VAOs is similar to VBOs. First, we call ```glGenVertexArrays()``` in order to setup the VAO. Next, we call the ```glBindVertexArray()``` function to bind the VAO to OpenGL & lastly we index our buffer objects against our buffer wit hthe ```glGenBuffers()``` function.
+
+In order to setup the desired VBO within our VAO, we have to call ```glBindBuffer()``` & in this case access the ```Triangles``` buffer object. Then, like before we allocate memory to the VBO based on the vertices array, setup our vertex attribute array & lastly unbind our VAO & VBO:
+
 **CPP main()**
-
-Below ```float vertices[]``` vv
 ```c++
+//Sets index of VAO
 glGenVertexArrays(NumVAOs, VAOs);
+//Binds VAO to a buffer
 glBindVertexArray(VAOs[0]);
-
+//Sets indexes of all required buffer objects
 glGenBuffers(NumBuffers, Buffers);
 
+//Binds VAO to array buffer
 glBindBuffer(GL_ARRAY_BUFFER, Buffers[Triangles]);
+//Allocates buffer memory for the vertices
 glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+//Allocates vertex attribute memory for vertex shader
 glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+//Index of vertex attribute for vertex shader
 glEnableVertexAttribArray(0);
 
 //Unbinding
 glBindVertexArray(0);
 glBindBuffer(GL_ARRAY_BUFFER, 0);
 ```
-Above ```while (glfwWindowShouldClose(window) == false)``` ^^
 
 ### GPU
+#### Retrieval
+In order to render our attribute arrays to a window, we need to send them through the OpenGL Graphics Pipeline. Depending upon the stage in the pipeline, we ourselves either cannot implement, have the option to, or must implement how the rendering is achieved. The stages that we need to implement are the vertex & fragment shaders.
+
+In order to do this, we need to create two files, which we will place inside the `shaders` folder & Visual Studio `shaders` filter. They will be named `vertexShader.vert` & `fragmentShader.frag`, however the names & extensions can be anything.
+
+The code below is placed during the OpenGL initialisation process in the ```main()``` function. Its purpose is to retrieve the shaders that we wish to implement, set them up with the ```LoadShaders()``` function & lastly activate them with the ```glUseProgram()``` function:
+
+**CPP Globals & Includes**
+```c++
+#include "LoadShaders.h"
+
+GLuint program;
+```
+
+**CPP main()**
+
+Below ```glewInit();``` vv
+```c++
+//Load shaders
+ShaderInfo shaders[] =
+{
+	{ GL_VERTEX_SHADER, "shaders/vertexShader.vert" },
+	{ GL_FRAGMENT_SHADER, "shaders/fragmentShader.frag" },
+	{ GL_NONE, NULL }
+};
+
+program = LoadShaders(shaders);
+glUseProgram(program);
+```
+Above ```glViewport(0, 0, 1280, 720);``` ^^
+
 #### Vertex Shader
-**vertexShader.vert**
+Open our vertex shader. Shaders are written in GLSL, the syntax of which is based on the C programming language, therefore also baring a resemblance to C++. Note that Visual Studio does not support GLSL syntax highlighting by default, however there are extensions for this. Regardless, it is easy to install GLSL syntax highlighting extensions within Visual Studio Code, so it may be beneficial to use Visual Studio Code for GLSL.
+
+The vertex shader determines all the positions of the vertices of an object. Notice the type of our variable ```position```. The ```layout``` qualifier allows for a variable's value to be either retrieved from the stage coming before (as with the use of ```in```), or to be sent to the stage coming after (with the use of ```out```). This can be done throughout the graphics pipeline's stages that we have access to. However, since the vertex shader is the first stage of the pipeline, we are also able to retrieve code from the CPU, as this comes directly before the vertex shader runs. This is what we are doing in this instance.
+
+The ```location``` determines an index for our vertex shader variable ```position``` that an equivalent variable on the CPU is expected to match. ```vec3``` is the actual type of the variable, which is a 3-dimensional vector. Also notice that above the ```position``` variable, we specify our GLSL version.
+
+**Globals**
 ```GLSL
 #version 460
+//Triangle position with values retrieved from main.cpp
 layout (location = 0) in vec3 position;
+```
 
+We need a ```main()``` function within the vertex shader in order to automatically allow the shader to be run. The ```gl_Position``` variable is predefined & is used to set the shader's output. This is automatically sent to the next stage of the graphics pipeline. The input we need to give ```gl_Position``` is the ```position``` variable's x, y & z values. An alpha value is also necessary for transparency. We are going to be rendering an opaque triangle, so we need to set the value to ```1.0```:
+
+**main()**
+```GLSL
 void main()
 {
+    //Triangle vertices sent through gl_Position to next stage
     gl_Position = vec4(position.x, position.y, position.z, 1.0);
 }
 ```
@@ -324,25 +384,3 @@ void main()
     FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 ```
-#### Retrieval
-**CPP Globals**
-```c++
-GLuint program;
-```
-
-//NOTE: Go back to check if LoadShaders is needed
-
-**CPP main()**
-Below ```glewInit();``` vv
-```c++
-ShaderInfo shaders[] =
-{
-	{ GL_VERTEX_SHADER, "shaders/vertexShader.vert" },
-	{ GL_FRAGMENT_SHADER, "shaders/fragmentShader.frag" },
-	{ GL_NONE, NULL }
-};
-
-program = LoadShaders(shaders);
-glUseProgram(program);
-```
-Above ```glViewport(0, 0, 1280, 720);``` ^^
