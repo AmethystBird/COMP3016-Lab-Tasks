@@ -9,22 +9,37 @@ A good resource for learning OpenGL is [LearnOpenGL](https://learnopengl.com/Int
 ## Setup
 ### Project
 #### Prerequisites
-In Visual Studio, create an `Empty Project` that uses C++. Next, create a new file named main.cpp in the `Source Files` filter. For GLSL shader functionality, you will also need to acquire the `LoadShaders` header & cpp files from [Files](/Lab5/Files/). Once they have been downloaded, right click your project file in the `Solution Explorer` & select `Open folder in File Explorer`. Create a new folder named 'shaders' & place the `LoadShaders` header & cpp files inside it. Next, go back to Visual Studio, right click the project file, select `Add` & then select `New Filter`. Name this filter `shaders`. Lastly, right click the `shaders` filter, hover over `Add` & select `Existing Item`. In the popup window, navigate to both of the `LoadShaders` files & select them.
+In Visual Studio, create an `Empty Project` that uses C++.
+
+![Empty Project](/Lab5/media/emptyProject.png)
+
+Next, create a new file named main.cpp in the `Source Files` filter. For GLSL shader functionality, you will also need to acquire the `LoadShaders` header & cpp files from [Files](/Lab5/Files/). Once they have been downloaded, right click your project file in the `Solution Explorer` & select `Open folder in File Explorer`. Create a new folder named 'shaders' & place the `LoadShaders` header & cpp files inside it. Next, go back to Visual Studio, right click the project file, select `Add` & then select `New Filter`. Name this filter `shaders`. Lastly, right click the `shaders` filter, hover over `Add` & select `Existing Item`. In the popup window, navigate to both of the `LoadShaders` files & select them.
 
 #### OpenGL
 It should not be necessary to install OpenGL, since it comes preinstalled on Windows, MacOS & Linux. However, if there are issues with OpenGL drivers, the [OpenGL Getting Started](https://www.khronos.org/opengl/wiki/Getting_Started) page will direct to the appropriate graphics driver sites.
 
 In order to use OpenGL, you must ensure that Visual Studio can locate OpenGL on your computer & therefore you must add it as an additional dependency. In Visual Studio, right click your project file, select `Properties`, unfold `Linker`, select `Input` & edit `Additional Dependencies` by adding `opengl32.lib`.
 
+![Additional Dependencies](/Lab5/media/additionalDependencies.png)
+
 #### Linking
 Library & include files that will be downloaded in this lab will need to be placed in a new subfolder in the `C:\Users\Public` directory. Create a folder in this directory named `OpenGL` & inside this folder create two folders named `include` & `lib`.
 
-Your Visual Studio project's linker needs to know the locations of the library files that are going to be downloaded. The include files will be located at `C:\Users\Public\OpenGL\include` & the library files will be located at `C:\Users\Public\OpenGL\lib`. In order to link to these locations, go to your Visual Studio project, navigate to the `Solution Explorer`, right click the project file, select `Properties`, unfold `Configuration Properties` & select `VC++ Properties`. Add the include directory `C:\Users\Public\OpenGL\include` to the `Include Directories` section & add the library directory `C:\Users\Public\OpenGL\lib` to the `Library Directories` section respectively.
+Your Visual Studio project's linker needs to know the locations of the library files that are going to be downloaded. The include files will be located at `C:\Users\Public\OpenGL\include` & the library files will be located at `C:\Users\Public\OpenGL\lib`. In order to link to these locations, go to your Visual Studio project, navigate to the `Solution Explorer`, right click the project file, select `Properties`, unfold `Configuration Properties` & select `VC++ Properties`.
+
+![VC++ Directories](/Lab5/media/VCPlusPlusDirectories.png)
+
+Add the include directory `C:\Users\Public\OpenGL\include` to the `Include Directories` section & add the library directory `C:\Users\Public\OpenGL\lib` to the `Library Directories` section respectively.
+
+![Include Directories](/Lab5/media/includeDirectories.png)
+![Library Directories](/Lab5/media/libraryDirectories.png)
 
 ### Libraries
 #### GLFW
 ##### Overview
 The GLFW library provides the ability to use OpenGL to render to windows, to receive input & also provides other useful events. In order to acquire GLFW, navigate to the [GLFW Download Page](https://www.glfw.org/download.html) & download the Windows pre-compiled 64-bit binaries.
+
+![GLFW Download](/Lab5/media/GLFWDownload.png)
 
 ##### Extraction
 Open a file explorer & navigate to `C:\Users\Public\OpenGL` & open a second file explorer & navigate to the GLFW folder in the `Downloads` folder. In the GLFW folder, open the `include` subfolder & move the `GLFW` subfolder within that into the `include` folder in the `OpenGL` directory. In the GLFW folder in the `Downloads` folder, many `lib-vc` folders exist. These are library folders that correspond to different versions of Visual C++. Open the `lib-vc2022` folder & move all the files into the `lib` folder in the `OpenGL` directory.
@@ -34,6 +49,8 @@ In Visual Studio, right click your project file, select `Properties`, unfold `Li
 #### OpenGL Extension Wrangler Library (GLEW)
 ##### Overview
 GLEW is an extension loading library. It provides checks to determine what extensions are able to be supported on any particular targeted platform. To download it, go to the [GLEW Download Page](https://glew.sourceforge.net/) & select the GLEW Binaries for Windows 32-bit & 64-bit. After this, you will be redirected to another site where you will have to wait a few seconds for your download to start.
+
+![GLEW Download](/Lab5/media/GLEWDownload.png)
 
 ##### Extraction
 Once you have downloaded GLEW, navigate to your `Downloads` folder. Open the `include` folder & move the `GL` folder into your `C:\Users\Public\OpenGL\include` directory. Additionally, in the GLEW folder, navigate to the `Release/x64` folder & move the files into the `C:\Users\Public\OpenGL\lib` directory. Then, in the GLEW folder, navigate to `bin/Release/x64` & move the `glew32.dll` file into your Visual Studio project's directory where your `main.cpp` file is located.
@@ -55,6 +72,8 @@ In your `main.cpp` file, add the ```//#include <glad/glad.h>``` include. Like wi
 The GLM library provides extended mathematics for OpenGL. GLM's functions also follow the same naming conventions & functionality as GLSL. While GLM is specifically intended for use with OpenGL, it is also able to be utilised with other third parties.
 
 Navigate to the [GLM Repository](https://github.com/g-truc/glm) & download the latest release in zip format. In the `Downloads` folder, open the `glm` folder & move the internal `glm` folder to the `C:\Users\Public\OpenGL\include` include directory. No glm ```#include``` directives are needed in your Visual Studio project for this lab. It will be specified as to whether you require them in future labs.
+
+![GLM Download](/Lab5/media/GLMDownload.png)
 
 ## Initialisation
 ### Window
