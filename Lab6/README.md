@@ -47,8 +47,7 @@ glBindBuffer(GL_ARRAY_BUFFER, 0);
 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 ```
 
-## Colours
-### Coordinates
+## Colour Coordinates
 **CPP Vertices**
 ```c++
 float vertices[] = {
@@ -107,12 +106,64 @@ void main()
 }
 ```
 
-### Uniforms
-### Task 1 (Dynamic Colour)
+## Uniforms
+[NOTE] must go after program is initialised
+
+**CPP**
+```c++
+//Gets index of colourIn uniform variable
+GLint colourLocation = glGetUniformLocation(program, "colourIn");
+//Sets colourIn
+glUniform4f(colourLocation, 1.0f, 0.25f, 0.0f, 1.0f);
+```
+
+**Vertex Shader**
+```GLSL
+#version 460
+//Triangle position with values retrieved from main.cpp
+layout (location = 0) in vec3 position;
+
+void main()
+{
+    //Triangle vertices sent through gl_Position to next stage
+    gl_Position = vec4(position.x, position.y, position.z, 1.0);
+}
+```
+
+**Fragment Shader**
+```GLSL
+#version 460
+//Colour value to send to next stage
+out vec4 FragColor;
+//Colour value
+uniform vec4 colourIn;
+
+void main()
+{
+    //RGBA values
+    FragColor = colourIn;
+}
+```
+
+## Task 1 (Dynamic Colour)
 ## Textures
 ### STB Image
-[Download STB Image](https://github.com/nothings/stb/blob/master/stb_image.h)
+[STB Image Download](https://github.com/nothings/stb/blob/master/stb_image.h)
+
+**stbImageLoader.cpp**
+```c++
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+```
+
+**main.cpp**
+```c++
+#include "stb_image.h"
+```
+
 ### Initialisation
+
+
 ### Coordinates
 ### Wrapping
 ### Filtering
