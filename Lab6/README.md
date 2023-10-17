@@ -76,7 +76,7 @@ glEnableVertexAttribArray(1);
 #version 460
 //Triangle position with values retrieved from main.cpp
 layout (location = 0) in vec3 position;
-//Triangle colours
+//Triangle colour
 layout (location = 1) in vec3 vertexColour;
 
 //Colour output to fragment shader
@@ -115,6 +115,25 @@ void main()
 GLint colourLocation = glGetUniformLocation(program, "colourIn");
 //Sets colourIn
 glUniform4f(colourLocation, 1.0f, 0.25f, 0.0f, 1.0f);
+```
+
+**CPP**
+```c++
+float vertices[] = {
+    //positions
+    0.5f, 0.5f, 0.0f,   //top right
+    0.5f, -0.5f, 0.0f,  //bottom right
+    -0.5f, -0.5f, 0.0f, //bottom left
+    -0.5f, 0.5f, 0.0f,  //top left
+};
+```
+
+**CPP**
+```c++
+//Allocation & indexing of vertex attribute memory for vertex shader
+//Positions
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+glEnableVertexAttribArray(0);
 ```
 
 **Vertex Shader**
