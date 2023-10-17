@@ -191,30 +191,49 @@ glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3* si
 glEnableVertexAttribArray(1);
 ```
 
-### Initialisation
+### Binding
 **CPP**
 ```c++
+//Texture index
 unsigned int texture;
+//Textures to generate
 glGenTextures(1, &texture);
+
+//Binding texture to type 2D texture
 glBindTexture(GL_TEXTURE_2D, texture);
 
+//Selects x axis (S) of texture bound to GL_TEXTURE_2D & sets to repeat beyond normalised coordinates
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//Selects y axis (T) equivalently
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+```
 
-int width, height, nrChannels;
-unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+### Data Retrieval
+**CPP**
+```c++
+//Parameters that will be sent & set based on retrieved texture
+int width, height, colourChannels;
+//Retrieves texture data
+unsigned char* data = stbi_load("container.jpg", &width, &height, &colourChannels, 0);
+```
 
-if (data)
+### Generation
+**CPP**
+```c++
+if (data) //If retrieval successful
 {
+    //Generation of texture from retrieved texture data
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    //Automatically generates all required mipmaps on bound texture
     glGenerateMipmap(GL_TEXTURE_2D);
 }
-else
+else //If retrieval unsuccessful
 {
     cout << "Failed to load texture.\n";
     return -1;
 }
 
+//Clears retrieved texture from memory
 stbi_image_free(data);
 ```
 
