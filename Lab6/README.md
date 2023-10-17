@@ -161,10 +161,111 @@ void main()
 #include "stb_image.h"
 ```
 
-### Initialisation
-
-
 ### Coordinates
+**CPP**
+```c++
+float vertices[] = {
+//Positions             //Textures
+0.5f, 0.5f, 0.0f,       1.0f, 1.0f, //top right
+0.5f, -0.5f, 0.0f,      1.0f, 0.0f, //bottom right
+-0.5f, -0.5f, 0.0f,     0.0f, 0.0f, //bottom left
+-0.5f, 0.5f, 0.0f,      0.0f, 1.0f  //top left
+};
+
+unsigned int indices[] = {
+    0, 1, 3, //first triangle
+    1, 2, 3 //second triangle
+};
+```
+
+### Vertex Attribute Arrays
+**CPP**
+```c++
+//Allocation & indexing of vertex attribute memory for vertex shader
+//Positions
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+glEnableVertexAttribArray(0);
+
+//Textures
+glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3* sizeof(float)));
+glEnableVertexAttribArray(1);
+```
+
+### Initialisation
+**CPP**
+```c++
+unsigned int texture;
+glGenTextures(1, &texture);
+glBindTexture(GL_TEXTURE_2D, texture);
+
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+int width, height, nrChannels;
+unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+
+if (data)
+{
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+}
+else
+{
+    cout << "Failed to load texture.\n";
+    return -1;
+}
+
+stbi_image_free(data);
+```
+
+### Rendering
+**CPP**
+```GLSL
+//Drawing
+glBindTexture(GL_TEXTURE_2D, texture);
+glBindVertexArray(VAOs[0]); //Bind buffer object to render; VAOs[0]
+glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+```
+
+### Shaders
+**Vertex Shader**
+```GLSL
+#version 460
+//Triangle position with values retrieved from main.cpp
+layout (location = 0) in vec3 position;
+//Texture coordinates from last stage
+layout (location = 1) in vec2 textureCoordinatesVertex;
+
+//Texture coordinates to send
+out vec2 textureCoordinatesFrag;
+
+void main()
+{
+    //Triangle vertices sent through gl_Position to next stage
+    gl_Position = vec4(position.x, position.y, position.z, 1.0);
+    //Sending texture coordinates to next stage
+    textureCoordinatesFrag = textureCoordinatesVertex;
+}
+```
+
+**Fragment Shader**
+```GLSL
+#version 460
+//Colour value to send to next stage
+out vec4 FragColor;
+
+//Texture coordinates from last stage
+in vec2 textureCoordinatesFrag;
+//Texture (colours)
+uniform sampler2D textureIn;
+
+void main()
+{
+    //Setting of texture & its coordinates as colour map
+    FragColor = texture(textureIn, textureCoordinatesFrag);
+}
+```
+
 ### Wrapping
 ### Filtering
 ### Mipmaps
