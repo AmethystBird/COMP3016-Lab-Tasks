@@ -213,13 +213,11 @@ glEnableVertexAttribArray(1);
 ### Binding
 **CPP**
 ```c++
-//Texture index
-unsigned int texture;
 //Textures to generate
-glGenTextures(1, &texture);
+glGenTextures(NumBuffers, Buffers);
 
 //Binding texture to type 2D texture
-glBindTexture(GL_TEXTURE_2D, texture);
+glBindTexture(GL_TEXTURE_2D, Buffers[Textures]);
 
 //Selects x axis (S) of texture bound to GL_TEXTURE_2D & sets to repeat beyond normalised coordinates
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -260,7 +258,7 @@ stbi_image_free(data);
 **CPP**
 ```GLSL
 //Drawing
-glBindTexture(GL_TEXTURE_2D, texture);
+glBindTexture(GL_TEXTURE_2D, Buffers[Textures]);
 glBindVertexArray(VAOs[0]); //Bind buffer object to render; VAOs[0]
 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 ```
