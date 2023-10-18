@@ -218,7 +218,12 @@ glGenTextures(NumBuffers, Buffers);
 
 //Binding texture to type 2D texture
 glBindTexture(GL_TEXTURE_2D, Buffers[Textures]);
+```
 
+### Wrapping
+
+**CPP**
+```c++
 //Selects x axis (S) of texture bound to GL_TEXTURE_2D & sets to repeat beyond normalised coordinates
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 //Selects y axis (T) equivalently
@@ -302,8 +307,22 @@ void main()
 }
 ```
 
-### Wrapping
-### Filtering
-### Mipmaps
-### Shader
+### Scaling
+#### Filtering
+**CPP**
+```c++
+//Sets bound texture to use nearest neighbour downscaling
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+//Sets to use linear interpolation upscaling
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+```
+
+#### Mipmaps
+```c++
+//Sets to use linear interpolation between adjacent mipmaps
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+//Sets to use linear interpolation upscaling (past largest mipmap texture)
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+```
+
 ### Texture Units
