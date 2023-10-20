@@ -410,9 +410,16 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 ```
 
-
+### Task 5
+Try composing the aforementioned code in order to generate a textured rectangle with potentially more appropriate filtering.
 
 #### Mipmaps
+When an object is downscaled significantly, such as a scenario where it is being viewed from far away in a scene, unwanted visual artifacts may appear. This is because OpenGL will not be able to differentiate between notable features & details of a texture & so will try to represent them all based on their relative positions. This is also not efficient, since a texture may be being rendered at a significantly lower resolution to that of its actual resolution.
+
+In order to deal with this issue, mipmaps can be used. Mipmaps are a collection of textures that represent different resolutions of the same image. Depending upon the scaling of the texture / the distance of the texture being viewed in a scene, a different mipmap level will be selected.
+
+OpenGL will generate mipmaps for us, therefore we don't have to create them manually, such as in an image editing program. However, between mipmaps we may still want to interpolate our texture. Therefore, we can use the ```GL_LINEAR_MIPMAP_LINEAR``` setting in the ```glTexParameteri()``` function when downscaling. Of course, this is not necessary when upscaling, so we can continue to use ```GL_LINEAR``` in that regard:
+
 ```c++
 //Sets to use linear interpolation between adjacent mipmaps
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -420,4 +427,5 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 ```
 
-### Texture Units
+### Task 6
+Try composing the aforementioned code in order to generate a textured rectangle with mipmap filtering.
