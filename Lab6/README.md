@@ -218,21 +218,24 @@ Try composing the aforementioned code in order to generate a single-coloured rec
 ## Task ? (Dynamic Colour)
 
 ## Textures
-### STB Image
-[STB Image Download](https://github.com/nothings/stb/blob/master/stb_image.h)
+In order to render textures, we will need an image loader. For this purpose, we are going to be using the [STB Image Loading Library](https://github.com/nothings/stb/blob/master/stb_image.h), which is comprised of a header file named ```stb_image.h```. In order to make use of it, download it from the link provided over the name & place it into your Visual Studio Project directory. After this, add it to the ```Source Files``` filter & add it as an included file to ```main.cpp```:
 
-**stbImageLoader.cpp**
+**CPP**
+```c++
+#include "stb_image.h"
+```
+
+You may notice that, ```stb_image.h``` currently does not function. In order to implement it into your project properly, create a new CPP file, which we are going to call ```stbImageLoader.cpp``` & add the following code to it:
+
+**CPP**
 ```c++
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 ```
 
-**main.cpp**
-```c++
-#include "stb_image.h"
-```
-
 ### Coordinates
+Like with colours, we can implement coordinates into our vertices array. Textures are 2-dimensional & therefore only require two components to create a point, as opposed to three. Points given represent any particular normalised location within the texture's bounds. Therefore, the highest number we should use is ```1.0f``` & the lowest is ```0.0f```. Below, we access the points at the four corners of our texture. Lastly, also as with colours, we need to create a vertex attribute array for our texture coordinates:
+
 **CPP**
 ```c++
 float vertices[] = {
@@ -247,11 +250,9 @@ unsigned int indices[] = {
     0, 1, 3, //first triangle
     1, 2, 3 //second triangle
 };
-```
 
-### Vertex Attribute Arrays
-**CPP**
-```c++
+...
+
 //Allocation & indexing of vertex attribute memory for vertex shader
 //Positions
 glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -263,6 +264,8 @@ glEnableVertexAttribArray(1);
 ```
 
 ### Binding
+We need to assign a buffer index & bind a texture to our ```GL_TEXTURE_2D``` buffer, as shown below.
+
 **CPP**
 ```c++
 //Textures to generate
@@ -273,6 +276,14 @@ glBindTexture(GL_TEXTURE_2D, Buffers[Textures]);
 ```
 
 ### Wrapping
+If a texture is applied to only part of an object as opposed to its entirety, there are multiple modes by which the texture can be displayed depending upon the desired result. This can be done with the ```glTexParameteri()``` function. Here are a list of options that one can use:
+
+- ```GL_CLAMP_TO_BORDER``` prevents the texture from overspilling
+- ```GL_CLAMP_TO_EDGE``` allows the edge pixels to continuously overspill
+- ```GL_REPEAT``` allows the texture to repeatedly render itself adjacently
+- ```GL_MIRRORED_REPEAT``` accomplishes ```GL_REPEAT``` while also flipping textures in the given direction of their given adjacent texture
+
+These parameters can be applied specifically to the x & y axis of a texture, as opposed to needing to be identical on both axes. ```GL_TEXTURE_WRAP_S``` & ```GL_TEXTURE_WRAP_T``` correspond to the x & y axes respectively. We also need to specify our texture buffer, which is ```GL_TEXTURE_2D```:
 
 **CPP**
 ```c++
@@ -283,6 +294,8 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 ```
 
 ### Data Retrieval
+In order to retrieve our texture, we need to call ```stbi_load()```, providing the texture name & variables to store its width, height & colour channels:
+
 **CPP**
 ```c++
 //Parameters that will be sent & set based on retrieved texture
@@ -292,6 +305,19 @@ unsigned char* data = stbi_load("container.jpg", &width, &height, &colourChannel
 ```
 
 ### Generation
+If our texture is retrieved successfully, we need to generate a texture from our loaded data with the ```glTexImage2D()``` function. There are many parameters, which are detailed below:
+- #1: The texture buffer, in order to apply the texture data to the bound texture object
+- #2: The mipmap level, which can either be set upon the texture or generated later; we are not going to set it yet, so we'll provide ```0```
+- #3: The resulting image's colour format
+- #4: The x dimension of the texture
+- #5: The y dimension of the texture
+- #6: Legacy feature which is always set to ```0```
+- #7: The source image's colour format
+- #8: The form of data in which we stored the image
+- #9: The image data
+
+While we do not have any mipmaps, we need to specify this regardless with the ```glGenerateMipmap()``` function. The parameter is the ```GL_TEXTURE_2D``` buffer:
+
 **CPP**
 ```c++
 if (data) //If retrieval successful
@@ -312,6 +338,8 @@ stbi_image_free(data);
 ```
 
 ### Rendering
+In order for OpenGL to know which texture to render, we need to call the ```glBindTexture()``` function in the render loop. We provide the ```GL_TEXTURE_2D``` buffer, as well as the index of the texture in the buffer:
+
 **CPP**
 ```GLSL
 //Drawing
@@ -320,8 +348,10 @@ glBindVertexArray(VAOs[0]); //Bind buffer object to render; VAOs[0]
 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 ```
 
-### Shaders
-**Vertex Shader**
+### Vertex Shader
+Since we setup a vertex attribute array for our texture coordinates, we need to create a corresponding layout variable in the vertex shader. We are going to call this ```textureCoordinatesVertex```. Then we need to pass its value to a variable that we are going to name ```textureCoordinatesFrag``` in order to give our fragment shader access to it:
+
+**GLSL**
 ```GLSL
 #version 460
 //Triangle position with values retrieved from main.cpp
@@ -340,8 +370,10 @@ void main()
     textureCoordinatesFrag = textureCoordinatesVertex;
 }
 ```
+### Fragment Shader
+We need to create our input variable ```textureCoordinatesFrag``` in order to receive our image coordinate data from the past stages of the graphics pipeline. We also need a uniform variable of type ```sampler2D``` called textureIn in order to store the texture's colour data. In this scenario, we do not actually need to create a uniform variable in our ```main.cpp``` file, as this is done automatically. Lastly, we need to provide our texture to ```FragColor``` with the ```texture()``` function. This function maps the colour data of ```textureIn``` against the positional data of ```textureCoordinatesFrag```:
 
-**Fragment Shader**
+**GLSL**
 ```GLSL
 #version 460
 //Colour value to send to next stage
@@ -359,8 +391,17 @@ void main()
 }
 ```
 
+### Task 4
+Try composing the aforementioned code in order to generate a textured rectangle.
+
 ### Scaling
 #### Filtering
+Currently, depending upon the size of the rendered rectangle, you may notice that the resolution is too low. However, OpenGL supports texture filtering for these situations. The filtering option for a texture can be set with the ```glTexParameteri()``` function. The first parameter specifies the buffer type, the second parameter specifies whether to apply the filtering option for downscaling or for upscaling specifically & the last parameter specifies the type of filtering to use.
+
+```GL_TEXTURE_MIN_FILTER``` is for downscaling & therefore setting this to use an upscaling filtering system will not work. For this reason, we can set it to use ```GL_NEAREST```, which achieves nearest neighbour filtering. This form of filtering simply enlargens the image.
+
+```GL_TEXTURE_MAG_FILTER``` is for upscaling & therefore we have the option of setting the filtering option to be ```GL_LINEAR```. This form of filtering interpolates existing data points in order to generate adjacent ones that share similarities to those around them. This creates a blur effect:
+
 **CPP**
 ```c++
 //Sets bound texture to use nearest neighbour downscaling
@@ -368,6 +409,8 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 //Sets to use linear interpolation upscaling
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 ```
+
+
 
 #### Mipmaps
 ```c++
