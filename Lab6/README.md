@@ -264,7 +264,7 @@ glEnableVertexAttribArray(1);
 ```
 
 ### Binding
-We need to assign a buffer index & bind a texture to our ```GL_TEXTURE_2D``` buffer, as shown below.
+We need to assign a buffer index & bind a texture to our ```GL_TEXTURE_2D``` buffer, as shown below:
 
 **CPP**
 ```c++
@@ -294,14 +294,16 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 ```
 
 ### Data Retrieval
-In order to retrieve our texture, we need to call ```stbi_load()```, providing the texture name & variables to store its width, height & colour channels:
+The texture we are using is the `woodPlanks.jpg` file located in the [media Folder](/Lab6/media/woodPlanks.jpg). Either create your own media folder, or take the existing one in this repository & put it into your Visual Studio Project directory. Note, there is no need to add the media folder as a filter in Visual Studio for textures.
+
+Next, in order to retrieve our texture, we need to call ```stbi_load()```, providing the texture name & variables to store the texture width, height & colour channels:
 
 **CPP**
 ```c++
 //Parameters that will be sent & set based on retrieved texture
 int width, height, colourChannels;
 //Retrieves texture data
-unsigned char* data = stbi_load("container.jpg", &width, &height, &colourChannels, 0);
+unsigned char* data = stbi_load("media/woodPlanks.jpg", &width, &height, &colourChannels, 0);
 ```
 
 ### Generation
