@@ -1,4 +1,4 @@
-# Lighting & Extras
+# Lab 6 - Lighting & Extras
 ## Indices
 ### Overview
 All vertices in an OpenGL object are drawn as triangles. Therefore, any object that is made up of more than three points is always composed of multiple triangles. For example, one rectangle would be made up of two triangles that connect together.
