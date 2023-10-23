@@ -1,4 +1,4 @@
-# COMP3016-Labs
+# COMP3016 Labs
 Labs for COMP3016 are usually comprised of READMEs that contain inline & linked code examples & code tasks. Certain labs may be in a different format.
 
 Note that if a lab appears to exist within this repository but is not linked by the [Table of Contents](#table-of-contents) below, that is because it is not yet finished.
