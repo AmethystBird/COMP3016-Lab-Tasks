@@ -13,3 +13,5 @@ Labs for COMP3016 are comprised of READMEs that contain inline & linked code exa
 Lab 4 - SDL [Setup](dle.plymouth.ac.uk/mod/lti/view.php?id=1651889) & [Pong](dle.plymouth.ac.uk/mod/lti/view.php?id=1651891)
 
 [Lab 5 - Introduction to OpenGL](/Lab5/README.md)
+
+[Lab 6 - Lighting & Extras](/Lab6/README.md)

@@ -5,10 +5,8 @@ All vertices in an OpenGL object are drawn as triangles. Therefore, any object t
 
 This system presents a problem, since a rectangle on face value is made up of four points, whereas using two triangles to form a rectangle requires six points. This is not efficient, since duplicated vertices need to be stored & rendered. As an object acquires more vertices, this inefficiency becomes exponential & will result in bad performance. In order to get around this problem however, OpenGl supports a concept named indexed drawing.
 
-### Coordinates
-Indexed drawing makes use of two arrays, for vertices & indices respectively. The vertices array must only contain unique points; that is, points that are not at the same position as any other in the array. The indices array then specifies the order in which to draw these points. This gets around the problem, since any vertice can now be called upon multiple times.
-
-Below, the vertices of four corners of a rectangle are displayed, as well as the indices for directing the order in which to draw them:
+### Indexing
+Indexed drawing makes use of two arrays, for vertices & indices respectively. The vertices array must only contain unique points; that is, points that are not at the same position as any other in the array. The indices array then specifies the order in which to draw these points. This gets around the problem, since any vertice can now be called upon multiple times. Below, the vertices of four corners of a rectangle are displayed, as well as the indices for directing the order in which to draw them:
 
 **CPP**
 ```c++
@@ -26,7 +24,9 @@ unsigned int indices[] = {
 ```
 
 ### Element Buffer Objects
-The indices array still needs to be bound to a buffer. The name of the buffer that takes indices as input is known as an element buffer object (EBO). When binding our indices to an EBO, we do still need to bind our vertices to a VBO as well. When doing this, we bind to the ```GL_ELEMENT_ARRAY_BUFFER``` as opposed to the ```GL_ARRAY_BUFFER```. However, since the indices themselves are not drawn, they do not need to be assigned to a vertex attribute array. Therefore, we still only need to assign one vertex attribute array for our vertices:
+The indices array still needs to be bound to a buffer. The name of the object that takes indices as input is known as an element buffer object (EBO). When binding our indices to an EBO, we do still need to bind our vertices to a VBO as well. To bind to an EBO, we have to access the ```GL_ELEMENT_ARRAY_BUFFER``` as opposed to the ```GL_ARRAY_BUFFER```.
+
+Notably, indices themselves are not drawn, since they only direct the drawing order. For this reason, they do not need to be assigned to a vertex attribute array. Therefore, we still only need to assign one vertex attribute array for our vertices:
 
 **CPP**
 ```c++
@@ -58,7 +58,10 @@ glBindBuffer(GL_ARRAY_BUFFER, 0);
 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 ```
 
+### Render Loop
 Inside the render loop, as opposed to calling ```glDrawArrays()``` we need to call ```glDrawElements()``` in order to direct the drawing process from the indices as opposed to the vertices directly:
+
+**CPP**
 ```c++
 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 ```
@@ -82,7 +85,7 @@ float vertices[] = {
 ```
 
 ### Vertex Attribute Arrays
-Unlike indices, the colour vertices do need to be applied within the drawing process. Therefore, we need to add a second vertex attribute pointer for colours & give it a second index. When doing this, we also need to modify the vertex attribute pointer for the positions of the object. This is because the addition of colours to the vertices array remaps the memory, therefore changing how the vertex attribute array needs to retrieve the data. For this reason, we give both vertex attribute arrays a spacing of ```6 * sizeof(float)``` & the second vertex attribute array the starting position of ```(void*)(3 * sizeof(float))```:
+Unlike indices, the colour vertices do need to be applied within the drawing process. Therefore, we need to add a second vertex attribute array for colours & give it a second index. When doing this, we also need to modify the vertex attribute array for the positions of the object. This is because the addition of colours to the vertices array remaps the memory, therefore changing how the vertex attribute array needs to retrieve the data. For this reason, we give both vertex attribute arrays a spacing of ```6 * sizeof(float)``` & the second vertex attribute array the starting position of ```(void*)(3 * sizeof(float))```:
 
 **CPP**
 ```c++
@@ -148,7 +151,7 @@ Normally, when passing data through the graphics pipeline, it is sent through it
 - The mechanism for accessing them is not as fast as accessing vertex attribute arrays; therefore use vertex attribute arrays as opposed to uniforms where possible
 
 ### Initialisation
-In order to create a uniform, we need to call the ```glGetUniformLocation()``` function upon a ```GLint``` variable in order to link it to a uniform variable within our GLSL program, which we will call ```colourLocation```. In order to do this, we need to pass the program to link within, as well as the name of the uniform variable to link to. Our variable is going to be named ```colourIn```. After this, we can call the ```glUniform4f()``` function in order to set the value of ```colourLocation```, as well as ```colourIn``` within our shader, respectively:
+In order to create a uniform, we need to call the ```glGetUniformLocation()``` function upon a ```GLint``` variable in order to link it to a uniform variable within our GLSL program. In order to do this, we need to pass the shader's program in order to link to it, as well as the name of the uniform variable to link to specifically. For now we will assume its name as ```colourIn``` & will declare it in the shader later. After this, we can call the ```glUniform4f()``` function in order to set the value of ```colourLocation```, as well as ```colourIn``` within our shader, respectively:
 
 **CPP**
 ```c++
@@ -225,7 +228,7 @@ In order to render textures, we will need an image loader. For this purpose, we 
 #include "stb_image.h"
 ```
 
-You may notice that, ```stb_image.h``` currently does not function. In order to implement it into your project properly, create a new CPP file, which we are going to call ```stbImageLoader.cpp``` & add the following code to it:
+You may notice that ```stb_image.h``` currently does not function. In order to implement it into your project properly, create a new CPP file, which we are going to call ```stbImageLoader.cpp``` & add the code displayed below to it. Note that there is no need to include the CPP file, only the header as aforementioned:
 
 **CPP**
 ```c++
@@ -294,9 +297,9 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 ```
 
 ### Data Retrieval
-The texture we are using is the `woodPlanks.jpg` file located in the [media Folder](/Lab6/media/woodPlanks.jpg). Either create your own media folder, or take the existing one in this repository & put it into your Visual Studio Project directory. Note, there is no need to add the media folder as a filter in Visual Studio for textures.
+The texture we are using is the `woodPlanks.jpg` file located in the [media Folder](/Lab6/media/woodPlanks.jpg). Either create your own media folder, or take the existing one in this repository & put it into your Visual Studio Project directory. Note, there is no need to add the media folder as a filter in Visual Studio for the sake of textures.
 
-Next, in order to retrieve our texture, we need to call ```stbi_load()```, providing the texture name & variables to store the texture width, height & colour channels:
+Next, in order to retrieve our texture, we need to call ```stbi_load()```. We must provide the texture name & variables to store the texture's attributes: Width, height & the colour channels:
 
 **CPP**
 ```c++
@@ -402,7 +405,7 @@ Currently, depending upon the size of the rendered rectangle, you may notice tha
 
 ```GL_TEXTURE_MIN_FILTER``` is for downscaling & therefore setting this to use an upscaling filtering system will not work. For this reason, we can set it to use ```GL_NEAREST```, which achieves nearest neighbour filtering. This form of filtering simply enlargens the image.
 
-```GL_TEXTURE_MAG_FILTER``` is for upscaling & therefore we have the option of setting the filtering option to be ```GL_LINEAR```. This form of filtering interpolates existing data points in order to generate adjacent ones that share similarities to those around them. This creates a blur effect:
+```GL_TEXTURE_MAG_FILTER``` is for upscaling & therefore we have the option of setting the filtering option to be ```GL_LINEAR```. This form of filtering interpolates existing data points in order to generate adjacent ones around them that share similarities to those they originate from. This creates a blur effect:
 
 **CPP**
 ```c++
