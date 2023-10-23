@@ -1,5 +1,7 @@
 # COMP3016-Labs
-Labs for COMP3016 are comprised of READMEs that contain inline & linked code examples & code tasks. Note that if a lab appears to exist within this repository but is not linked by the [Table of Contents](#table-of-contents) below, that is because it is not yet finished.
+Labs for COMP3016 are usually comprised of READMEs that contain inline & linked code examples & code tasks. Certain labs may be in a different format.
+
+Note that if a lab appears to exist within this repository but is not linked by the [Table of Contents](#table-of-contents) below, that is because it is not yet finished.
 
 ## Table of Contents
 [Lab 0 - Setup](/Lab0/README.md)
@@ -10,7 +12,7 @@ Labs for COMP3016 are comprised of READMEs that contain inline & linked code exa
 
 [Lab 3 - Object-Orientation #2](/Lab3/README.md)
 
-Lab 4 - SDL [Setup](dle.plymouth.ac.uk/mod/lti/view.php?id=1651889) & [Pong](dle.plymouth.ac.uk/mod/lti/view.php?id=1651891)
+[Lab 4 - SDL](/Lab4/Lab%204.docx)
 
 [Lab 5 - Introduction to OpenGL](/Lab5/README.md)
 
