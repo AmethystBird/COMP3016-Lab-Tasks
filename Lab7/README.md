@@ -72,25 +72,25 @@ Complete above.
 **CPP**
 ```c++
 //Model matrix
-glm::mat4 model = glm::mat4(1.0f);
-//model = glm::mat4(1.0f);
+mat4 model = mat4(1.0f);
+//model = mat4(1.0f);
 //Scaling to zoom in
-model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+model = scale(model, vec3(2.0f, 2.0f, 2.0f));
 //Rotation to look down
-model = glm::rotate(model, glm::radians(-45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+model = rotate(model, radians(-45.0f), vec3(1.0f, 0.0f, 0.0f));
 //Movement to position further back
-model = glm::translate(model, glm::vec3(0.0f, 1.f, -1.5f));
+model = translate(model, vec3(0.0f, 1.f, -1.5f));
 
 //View matrix
-glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+mat4 view = lookAt(vec3(0.0f, 0.0f, 3.0f), vec3(0.0f, 0.0f, 2.0f), vec3(0.0f, 1.0f, 0.0f));
 
 //Projection matrix
-glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
+mat4 projection = perspective(radians(45.0f), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
 
 // Model-view-projection matrix uniform for vertex shader
-glm::mat4 mvp = projection * view * model;
+mat4 mvp = projection * view * model;
 int mvpLoc = glGetUniformLocation(program, "mvpIn");
-glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvp));
+glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, value_ptr(mvp));
 ```
 
 **Vertex Shader**
@@ -120,13 +120,16 @@ void main()
 Complete above.
 
 ### Task 4
-Achieve the same transform in 'Dynamic Rotation' with addition of MVP
+Achieve the same transform in 'Dynamic Rotation' with addition of MVP. Fix solution using 'glm::' unnecessarily
 
 ### 3D Rotation
 Might do, not sure yet
 
 ### Depth Buffer (Z Buffer)
-### Rotation
+If 3D rotation done
+
 ## Controls
+
+
 ### Movement
 ### Zooming
