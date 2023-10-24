@@ -138,6 +138,8 @@ glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, value_ptr(mvp));
 ```
 
 ### Vertex Shader
+In our vertex shader, we need to declare our uniform ```mvpIn``` & we no longer need our ```transformIn``` variable. Where we originally applied our transformation upon our vertex positions, we can now apply our ```mvpIn``` values:
+
 **GLSL**
 ```GLSL
 #version 460
@@ -162,10 +164,10 @@ void main()
 ```
 
 ### Task 3
-Complete above.
+Try composing the aforementioned code in order to use an MVP in order to view our scene.
 
 ### Task 4
-Achieve the same transform in 'Dynamic Rotation' with addition of MVP.
+Our wooden rectangle no longer perpetually rotates as it did in the [Dynamic Rotation](#dynamic-rotation) section. Your task is to bring this feature back alongside the addition of the MVP.
 
 ## Controls
 ### Movement

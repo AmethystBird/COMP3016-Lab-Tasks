@@ -218,8 +218,6 @@ void main()
 ### Task 3
 Try composing the aforementioned code in order to generate a single-coloured rectangle with a uniform variable.
 
-## Task ? (Dynamic Colour)
-
 ## Textures
 In order to render textures, we will need an image loader. For this purpose, we are going to be using the [STB Image Loading Library](https://github.com/nothings/stb/blob/master/stb_image.h), which is comprised of a header file named ```stb_image.h```. In order to make use of it, download it from the link provided over the name & place it into your Visual Studio Project directory. After this, add it to the ```Source Files``` filter & add it as an included file to ```main.cpp```:
 
