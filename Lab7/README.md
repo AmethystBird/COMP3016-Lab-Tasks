@@ -1,6 +1,7 @@
 # Lab 7 - Transformations
-## Transformations
-### Rotation
+## Overview
+If you followed [Lab 5](/Lab5/README.md) as intended, you will have acquired the OpenGL Mathematics library (GLM). This library's classes, functions & types are designed to mirror or at least follow the conventions of GLSL for ease of use. This library is going to be used a lot in this section since it deals with transformations. The tasks in this lab require the following includes in ```main.cpp``` & set ```glm``` as an additional namespace to ```std```:
+
 **CPP**
 ```c++
 //GLM
@@ -10,6 +11,13 @@
 
 using namespace glm;
 ```
+
+## Matrices
+### Overview
+To start with, we are going to rotate our wooden square in our scene on its side. In order to do this, we can create a 4x4 matrix with GLM's ```mat4``` type. We are going to call this variable ```transform```. We can use GLM's maths functions, such as ```rotate()```, in order to manipulate the values inside of the transform matrix.
+
+### Rotation & Scale
+The ```rotate()``` function's first parameter takes the matrix itself, the second parameter takes the degrees of rotation & the last parameter takes the direction in which to rotate; a 3x1 vector of x, y & z values. We are also going to use the ```scale()``` function to downsize the transform matrix to 50% on all axes, therefore we provide values of ```0.5```. Lastly in order to make use of the transform matrix, we need to set it as a uniform so that we can access it in our vertex shader:
 
 **CPP**
 ```c++
@@ -24,10 +32,28 @@ transform = scale(transform, vec3(0.5, 0.5, 0.5));
 GLint transformIndex = glGetUniformLocation(program, "transformIn");
 glUniformMatrix4fv(transformIndex, 1, GL_FALSE, value_ptr(transform));
 ```
-### Task 1
-Complete above.
 
-### Dynamic Rotation
+### Vertex Shader
+Since we are going to be manipulating the position of our wooden square, we are going to be modifying our vertex shader, as opposed to our fragment shader. In order to achieve this, we need to declare our ```transformIn``` uniform & multiply it by our position vector when setting our final position to ```gl_Position```:
+
+**GLSL**
+```GLSL
+//Transformation
+uniform mat4 transformIn;
+
+void main()
+{
+    //Transformation applied to vertices
+    gl_Position = transformIn * vec4(position.x, position.y, position.z, 1.0);
+    //Sending texture coordinates to next stage
+    textureCoordinatesFrag = textureCoordinatesVertex;
+}
+```
+
+## Task 1
+Try composing the aforementioned code in order to rotate & downscale the rectangle.
+
+## Dynamic Rotation
 **CPP Globals**
 ```c++
 //Transformations
@@ -64,11 +90,12 @@ while (glfwWindowShouldClose(window) == false)
 }
 ```
 
-### Task 2
+## Task 2
 Complete above.
 
-## Perspective
-### Model View Projection (MVP)
+## Model View Projection (MVP)
+### Overview
+### Initialisation
 **CPP**
 ```c++
 //Model matrix
@@ -93,7 +120,8 @@ int mvpLoc = glGetUniformLocation(program, "mvpIn");
 glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, value_ptr(mvp));
 ```
 
-**Vertex Shader**
+### Vertex Shader
+**GLSL**
 ```GLSL
 #version 460
 //Triangle position with values retrieved from main.cpp
@@ -120,10 +148,11 @@ void main()
 Complete above.
 
 ### Task 4
-Achieve the same transform in 'Dynamic Rotation' with addition of MVP. I need to fix solution using 'glm::' unnecessarily
+Achieve the same transform in 'Dynamic Rotation' with addition of MVP.
 
 ## Controls
 ### Movement
+#### Globals
 **CPP**
 ```c++
 //Transformations
@@ -141,6 +170,7 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 ```
 
+#### Model & Projection
 Like before, but without mvp at this stage
 
 **CPP**
@@ -158,6 +188,7 @@ model = translate(model, vec3(0.0f, 1.f, -1.5f));
 mat4 projection = perspective(radians(45.0f), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
 ```
 
+#### Render Loop
 mat4 view: Sets the position of the viewer, the movement direction in relation to it & the world up direction
 
 **CPP**
@@ -195,6 +226,8 @@ while (glfwWindowShouldClose(window) == false)
 }
 ```
 
+#### User Input
+
 **CPP**
 ```c++
 void ProcessUserInput(GLFWwindow* WindowIn)
@@ -226,10 +259,12 @@ void ProcessUserInput(GLFWwindow* WindowIn)
     }
 }
 ```
-### Task 5
+#### Task 5
 Complete above.
 
 ### Direction
+#### Overview
+#### Globals
 **CPP**
 ```c++
 //Camera sidways rotation
@@ -243,6 +278,7 @@ float cameraLastXPos = 800.0f / 2.0f;
 float cameraLastYPos = 600.0f / 2.0f;
 ```
 
+#### Cursor
 Added set input mode
 
 **CPP**
@@ -267,6 +303,7 @@ glfwMakeContextCurrent(window);
 glewInit();
 ```
 
+#### Mouse Movement
 **Header**
 ```c++
 //Called on mouse movement
@@ -280,18 +317,18 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     //Initially no last positions, so sets last positions to current positions
     if (mouseFirstEntry)
     {
-        cameraLastXPos = xpos;
-        cameraLastYPos = ypos;
+        cameraLastXPos = (float)xpos;
+        cameraLastYPos = (float)ypos;
         mouseFirstEntry = false;
     }
 
     //Sets values for change in position since last frame to current frame
-    float xOffset = xpos - cameraLastXPos;
-    float yOffset = cameraLastYPos - ypos;
+    float xOffset = (float)xpos - cameraLastXPos;
+    float yOffset = cameraLastYPos - (float)ypos;
 
     //Sets last positions to current positions for next frame
-    cameraLastXPos = xpos;
-    cameraLastYPos = ypos;
+    cameraLastXPos = (float)xpos;
+    cameraLastYPos = (float)ypos;
 
     //Moderates the change in position based on sensitivity value
     const float sensitivity = 0.025f;
@@ -313,14 +350,14 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     }
 
     //Modification of direction vector based on mouse turning
-    glm::vec3 direction;
-    direction.x = cos(glm::radians(cameraYaw)) * cos(glm::radians(cameraPitch));
-    direction.y = sin(glm::radians(cameraPitch));
-    direction.z = sin(glm::radians(cameraYaw)) * cos(glm::radians(cameraPitch));
-    cameraFront = glm::normalize(direction);
+    vec3 direction;
+    direction.x = cos(radians(cameraYaw)) * cos(radians(cameraPitch));
+    direction.y = sin(radians(cameraPitch));
+    direction.z = sin(radians(cameraYaw)) * cos(radians(cameraPitch));
+    cameraFront = normalize(direction);
 }
 ```
-
+#### Mouse Callback
 **CPP**
 ```c++
 //Sets the framebuffer_size_callback() function as the callback for the window resizing event
@@ -330,5 +367,5 @@ glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 glfwSetCursorPosCallback(window, mouse_callback);
 ```
 
-### Task 6
+#### Task 6
 Complete above.
