@@ -54,11 +54,15 @@ void main()
 Try composing the aforementioned code in order to rotate & downscale the rectangle.
 
 ## Dynamic Rotation
+Next, we are going to get our wooden rectangle to perpetually rotate. First, we should make our transform variable global:
+
 **CPP Globals**
 ```c++
 //Transformations
 mat4 transform;
 ```
+
+All the transformation code from the last section needs to be relocated to the inside of the render loop. However, the rotation value needs to be perpetually changed. An easy way to do this is to use the ```glfwGetTime()``` function, which counts up from 0 upon the initialisation of GLFW. This is what we are going to set our degrees to rotate our rectangle to in the ```rotate()``` function:
 
 **CPP Render Loop**
 ```c++
@@ -91,11 +95,15 @@ while (glfwWindowShouldClose(window) == false)
 ```
 
 ## Task 2
-Complete above.
+Try composing the aforementioned code in order to perpetually rotate the downscaled the rectangle.
 
 ## Model View Projection (MVP)
-### Overview
+### Model & View
+In order to create a dynamically adjustable & realistic perception within a scene, we need to create a model-view-projection matrix (MVP). The model consists of the location of all objects within world space & the view determines the rotation of these objects within world space. Note that the viewer itself does not change position; instead, the world itself moves around the viewer.
+
 ### Initialisation
+Once we have initialised our model matrix, we are going to use the ```scale()``` function to enlargen its contents. In doing so, this gives the impression that we are 'zooming in' or 'moving forwards.' we also use the ```rotate()``` function in order to move the scene downwards so as to create the impression that we have moved up above it. Lastly, we also use the ```translate()``` function to move the contents of the model so as to make it look as though we have moved backwards:
+
 **CPP**
 ```c++
 //Model matrix
@@ -110,7 +118,16 @@ model = translate(model, vec3(0.0f, 1.f, -1.5f));
 
 //View matrix
 mat4 view = lookAt(vec3(0.0f, 0.0f, 3.0f), vec3(0.0f, 0.0f, 2.0f), vec3(0.0f, 1.0f, 0.0f));
+```
 
+### Projection
+The projection component of the MVP represents the field of view/vision (FOV) displayed on the window & everything contained in it. There are two options for types of projection that we can use, orthographic & perspective. Orthographic projection is relatively simple, as it allows everything within the given field of vision to be viewed at its absolute size. However, when we observe the universe, the further away an object is, the smaller it appears. In order to achieve this effect, we need to use the more complex perspective form of projection.
+
+### Initialisation
+When initialising our projection matrix with perspective, we need to use the ```perspective()``` function. First, we need to supply the viewing angle for our FOV, which we are going to set to ```45.0f``` as degrees with the ```radians()``` function. Then, we need to give the window's width divided by its height. Lastly, we need to set the values for how close & how far objects in the scene may be allowed to be viewed within our FOV. In our case, any vertices at a position below / that are closer than ```0.1f``` & any vertices beyond ```100.f``` won't be rendered. Since our MVP is now complete, we also need to set it as a uniform for our vertex shader to make use of it, which we are going to call ```mvpIn```:
+
+**CPP**
+```c++
 //Projection matrix
 mat4 projection = perspective(radians(45.0f), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
 
