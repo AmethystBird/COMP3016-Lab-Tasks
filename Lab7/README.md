@@ -122,12 +122,6 @@ Complete above.
 ### Task 4
 Achieve the same transform in 'Dynamic Rotation' with addition of MVP. I need to fix solution using 'glm::' unnecessarily
 
-### 3D Rotation
-Might do, not sure yet
-
-### Depth Buffer (Z Buffer)
-If 3D rotation done
-
 ## Controls
 ### Movement
 **CPP**
@@ -232,8 +226,10 @@ void ProcessUserInput(GLFWwindow* WindowIn)
     }
 }
 ```
+### Task 5
+Complete above.
 
-### Zooming
+### Direction
 **CPP**
 ```c++
 //Camera sidways rotation
@@ -333,3 +329,6 @@ glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 //Sets the mouse_callback() function as the callback for the mouse movement event
 glfwSetCursorPosCallback(window, mouse_callback);
 ```
+
+### Task 6
+Complete above.
