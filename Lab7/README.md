@@ -120,7 +120,7 @@ void main()
 Complete above.
 
 ### Task 4
-Achieve the same transform in 'Dynamic Rotation' with addition of MVP. Fix solution using 'glm::' unnecessarily
+Achieve the same transform in 'Dynamic Rotation' with addition of MVP. I need to fix solution using 'glm::' unnecessarily
 
 ### 3D Rotation
 Might do, not sure yet
@@ -129,7 +129,108 @@ Might do, not sure yet
 If 3D rotation done
 
 ## Controls
-
-
 ### Movement
+**CPP**
+```c++
+//Transformations
+//Relative position within world space
+glm::vec3 cameraPosition = glm::vec3(0.0f, 0.0f, 3.0f);
+//The direction of travel
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+//Up position within world space
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+//Time
+//Time change
+float deltaTime = 0.0f;
+//Last value of time change
+float lastFrame = 0.0f;
+```
+
+Like before, but without mvp at this stage
+
+**CPP**
+```c++
+//Model matrix
+mat4 model = mat4(1.0f);
+//Scaling to zoom in
+model = scale(model, vec3(2.0f, 2.0f, 2.0f));
+//Rotation to look down
+model = rotate(model, radians(-45.0f), vec3(1.0f, 0.0f, 0.0f));
+//Movement to position further back
+model = translate(model, vec3(0.0f, 1.f, -1.5f));
+
+//Projection matrix
+mat4 projection = perspective(radians(45.0f), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
+```
+
+mat4 view: Sets the position of the viewer, the movement direction in relation to it & the world up direction
+
+**CPP**
+```c++
+//Render loop
+while (glfwWindowShouldClose(window) == false)
+{
+    //Time
+    float currentFrame = static_cast<float>(glfwGetTime());
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+
+    //Input
+    ProcessUserInput(window); //Takes user input
+
+    //Rendering
+    glClearColor(0.25f, 0.0f, 1.0f, 1.0f); //Colour to display on cleared window
+    glClear(GL_COLOR_BUFFER_BIT); //Clears the colour buffer
+
+    //Transformations
+    mat4 view = glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
+    mat4 mvp = projection * view * model;
+    int mvpLoc = glGetUniformLocation(program, "mvpIn");
+
+    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, value_ptr(mvp));
+
+    //Drawing
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindVertexArray(VAOs[0]); //Bind buffer object to render; VAOs[0]
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    //Refreshing
+    glfwSwapBuffers(window); //Swaps the colour buffer
+    glfwPollEvents(); //Queries all GLFW events
+}
+```
+
+**CPP**
+```c++
+void ProcessUserInput(GLFWwindow* WindowIn)
+{
+    //Closes window on 'exit' key press
+    if (glfwGetKey(WindowIn, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(WindowIn, true);
+    }
+
+    //Extent to which to move in one instance
+    const float movementSpeed = 1.0f * deltaTime;
+    //WASD controls
+    if (glfwGetKey(WindowIn, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        cameraPosition += movementSpeed * cameraFront;
+    }
+    if (glfwGetKey(WindowIn, GLFW_KEY_S) == GLFW_PRESS)
+    {
+        cameraPosition -= movementSpeed * cameraFront;
+    }
+    if (glfwGetKey(WindowIn, GLFW_KEY_A) == GLFW_PRESS)
+    {
+        cameraPosition -= normalize(cross(cameraFront, cameraUp)) * movementSpeed;
+    }
+    if (glfwGetKey(WindowIn, GLFW_KEY_D) == GLFW_PRESS)
+    {
+        cameraPosition += normalize(cross(cameraFront, cameraUp)) * movementSpeed;
+    }
+}
+```
+
 ### Zooming
