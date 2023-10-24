@@ -1,5 +1,6 @@
 # Lab 4 - Tic-Tac-Toe
 ## Pretext
+In this lab you will learn how to:
 - Incorporate the SDL framework into your C++ project
 - Utilise mouse input within the SDL framework for game actions
 - Print fonts on the SDL window screen
