@@ -134,11 +134,11 @@ If 3D rotation done
 ```c++
 //Transformations
 //Relative position within world space
-glm::vec3 cameraPosition = glm::vec3(0.0f, 0.0f, 3.0f);
+vec3 cameraPosition = vec3(0.0f, 0.0f, 3.0f);
 //The direction of travel
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+vec3 cameraFront = vec3(0.0f, 0.0f, -1.0f);
 //Up position within world space
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+vec3 cameraUp = vec3(0.0f, 1.0f, 0.0f);
 
 //Time
 //Time change
@@ -184,7 +184,7 @@ while (glfwWindowShouldClose(window) == false)
     glClear(GL_COLOR_BUFFER_BIT); //Clears the colour buffer
 
     //Transformations
-    mat4 view = glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
+    mat4 view = lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
     mat4 mvp = projection * view * model;
     int mvpLoc = glGetUniformLocation(program, "mvpIn");
 
@@ -234,3 +234,102 @@ void ProcessUserInput(GLFWwindow* WindowIn)
 ```
 
 ### Zooming
+**CPP**
+```c++
+//Camera sidways rotation
+float cameraYaw = -90.0f;
+//Camera vertical rotation
+float cameraPitch = 0.0f;
+//Determines if first entry of mouse into window
+bool mouseFirstEntry = true;
+//Positions of camera from given last frame
+float cameraLastXPos = 800.0f / 2.0f;
+float cameraLastYPos = 600.0f / 2.0f;
+```
+
+Added set input mode
+
+**CPP**
+```c++
+GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Lab5", NULL, NULL);
+
+//Checks if window has been successfully instantiated
+if (window == NULL)
+{
+    cout << "GLFW Window did not instantiate\n";
+    glfwTerminate();
+    return -1;
+}
+
+//Sets cursor to automatically bind to window & hides cursor pointer
+glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+//Binds OpenGL to window
+glfwMakeContextCurrent(window);
+
+//Initialisation of GLEW
+glewInit();
+```
+
+**Header**
+```c++
+//Called on mouse movement
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+```
+
+**CPP**
+```c++
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    //Initially no last positions, so sets last positions to current positions
+    if (mouseFirstEntry)
+    {
+        cameraLastXPos = xpos;
+        cameraLastYPos = ypos;
+        mouseFirstEntry = false;
+    }
+
+    //Sets values for change in position since last frame to current frame
+    float xOffset = xpos - cameraLastXPos;
+    float yOffset = cameraLastYPos - ypos;
+
+    //Sets last positions to current positions for next frame
+    cameraLastXPos = xpos;
+    cameraLastYPos = ypos;
+
+    //Moderates the change in position based on sensitivity value
+    const float sensitivity = 0.025f;
+    xOffset *= sensitivity;
+    yOffset *= sensitivity;
+
+    //Adjusts yaw & pitch values against changes in positions
+    cameraYaw += xOffset;
+    cameraPitch += yOffset;
+
+    //Prevents turning up & down beyond 90 degrees to look backwards
+    if (cameraPitch > 89.0f)
+    {
+        cameraPitch = 89.0f;
+    }
+    else if (cameraPitch < -89.0f)
+    {
+        cameraPitch = -89.0f;
+    }
+
+    //Modification of direction vector based on mouse turning
+    glm::vec3 direction;
+    direction.x = cos(glm::radians(cameraYaw)) * cos(glm::radians(cameraPitch));
+    direction.y = sin(glm::radians(cameraPitch));
+    direction.z = sin(glm::radians(cameraYaw)) * cos(glm::radians(cameraPitch));
+    cameraFront = glm::normalize(direction);
+}
+```
+
+**CPP**
+```c++
+//Sets the framebuffer_size_callback() function as the callback for the window resizing event
+glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+//Sets the mouse_callback() function as the callback for the mouse movement event
+glfwSetCursorPosCallback(window, mouse_callback);
+```
