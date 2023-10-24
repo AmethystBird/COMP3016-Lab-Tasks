@@ -99,10 +99,15 @@ Try composing the aforementioned code in order to perpetually rotate the downsca
 
 ## Model View Projection (MVP)
 ### Model & View
-In order to create a dynamically adjustable & realistic perception within a scene, we need to create a model-view-projection matrix (MVP). The model consists of the location of all objects within world space & the view determines the rotation of these objects within world space. Note that the viewer itself does not change position; instead, the world itself moves around the viewer.
+### Overview
+In order to create a dynamically adjustable & realistic perception within a scene, we need to create a model-view-projection matrix (MVP). The model consists of the location of all objects within world space & the view determines the relation of these objects to the viewer. Note that the viewer itself never changes position since the viewer itself does not tangibly exist in OpenGL. Instead, the world itself moves around the viewer.
 
-### Initialisation
-Once we have initialised our model matrix, we are going to use the ```scale()``` function to enlargen its contents. In doing so, this gives the impression that we are 'zooming in' or 'moving forwards.' we also use the ```rotate()``` function in order to move the scene downwards so as to create the impression that we have moved up above it. Lastly, we also use the ```translate()``` function to move the contents of the model so as to make it look as though we have moved backwards:
+#### Initialisation
+##### Model
+Once we have initialised our model matrix, we are going to use the ```scale()``` function to enlargen its contents. In doing so, this gives the impression that we are 'zooming in' or 'moving forwards.' we also use the ```rotate()``` function in order to move the scene downwards so as to create the impression that we have moved up above it. Lastly, we also use the ```translate()``` function to move the contents of the model so as to make it look as though we have moved backwards.
+
+##### View
+When initialising our view, we need to call the ```lookAt()``` function to determine the relative positioning & direction of the view. The first parameter is the position, the second is the directional rotation & the last is the up vector. The up vector represents the world's absolute up direction. Therefore, if we were to change the up vector's ```1.0f``` y value to ```-1.0f```, the world would appear upside down [check this]:
 
 **CPP**
 ```c++
@@ -121,9 +126,10 @@ mat4 view = lookAt(vec3(0.0f, 0.0f, 3.0f), vec3(0.0f, 0.0f, 2.0f), vec3(0.0f, 1.
 ```
 
 ### Projection
+#### Overview
 The projection component of the MVP represents the field of view/vision (FOV) displayed on the window & everything contained in it. There are two options for types of projection that we can use, orthographic & perspective. Orthographic projection is relatively simple, as it allows everything within the given field of vision to be viewed at its absolute size. However, when we observe the universe, the further away an object is, the smaller it appears. In order to achieve this effect, we need to use the more complex perspective form of projection.
 
-### Initialisation
+#### Initialisation
 When initialising our projection matrix with perspective, we need to use the ```perspective()``` function. First, we need to supply the viewing angle for our FOV, which we are going to set to ```45.0f``` as degrees with the ```radians()``` function. Then, we need to give the window's width divided by its height. Lastly, we need to set the values for how close & how far objects in the scene may be allowed to be viewed within our FOV. In our case, any vertices at a position below / that are closer than ```0.1f``` & any vertices beyond ```100.f``` won't be rendered. Since our MVP is now complete, we also need to set it as a uniform for our vertex shader to make use of it, which we are going to call ```mvpIn```:
 
 **CPP**
@@ -137,7 +143,7 @@ int mvpLoc = glGetUniformLocation(program, "mvpIn");
 glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, value_ptr(mvp));
 ```
 
-### Vertex Shader
+#### Vertex Shader
 In our vertex shader, we need to declare our uniform ```mvpIn``` & we no longer need our ```transformIn``` variable. Where we originally applied our transformation upon our vertex positions, we can now apply our ```mvpIn``` values:
 
 **GLSL**
@@ -163,15 +169,16 @@ void main()
 }
 ```
 
-### Task 3
+#### Task 3
 Try composing the aforementioned code in order to use an MVP in order to view our scene.
 
-### Task 4
+#### Task 4
 Our wooden rectangle no longer perpetually rotates as it did in the [Dynamic Rotation](#dynamic-rotation) section. Your task is to bring this feature back alongside the addition of the MVP.
 
 ## Controls
 ### Movement
 #### Globals
+We are going to make use of our MVP in order to allow for the user the move around the scene with WASD.
 **CPP**
 ```c++
 //Transformations

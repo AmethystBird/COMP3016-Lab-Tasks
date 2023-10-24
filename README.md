@@ -12,7 +12,7 @@ Note that if a lab appears to exist within this repository but is not linked by 
 
 [Lab 3 - Object-Orientation #2](/Lab3/README.md)
 
-[Lab 4 - SDL](/Lab4/Lab%204.docx)
+[Lab 4 - SDL](/Lab4/README.md)
 
 [Lab 5 - Introduction to OpenGL](/Lab5/README.md)
 
