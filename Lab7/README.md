@@ -1,6 +1,6 @@
 # Lab 7 - Transformations
 ## Overview
-If you followed [Lab 5](/Lab5/README.md) as intended, you will have acquired the OpenGL Mathematics library (GLM). This library's classes, functions & types are designed to mirror or at least follow the conventions of GLSL for ease of use. This library is going to be used a lot in this section since it deals with transformations. The tasks in this lab require the following includes in ```main.cpp``` & set ```glm``` as an additional namespace to ```std```:
+If you followed [Lab 5](/Lab5/README.md) as intended, you will have acquired the OpenGL Mathematics library (GLM). This library's classes, functions & types are designed to mirror or at least follow the conventions of GLSL for ease of use. This library is going to be used a lot in this section since it deals with transformations. The tasks in this lab require the following includes in ```main.cpp``` & for ```glm``` to be set as an additional namespace to ```std```:
 
 **CPP**
 ```c++
@@ -95,12 +95,12 @@ while (glfwWindowShouldClose(window) == false)
 ```
 
 ## Task 2
-Try composing the aforementioned code in order to perpetually rotate the downscaled the rectangle.
+Try composing the aforementioned code in order to perpetually rotate the downscaled rectangle.
 
 ## Model View Projection (MVP)
 ### Model & View
 ### Overview
-In order to create a dynamically adjustable & realistic perception within a scene, we need to create a model-view-projection matrix (MVP). The model consists of the location of all objects within world space & the view determines the relation of these objects to the viewer. Note that the viewer itself never changes position since the viewer itself does not tangibly exist in OpenGL. Instead, the world itself moves around the viewer.
+In order to create a dynamically adjustable & realistic perception within a scene, we need to create a model-view-projection matrix (MVP). The model consists of the location of all objects within world space & the view determines the relation of these objects to the viewer. Note that the viewer itself never changes position since the viewer itself does not tangibly exist in OpenGL. Instead, the world itself, which does exist, moves around the viewer.
 
 #### Initialisation
 ##### Model
@@ -127,10 +127,10 @@ mat4 view = lookAt(vec3(0.0f, 0.0f, 3.0f), vec3(0.0f, 0.0f, 2.0f), vec3(0.0f, 1.
 
 ### Projection
 #### Overview
-The projection component of the MVP represents the field of view/vision (FOV) displayed on the window & everything contained in it. There are two options for types of projection that we can use, orthographic & perspective. Orthographic projection is relatively simple, as it allows everything within the given field of vision to be viewed at its absolute size. However, when we observe the universe, the further away an object is, the smaller it appears. In order to achieve this effect, we need to use the more complex perspective form of projection.
+The projection component of the MVP represents the field of view/vision (FOV) displayed on the window & everything contained in it. There are two projection options that we can use: Orthographic & perspective. Orthographic projection is relatively simple, as it allows everything within the given field of vision to be viewed at its absolute size. However, when we observe the universe, the further away an object is, the smaller it appears. In order to achieve this effect, we need to use the more complex perspective form of projection.
 
 #### Initialisation
-When initialising our projection matrix with perspective, we need to use the ```perspective()``` function. First, we need to supply the viewing angle for our FOV, which we are going to set to ```45.0f``` as degrees with the ```radians()``` function. Then, we need to give the window's width divided by its height. Lastly, we need to set the values for how close & how far objects in the scene may be allowed to be viewed within our FOV. In our case, any vertices at a position below / that are closer than ```0.1f``` & any vertices beyond ```100.f``` won't be rendered. Since our MVP is now complete, we also need to set it as a uniform for our vertex shader to make use of it, which we are going to call ```mvpIn```:
+When initialising our projection matrix with perspective, we need to use the ```perspective()``` function. First, we need to supply the viewing angle for our FOV, which we are going to set to ```45.0f``` as degrees with the ```radians()``` function. Then, we need to give the window's width divided by its height, since the projection in part relies on the dimensions of the viewport. Lastly, we need to set the values for how close & how far objects in the scene may be allowed to be viewed within our FOV. In our case, any vertices at a position below / that are closer than ```0.1f``` & any vertices beyond ```100.f``` won't be rendered. Since our MVP is now complete, we also need to set it as a uniform for our vertex shader to make use of it, which we are going to call ```mvpIn```:
 
 **CPP**
 ```c++
@@ -178,7 +178,8 @@ Our wooden rectangle no longer perpetually rotates as it did in the [Dynamic Rot
 ## Controls
 ### Movement
 #### Globals
-We are going to make use of our MVP in order to allow for the user the move around the scene with WASD.
+We are going to make use of our MVP in order to allow for the user to be able to move around the scene with WASD. In order to do this, we need to instantiate some global variables. There are three vec3 variables, all of which relate to the camera. The first variable is the ```cameraPosition```, which will represent the viewing position, the second variable is the ```cameraFront```, which will determine the direction by which any travel will move in & the last variable, ```cameraUp```, denotes the absolute direction of up in world space.
+
 **CPP**
 ```c++
 //Transformations
@@ -188,7 +189,12 @@ vec3 cameraPosition = vec3(0.0f, 0.0f, 3.0f);
 vec3 cameraFront = vec3(0.0f, 0.0f, -1.0f);
 //Up position within world space
 vec3 cameraUp = vec3(0.0f, 1.0f, 0.0f);
+```
 
+We also need the variables ```deltaTime``` & ```lastFrame```. The former will later be set to represent time change. The purpose of this variable will be to determine the time taken between each frame change. This is useful as a moderation when quantifying the extent to which user inputted interactions take place between frames, thereby keeping them framerate independent. This way, any action that takes place can be moderated by ```deltaTime```. If this variable wasn't used, any action would become variably too fast or slow depending upon the framerate of the program. The latter variable, ```lastFrame```, simply stores the time value of the last current frame. This is used as a way to determine ```deltaTime```:
+
+**CPP**
+```c++
 //Time
 //Time change
 float deltaTime = 0.0f;
@@ -197,7 +203,7 @@ float lastFrame = 0.0f;
 ```
 
 #### Model & Projection
-Like before, but without mvp at this stage
+Previously, we only set our view & resulting MVP once. However, both of these will now need to be able to change in relation to user inputted movement. This is because the view determines the relative position & the MVP takes this into account, along with everything else. For this reason, we need to remove the code we used before for setting our view & MVP, & reimplement this elsewhere later:
 
 **CPP**
 ```c++
@@ -215,7 +221,9 @@ mat4 projection = perspective(radians(45.0f), (float)windowWidth / (float)window
 ```
 
 #### Render Loop
-mat4 view: Sets the position of the viewer, the movement direction in relation to it & the world up direction
+In the render loop, we first need to calculate ```deltaTime```. In order to do this, we will need to detract the time of the last frame against the time of the current frame. For this reason, we need to create a variable named ```currentFrame``` which will be set to ```glfwGetTime()``` in order to retrieve the given current time value. Next, we need to set ```deltaTime``` to be ```currentFrame - lastFrame``` & then set ```lastFrame```'s value to be ```currentFrame```'s for the sake of the next iteration of the render loop.
+
+Since the position of the viewer could update during any frame, we need to set the position & the resulting MVP values in the render loop. In order to do this, we need to remove our transformation code & replace it with code to set the ```view``` & the ```mvp```. When setting the ```view```, this time we use our camera variables in order to allow for the values to perpetually change in relation to them. Note that for ```lookAt()```'s second parameter, we need to supply the sum of ```cameraPosition + cameraFront```. By adding the position to the travel direction (```cameraFront```), this creates the actual transformation for movement. Lastly, we can then set the ```mvp``` after this:
 
 **CPP**
 ```c++
@@ -253,6 +261,9 @@ while (glfwWindowShouldClose(window) == false)
 ```
 
 #### User Input
+Lastly, we need to update our ```ProcessUserInput()``` function to also include the WASD presses. For each case, we need to modify the cameraPosition accordingly. In order to determine by how much, however, we need to create a variable named ```movementSpeed```, which will be a modifier to scale against any movement that occurs.
+
+In the cases of W & S, we are moving forwards or backwards respectively. Therefore, we need to alter the ```cameraPosition``` by adding the multiplied value of ```movementSpeed * cameraFront```. In the cases of A & D, we are instead moving left or right respectively, in the form of strafing. For these cases we instead create a cross product of the ```cameraFront``` & ```cameraUp``` in order to acquire a right vector. Adding the right vector moves the position right, & subtracting it moves the position left:
 
 **CPP**
 ```c++
