@@ -1,5 +1,5 @@
 # Lab 7 - Transformations
-## Overview
+## OpenGL Mathematics Library (GLM)
 If you followed [Lab 5](/Lab5/README.md) as intended, you will have acquired the OpenGL Mathematics library (GLM). This library's classes, functions & types are designed to mirror or at least follow the conventions of GLSL for ease of use. This library is going to be used a lot in this section since it deals with transformations. The tasks in this lab require the following includes in ```main.cpp``` & for ```glm``` to be set as an additional namespace to ```std```:
 
 **CPP**
@@ -50,21 +50,23 @@ void main()
 }
 ```
 
-## Task 1
+### Task 1
 Try composing the aforementioned code in order to rotate & downscale the rectangle.
 
 ## Dynamic Rotation
+### Globals
 Next, we are going to get our wooden rectangle to perpetually rotate. First, we should make our transform variable global:
 
-**CPP Globals**
+**CPP**
 ```c++
 //Transformations
 mat4 transform;
 ```
 
+### Render Loop
 All the transformation code from the last section needs to be relocated to the inside of the render loop. However, the rotation value needs to be perpetually changed. An easy way to do this is to use the ```glfwGetTime()``` function, which counts up from 0 upon the initialisation of GLFW. This is what we are going to set our degrees to rotate our rectangle to in the ```rotate()``` function:
 
-**CPP Render Loop**
+**CPP**
 ```c++
 //Render loop
 while (glfwWindowShouldClose(window) == false)
@@ -94,7 +96,7 @@ while (glfwWindowShouldClose(window) == false)
 }
 ```
 
-## Task 2
+### Task 2
 Try composing the aforementioned code in order to perpetually rotate the downscaled rectangle.
 
 ## Model View Projection (MVP)
@@ -107,7 +109,7 @@ In order to create a dynamically adjustable & realistic perception within a scen
 Once we have initialised our model matrix, we are going to use the ```scale()``` function to enlargen its contents. In doing so, this gives the impression that we are 'zooming in' or 'moving forwards.' we also use the ```rotate()``` function in order to move the scene downwards so as to create the impression that we have moved up above it. Lastly, we also use the ```translate()``` function to move the contents of the model so as to make it look as though we have moved backwards.
 
 ##### View
-When initialising our view, we need to call the ```lookAt()``` function to determine the relative positioning & direction of the view. The first parameter is the position, the second is the directional rotation & the last is the up vector. The up vector represents the world's absolute up direction. Therefore, if we were to change the up vector's ```1.0f``` y value to ```-1.0f```, the world would appear upside down [check this]:
+When initialising our view, we need to call the ```lookAt()``` function to determine the relative positioning & direction of the view. The first parameter is the position, the second is the directional rotation & the last is the up vector. The up vector represents the world's absolute up direction. Therefore, if we were to change the up vector's ```1.0f``` y value to ```-1.0f```, the world would appear upside down:
 
 **CPP**
 ```c++
@@ -352,7 +354,9 @@ In order to detect mouse movement, we need to implement the ```mouse_callback()`
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 ```
 
-Inside of this function, we need to first check if ```mouseFirstEntry``` is true or not in order to determine whether to set the camera's last x & y positions or not. After this, we need to set our changes in position & store them in our x & y offset variables. When doing this, we need to take our passed ```xpos``` & ```ypos``` variables & apply them against our camera's last x & y positions. After this, we need to set our camera's last x & y positions based on the passed ```xpos``` & ```ypos``` values. Like before, where we used the ```movementSpeed``` variable for keyboard input, we need a variable to moderate the turning speed. We are going to call this ```sensitivity``` & set our offset variable values to their current values multiplied by ```sensitivity```. We then need to modify our current camera yaw & pitch values by adding our offset values to them to adjust our horizontal & vertical rotation:
+Inside of this function, we need to first check if ```mouseFirstEntry``` is true or not in order to determine whether to set the camera's last x & y positions or not. After this, we need to set our changes in position & store them in our x & y offset variables. When doing this, we need to take our passed ```xpos``` & ```ypos``` variables & apply them against our camera's last x & y positions. Next, we need to set our camera's last x & y positions based on the passed ```xpos``` & ```ypos``` values.
+
+Like before, where we used the ```movementSpeed``` variable for keyboard input, we need a variable to moderate the turning speed. We are going to call this ```sensitivity``` & set our offset variable values to their current values multiplied by ```sensitivity```. We then need to modify our current camera yaw & pitch values by adding our offset values to them to adjust our horizontal & vertical rotation:
 
 **CPP**
 ```c++
