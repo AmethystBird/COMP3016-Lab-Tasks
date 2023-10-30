@@ -297,14 +297,17 @@ void ProcessUserInput(GLFWwindow* WindowIn)
 }
 ```
 #### Task 5
-Complete above.
+Try composing the aforementioned code in order to allow for WASD controls for traversal in your scene.
 
 ### Direction
-#### Overview
 #### Globals
+As well as traversing through the scene, we also want to allow the user to rotate themselves within the scene. In order to do this, we need to initialise some new global variables. The first two, ```cameraYaw``` & ```cameraPitch```, allow for sideways rotation (rotation around the y axis; looking left & right) & vertical rotation (rotation around the x axis; looking up & down) respectively.
+
+Since we are going to be using mouse movement to determine the viewing direction, we are going to need the variable ```mouseFirstEntry```. This variable will be used later to ensure that the next two variables, ```cameraLastPos``` x & y, are not set on the first shown frame. This is because there is no last frame that comes before the first frame:
+
 **CPP**
 ```c++
-//Camera sidways rotation
+//Camera sideways rotation
 float cameraYaw = -90.0f;
 //Camera vertical rotation
 float cameraPitch = 0.0f;
@@ -316,7 +319,7 @@ float cameraLastYPos = 600.0f / 2.0f;
 ```
 
 #### Cursor
-Added set input mode
+In order for our window to be able to capture our cursor, we need to call the ```glfwSetInputMode()``` function during our GLFW setup stage. The first parameter is the window in question, the second is the input mode & the last is the 'value,' which in this case refers to the mode's settings. We want the mode to be set to use ```GLFW_CURSOR``` & for our cursor to be invisible while this is the case, therefore we set the value to ```GLFW_CURSOR_DISABLED```:
 
 **CPP**
 ```c++
@@ -341,11 +344,15 @@ glewInit();
 ```
 
 #### Mouse Movement
+In order to detect mouse movement, we need to implement the ```mouse_callback()``` function:
+
 **Header**
 ```c++
 //Called on mouse movement
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 ```
+
+Inside of this function, we need to first check if ```mouseFirstEntry``` is true or not in order to determine whether to set the camera's last x & y positions or not. After this, we need to set our changes in position & store them in our x & y offset variables. When doing this, we need to take our passed ```xpos``` & ```ypos``` variables & apply them against our camera's last x & y positions. After this, we need to set our camera's last x & y positions based on the passed ```xpos``` & ```ypos``` values. Like before, where we used the ```movementSpeed``` variable for keyboard input, we need a variable to moderate the turning speed. We are going to call this ```sensitivity``` & set our offset variable values to their current values multiplied by ```sensitivity```. We then need to modify our current camera yaw & pitch values by adding our offset values to them to adjust our horizontal & vertical rotation:
 
 **CPP**
 ```c++
@@ -375,26 +382,33 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     //Adjusts yaw & pitch values against changes in positions
     cameraYaw += xOffset;
     cameraPitch += yOffset;
-
-    //Prevents turning up & down beyond 90 degrees to look backwards
-    if (cameraPitch > 89.0f)
-    {
-        cameraPitch = 89.0f;
-    }
-    else if (cameraPitch < -89.0f)
-    {
-        cameraPitch = -89.0f;
-    }
-
-    //Modification of direction vector based on mouse turning
-    vec3 direction;
-    direction.x = cos(radians(cameraYaw)) * cos(radians(cameraPitch));
-    direction.y = sin(radians(cameraPitch));
-    direction.z = sin(radians(cameraYaw)) * cos(radians(cameraPitch));
-    cameraFront = normalize(direction);
-}
 ```
+
+If the user decided to keep moving their view up or down, they would ultimately flip upside down. In order to prevent this, we have to cap our cameraPitch value to between -90 & 90 degrees. The last thing we need to do is set our direction vector's values based on our camera yaw & pitch & then set our ```cameraFront``` variable to this new value:
+
+**CPP**
+```c++
+//Prevents turning up & down beyond 90 degrees to look backwards
+if (cameraPitch > 89.0f)
+{
+    cameraPitch = 89.0f;
+}
+else if (cameraPitch < -89.0f)
+{
+    cameraPitch = -89.0f;
+}
+
+//Modification of direction vector based on mouse turning
+vec3 direction;
+direction.x = cos(radians(cameraYaw)) * cos(radians(cameraPitch));
+direction.y = sin(radians(cameraPitch));
+direction.z = sin(radians(cameraYaw)) * cos(radians(cameraPitch));
+cameraFront = normalize(direction);
+```
+
 #### Mouse Callback
+Our ```mouse_callback()``` function won't fire as an event until we register it as a callback with ```glfwSetCursorPosCallback()```:
+
 **CPP**
 ```c++
 //Sets the framebuffer_size_callback() function as the callback for the window resizing event
@@ -405,4 +419,4 @@ glfwSetCursorPosCallback(window, mouse_callback);
 ```
 
 #### Task 6
-Complete above.
+Try composing the aforementioned code in order to allow for mouse controls for rotation in your scene.
