@@ -1,7 +1,4 @@
 # Lab 8 - Procedural Terrain Generation
-## Fast Noise Lite
-Placeholder
-
 ## Terrain
 ### Includes
 **CPP**
@@ -197,6 +194,124 @@ void main()
 }
 ```
 
+### Task 1
+Try composing the aforementioned code in order to generate a flat grid of chunks.
+
 ## Height Map
+### Fast Noise Lite
+**CPP**
+```c++
+#include "FastNoiseLite.h"
+```
+
+### Noise
+**CPP**
+```c++
+//Assigning perlin noise type for map
+FastNoiseLite TerrainNoise;
+//Setting noise type to Perlin
+TerrainNoise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+//Sets the noise scale
+TerrainNoise.SetFrequency(0.05f);
+//Generates a random seed between integers 0 & 100
+int terrainSeed = rand() % 100;
+//Sets seed for noise
+TerrainNoise.SetSeed(terrainSeed);
+
+//Initialising height map
+vector<float> terrainHeightMap(MAP_SIZE);
+```
+
+### Height Variation
+**CPP**
+```c++
+//Terrain vertice index
+int i = 0;
+//Using x & y nested for loop in order to apply noise 2-dimensionally
+for (int y = 0; y < RENDER_DISTANCE; y++)
+{
+    for (int x = 0; x < RENDER_DISTANCE; x++)
+    {
+        //Setting of height from 2D noise value at respective x & y coordinate
+        terrainVertices[i][1] = TerrainNoise.GetNoise((float)x, (float)y);
+        i++;
+    }
+}
+```
+
+### Vertices
+Removal of terrainVertices height at [i][1].
+
+**CPP**
+```c++
+for (int i = 0; i < MAP_SIZE; i++)
+{
+    //Generation of x & z vertices for horizontal plane
+    terrainVertices[i][0] = columnVerticesOffset;
+    terrainVertices[i][2] = rowVerticesOffset;
+    ...
+}
+```
+
 ## Biomes
-## Weather
+### Cellular Noise
+**CPP**
+```c++
+//Biome noise
+FastNoiseLite BiomeNoise;
+BiomeNoise.SetNoiseType(FastNoiseLite::NoiseType_Cellular);
+BiomeNoise.SetFrequency(0.05f);
+int biomeSeed = rand() % 100;
+TerrainNoise.SetSeed(biomeSeed);
+```
+
+### Noise Generation Loop
+**CPP**
+```c++
+//Retrieval of biome to set
+float biomeValue = BiomeNoise.GetNoise((float)x, (float)y);
+
+if (biomeValue <= -0.75f) //Plains
+{
+    terrainVertices[i][3] = 0.0f;
+    terrainVertices[i][4] = 0.75f;
+    terrainVertices[i][5] = 0.25f;
+}
+else //Desert
+{
+    terrainVertices[i][3] = 1.0f;
+    terrainVertices[i][4] = 1.0f;
+    terrainVertices[i][5] = 0.5f;
+}
+```
+### Vertices
+Removal of colour setting.
+
+**CPP**
+```c++
+int rowIndex = 0;
+for (int i = 0; i < MAP_SIZE; i++)
+{
+    //Generation of x & z vertices for horizontal plane
+    terrainVertices[i][0] = columnVerticesOffset;
+    terrainVertices[i][2] = rowVerticesOffset;
+
+    //Shifts x position across for next triangle along grid
+    columnVerticesOffset = columnVerticesOffset + -0.0625f;
+
+    //Indexing of each chunk within row
+    rowIndex++;
+    //True when all triangles of the current row have been generated
+    if (rowIndex == RENDER_DISTANCE)
+    {
+        //Resets for next row of triangles
+        rowIndex = 0;
+        //Resets x position for next row of triangles
+        columnVerticesOffset = drawingStartPosition;
+        //Shifts y position
+        rowVerticesOffset = rowVerticesOffset + -0.0625f;
+    }
+}
+```
+
+## Altitude
