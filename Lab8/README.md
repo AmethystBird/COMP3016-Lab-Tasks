@@ -314,4 +314,15 @@ for (int i = 0; i < MAP_SIZE; i++)
 }
 ```
 
-## Altitude
+### Altitude
+**CPP**
+```c++
+//Determination of biomes based on height
+if (terrainVertices[i][1] >= (0.5f / 8.0f))
+{
+    //Snow
+    terrainVertices[i][3] = 1.0f;
+    terrainVertices[i][4] = 1.0f;
+    terrainVertices[i][5] = 1.0f;
+}
+```
