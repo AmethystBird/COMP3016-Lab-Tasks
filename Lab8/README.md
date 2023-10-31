@@ -1,6 +1,8 @@
 # Lab 8 - Procedural Terrain Generation
 ## Terrain
 ### Includes
+For this lab, we are not going to be using textures, so you can safely remove includes relating to this. For now, the only addition is the use of ```<vector>```. Later however, we are going to add an extra library for generating noise:
+
 **CPP**
 ```c++
 //STD
@@ -17,12 +19,13 @@
 //GENERAL
 #include "main.h"
 #include "LoadShaders.h"
-
-//SPECIALISED
-#include "FastNoiseLite.h"
 ```
 
 ### Globals
+In order to generate our terrain, we are first going to initialise some globals. Our first two are ```RENDER_DISTANCE``` & ```MAP_SIZE```. The value of ```RENDER_DISTANCE``` is the amount of chunks across either the x or y direction of the terrain. ```MAP_SIZE``` is the total number of chunks. To clarify on what chunks are, they are square representations of the terrain, rather than triangular. As a result, our chunks will be mapped within our indices array. In our case, we will be using 1x1 squares.
+
+The variable ```squaresRow``` will later be used to check if an entire row of chunks has been generated. ```trianglesPerSquare``` effectively sets the size of the chunk. In our case, we want our chunks to be 1x1 squares. ```trianglesGrid``` contains the total amount of triangles within the terrain map. This will be used to initialise & to count through each triangle to generate chunks, or rather indices:
+
 **CPP**
 ```c++
 #define RENDER_DISTANCE 128 //Render width of map
@@ -30,18 +33,17 @@
 
 //Amount of chunks across one dimension
 const int squaresRow = RENDER_DISTANCE - 1;
-//Amount of chunks on map
-const int squaresGrid = squaresRow * squaresRow;
 //Two triangles per square to form a 1x1 chunk
 const int trianglesPerSquare = 2;
-
-//Amount of triangles across one dimension
-const int trianglesRow = squaresRow * trianglesPerSquare;
 //Amount of triangles on map
-const int trianglesGrid = trianglesRow * squaresRow;
+const int trianglesGrid = squaresRow * squaresRow * trianglesPerSquare;
 ```
 
 ### Vertices
+When generating our terrain, we first need to create its vertices. In order to store them, we need a 2 dimensional array named ```terrainVertices```. The array's first dimension will store every triangle across the terrain grid, therefore we will set its size to ```MAP_SIZE```. The second dimension will allow each triangle to contain 6 values: 3 for points & 3 for colours.
+
+Our variable ```drawingStartPosition``` sets the initial drawing position for the terrain. The columnVertices & rowVertices offset variables take its value initially, however their values are shifted in order to generate triangles in the correct locations within the terrain's grid. ```rowIndex``` will be used to check if an entire row of triangles has been generated & if so, the next row will begin generation:
+
 **CPP**
 ```c++
 //Generation of height map vertices
@@ -53,6 +55,16 @@ float columnVerticesOffset = drawingStartPosition;
 float rowVerticesOffset = drawingStartPosition;
 
 int rowIndex = 0;
+```
+
+Within the for loop shown, we are going to index across every triangle within the terrain grid. The first three indexes of ```terrainVertices``` will then be set. The x & z positions will take the values of the columnVertices & rowVertices offset variables respectively. This will allow the positions of each triangle to be perpetually shifted in order to generate the entire grid. For now, we will also keep setting the same green colour to each vertice.
+
+In order to generate triangles along rows, our ```columnVerticesOffset``` variable is shifted in each iteration of the loop. In order to move down a row, ```rowIndex``` is checked against the length of a row (which happens to also be the length of a column) with the ```RENDER_DISTANCE``` variable. If this is true, the ```columnVerticesOffset``` variable is set back to its starting position with ```drawingStartPosition``` & ```rowVerticesOffset``` is shifted to the next row.
+
+It is important to note however, that we are not yet generating the heightmap. Unlike the x & z values, the heightmap will later have non-uniform variation applied to it. In addition, you may have noticed that we are only generating one triangle per square. Because of this, no flipped triangles are being generated to slot into the second halves of each square. Generating both triangles is not necessary & the lack of whole squares will be amended for when we generate our chunks, otherwise known as indices:
+
+**CPP**
+```c++
 for (int i = 0; i < MAP_SIZE; i++)
 {
     //Generation of x & z vertices for horizontal plane
@@ -97,7 +109,6 @@ int rowIndicesOffset = 0;
 rowIndex = 0;
 for (int i = 0; i < trianglesGrid - 1; i += 2)
 {
-    //vertices
     terrainIndices[i][0] = columnIndicesOffset + rowIndicesOffset; //top left
     terrainIndices[i][2] = RENDER_DISTANCE + columnIndicesOffset + rowIndicesOffset; //bottom left
     terrainIndices[i][1] = 1 + columnIndicesOffset + rowIndicesOffset; //top right
