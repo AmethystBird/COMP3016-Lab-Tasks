@@ -287,6 +287,8 @@ Try composing the aforementioned code in order to generate natural-looking heigh
 
 ## Biomes
 ### Cellular Noise
+Currently, our terrain only has one biome. Since our biome appears green, we are going to consider it a plains biome. Much like with our heightmap, it is also possible to generate biomes with noise algorithms. We are going to generate a desert. In order to do this, we need to create a new ```FastNoiseLite``` object which we are going to call ```BiomeNoise```. While not necessary, we are going to use cellular noise as opposed to Perlin noise this time. Make sure to set a different seed with the ```biomeSeed``` variable. Using the same seed in certain cases can produce noticeable repetition between all the elements of our terrain's variation:
+
 **CPP**
 ```c++
 //Biome noise
@@ -298,6 +300,8 @@ TerrainNoise.SetSeed(biomeSeed);
 ```
 
 ### Noise Generation Loop
+In our nested loop for setting our height noise, we can also set our biome. We can determine biomes based on cut off values. This ensures that biomes form cohesive areas. In our case, noise values less than or the same as ```0.75f``` will generate our plains biome & values greater than this will generate our desert biome. We are going to display our biomes through different colour values: Plains biomes will be green & deserts will be yellow:
+
 **CPP**
 ```c++
 //Retrieval of biome to set
@@ -317,7 +321,7 @@ else //Desert
 }
 ```
 ### Vertices
-Removal of colour setting.
+Since we are setting colours within our noise generation nested loop, we need to remove the code in our vertices generation loop that sets the colours of vertices.
 
 **CPP**
 ```c++
@@ -345,16 +349,8 @@ for (int i = 0; i < MAP_SIZE; i++)
     }
 }
 ```
+### Task 3
+Try composing the aforementioned code in order to generate natural-looking biomes across the terrain.
 
-### Altitude
-**CPP**
-```c++
-//Determination of biomes based on height
-if (terrainVertices[i][1] >= (0.5f / 8.0f))
-{
-    //Snow
-    terrainVertices[i][3] = 1.0f;
-    terrainVertices[i][4] = 1.0f;
-    terrainVertices[i][5] = 1.0f;
-}
-```
+### Task 4
+Try generating a snowy-mountain biome based on height level in which the colour of the vertices is set to white.
