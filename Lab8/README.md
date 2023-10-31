@@ -42,7 +42,7 @@ const int trianglesGrid = squaresRow * squaresRow * trianglesPerSquare;
 ### Vertices
 When generating our terrain, we first need to create its vertices. In order to store them, we need a 2 dimensional array named ```terrainVertices```. The array's first dimension will store every triangle across the terrain grid, therefore we will set its size to ```MAP_SIZE```. The second dimension will allow each triangle to contain 6 values: 3 for points & 3 for colours.
 
-Our variable ```drawingStartPosition``` sets the initial drawing position for the terrain. The columnVertices & rowVertices offset variables take its value initially, however their values are shifted in order to generate triangles in the correct locations within the terrain's grid. ```rowIndex``` will be used to check if an entire row of triangles has been generated & if so, the next row will begin generation:
+Our variable ```drawingStartPosition``` sets the initial drawing position for the terrain. The column & row verticesOffset variables take its value initially, however their values are shifted in order to generate triangles in the correct locations within the terrain's grid. ```rowIndex``` will be used to check if an entire row of triangles has been generated & if so, the next row will begin generation:
 
 **CPP**
 ```c++
@@ -57,7 +57,7 @@ float rowVerticesOffset = drawingStartPosition;
 int rowIndex = 0;
 ```
 
-Within the for loop shown, we are going to index across every triangle within the terrain grid. The first three indexes of ```terrainVertices``` will then be set. The x & z positions will take the values of the columnVertices & rowVertices offset variables respectively. This will allow the positions of each triangle to be perpetually shifted in order to generate the entire grid. For now, we will also keep setting the same green colour to each vertice.
+Within the for loop shown, we are going to index across every triangle within the terrain grid. The first three indexes of ```terrainVertices``` will then be set. The x & z positions will take the values of the column & row verticesOffset variables respectively. This will allow the positions of each triangle to be perpetually shifted in order to generate the entire grid. For now, we will also keep setting the same green colour to each vertice.
 
 In order to generate triangles along rows, our ```columnVerticesOffset``` variable is shifted in each iteration of the loop. In order to move down a row, ```rowIndex``` is checked against the length of a row (which happens to also be the length of a column) with the ```RENDER_DISTANCE``` variable. If this is true, the ```columnVerticesOffset``` variable is set back to its starting position with ```drawingStartPosition``` & ```rowVerticesOffset``` is shifted to the next row.
 
@@ -96,6 +96,10 @@ for (int i = 0; i < MAP_SIZE; i++)
 ```
 
 ### Indices
+In order to map our vertices to chunks, we need to create our indices array, which we are going to call ```terrainIndices```. Like when filling our vertex array, we also need column & row indicesOffset variables. Our for loop for generating the chunks needs to index through every triangle we generated in our vertex array, therefore the for loop's condition takes ```trianglesGrid```.
+
+Notice that we create two triangles in each iteration of the loop, which is necessary since one chunk comprises of two triangles. However, we didn't create the vertices for the adjacent triangles when generating the vertex array. The reason we are able to do this is because we are using the vertices from the side of the triangle in the given next iteration:
+
 **CPP**
 ```c++
 //Generation of height map indices
