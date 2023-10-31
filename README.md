@@ -19,3 +19,5 @@ Note that if a lab appears to exist within this repository but is not linked by 
 [Lab 6 - Lighting & Extras](/Lab6/README.md)
 
 [Lab 7 - Transformations](/Lab7/README.md)
+
+[Lab 8 - Procedural Terrain Generation](/Lab8/README.md)
