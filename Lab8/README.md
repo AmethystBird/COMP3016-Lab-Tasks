@@ -1,13 +1,12 @@
 # Lab 8 - Procedural Terrain Generation
 ## Terrain
 ### Includes
-For this lab, we are not going to be using textures, so you can safely remove includes relating to this. For now, the only addition is the use of ```<vector>```. Later however, we are going to add an extra library for generating noise:
+For this lab, we are not going to be using textures, so you can safely remove includes relating to this. Later however, we are going to add an extra library for generating noise:
 
 **CPP**
 ```c++
 //STD
 #include <iostream>
-#include <vector>
 
 //GLEW
 #include <GL/glew.h>
@@ -141,6 +140,8 @@ for (int i = 0; i < trianglesGrid - 1; i += 2)
 ```
 
 ### Vertex Attribute Pointers
+Past labs will have resulted in vertex attribute arrays for vertices & texturing & for colours to be sent to the GPU as uniform variables. We are no longer using textures, however we are sending colours as vertex attribute arrays. Remove any redundant code relating to textures & uniform colours & implement the following:
+
 **CPP**
 ```c++
 //Allocation & indexing of vertex attribute memory for vertex shader
@@ -154,6 +155,8 @@ glEnableVertexAttribArray(1);
 ```
 
 ### Model
+Due to the orientation of our world, we need to adjust our model. Set the ```radians()``` to be ```0.0f``` so that we are facing straight forwards & set ```translate()``` ```vec3``` y value to ```-2.f``` so that we are higher up:
+
 **CPP**
 ```c++
 //Looking straight forward
@@ -163,12 +166,16 @@ model = translate(model, vec3(0.0f, -2.f, -1.5f));
 ```
 
 ### Render Loop
+We need to increase the amount of indices that are able to be rendered when calling ```glDrawElements()``` to ```MAP_SIZE``` multiplied by ```32```:
+
 **CPP**
 ```c++
 glDrawElements(GL_TRIANGLES, MAP_SIZE * 32, GL_UNSIGNED_INT, 0);
 ```
 
 ### Vertex Shader
+In order to retrieve colour in our vertex shader, we need to create a layout variable at the index of our colour vertex attribute array; we will call this ```colourVertex```. We will then send its value to ```colourFrag``` for use in our fragment shader:
+
 **Shader**
 ```GLSL
 #version 460
@@ -193,6 +200,8 @@ void main()
 ```
 
 ### Fragment Shader
+All we need to do in the fragment shader is set ```colourFrag```'s values to ```FragColor```, along with our value of ```1.0f``` in our ```vec4``` for opaqueness:
+
 **Shader**
 ```GLSL
 #version 460
@@ -214,12 +223,16 @@ Try composing the aforementioned code in order to generate a flat grid of chunks
 
 ## Height Map
 ### Fast Noise Lite
+Currently, our terrain is flat. We could use pseudo-randomisation in order to generate height variation, however this wouldn't look like natural terrain. In order to generate a more natural look, we can use noise. In order to do this, retrieval of the [Fast Noise Lite Header Library](https://github.com/Auburn/FastNoiseLite/blob/master/Cpp/FastNoiseLite.h) is required for this lab. Download the ```FastNoiseLite.h``` file, place it into your Visual Studio project's directory & add it as an existing item to your project. Lastly, include the file as shown below:
+
 **CPP**
 ```c++
 #include "FastNoiseLite.h"
 ```
 
 ### Noise
+Before we generate our vertex array, we need to create an object of type ```FastNoiseLite```, which we are going to call ```TerrainNoise```. Fast Noise Lite supports multiple noise algorithms. For the terrain, we are going to be using Perlin noise, which we can set with the ```SetNoiseType()``` function. We can also set the scale of the noise with the ```SetFrequency()``` function & set the seed with the ```SetSeed()``` function:
+
 **CPP**
 ```c++
 //Assigning perlin noise type for map
@@ -232,12 +245,13 @@ TerrainNoise.SetFrequency(0.05f);
 int terrainSeed = rand() % 100;
 //Sets seed for noise
 TerrainNoise.SetSeed(terrainSeed);
-
-//Initialising height map
-vector<float> terrainHeightMap(MAP_SIZE);
 ```
 
 ### Height Variation
+We need to apply Perlin noise values to every y value of our terrain's vertices. Notice that our terrain expands in both x & y directions, however our ```terrainVertices``` array stores each triangle linearly. If we applied 1-dimensional Perlin noise to our triangles, this would create strange results. This is because our terrain's x & y values will be rendered as a plane, so applying Perlin noise in 1 dimension would contradict the resulting 2-dimensional structure of the terrain's plane.
+
+In order to apply our Perlin noise 2-dimensionally, we need to create a 2-deep nested for loop & supply noise values based on both our x & y index values to each height vertice in our ```terrainVertices``` array. This works because our array's data is ordered & therefore may as well be a 2-dimensional array:
+
 **CPP**
 ```c++
 //Terrain vertice index
@@ -255,7 +269,7 @@ for (int y = 0; y < RENDER_DISTANCE; y++)
 ```
 
 ### Vertices
-Removal of terrainVertices height at [i][1].
+Since we have set our height vertices in the heightmap nested loop, we shouldn't set our height vertices in our triangle generation for loop:
 
 **CPP**
 ```c++
@@ -267,6 +281,9 @@ for (int i = 0; i < MAP_SIZE; i++)
     ...
 }
 ```
+
+### Task 2
+Try composing the aforementioned code in order to generate natural-looking height variation across the grid of chunks.
 
 ## Biomes
 ### Cellular Noise
