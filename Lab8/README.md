@@ -354,3 +354,6 @@ Try composing the aforementioned code in order to generate natural-looking biome
 
 ### Task 4
 Try generating a snowy-mountain biome based on height level in which the colour of the vertices is set to white.
+
+## Depth
+While observing the scene, you may have noticed that depth of the terrain is difficult to conceptualise. This is because no lighting has been implemented in the scene, with the exception of simply setting colours. While not in the scope of COMP3016, [Basic lighting](https://learnopengl.com/Lighting/Basic-Lighting) will significantly improve the appearance of the terrain, as well as many other applications of OpenGL.
