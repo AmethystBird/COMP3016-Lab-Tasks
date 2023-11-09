@@ -237,7 +237,7 @@ while (glfwWindowShouldClose(window) == false)
 ### Overview
 From a high level perspective, there are 3 stages that must take place in order to render objects in 3D space to a window.
 - The instantiation of spacial information in C++ | CPU
-- The transition of data to the shader with OpenGL | CPU -->> GPU
+- The transition of data to the shader with OpenGL | CPU → GPU
 - The rendering stage with GLSL (OpenGL Shading Language) | GPU
 
 ### CPU Instantiation
@@ -336,7 +336,7 @@ glBindBuffer(GL_ARRAY_BUFFER, 0);
 ```
 
 #### Shader Retrieval
-In order to render our attribute arrays to a window, we need to send them through the OpenGL Graphics Pipeline. Depending upon the stage in the pipeline, we ourselves either cannot implement, have the option to, or must implement how the rendering is achieved. The stages that we need to implement are the vertex & fragment shaders.
+In order to render our attribute arrays to a window, we need to send them through the OpenGL Graphics Pipeline. Depending upon the stage in the pipeline, we ourselves either cannot implement, have the option to, or must implement how the rendering is accomplished. The stages that we need to implement are the vertex & fragment shaders.
 
 In order to do this, we need to create two files, which we will place inside the `shaders` folder & Visual Studio `shaders` filter. They will be named `vertexShader.vert` & `fragmentShader.frag`, however the names & extensions can be anything.
 
