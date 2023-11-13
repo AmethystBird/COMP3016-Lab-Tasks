@@ -19,7 +19,7 @@ Open the `Build.md` file within the [ASSIMP Github repository](https://github.co
 
 Either clone the repository through the command line as specified by ASSIMP's instructions, or alternatively one can use software such as Github Desktop. The location for where we are going to clone it is `C:\Users\Public\ASSIMP\Source`.
 
-### Building ASSIMP
+### Building ASSIMP with CMake
 #### Overview
 In order to build ASSIMP, we need to first open CMake. Within CMake, two text boxes should be located at the top left of its main window. The text box labeled `Where is the source code` will require the directory to ASSIMP's source. The text box labeled `Where to build the binaries` instead requires the directory to build the binaries to:
 
@@ -49,20 +49,60 @@ We need to add these include & library paths to our Visual Studio project. In or
 - **Include** Configuration: `C:\Users\Public\ASSIMP\Binaries\include`
 - **Library**: `C:\Users\Public\ASSIMP\Binaries\lib\Release`
 
+Lastly, we need to add the ASSIMP includes to our `main.cpp` file. If this fails, then something in the aforementioned process was done incorrectly:
+
+**CPP**
+```c++
+//ASSIMP
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+```
+
 #### Linking
 Next, we also need to link the ASSIMP library to the Visual Studio project. In order to do this, unfold `Linker` & navigate to `Input` & add `assimp-vc143-mt.lib` under `Additional Dependencies`.
 
+### LearnOpenGL
+#### Files
+ASSIMP allows us to retrieve models from files. However, it lacks the ability to construct the models. Therefore, we still need to map models to a form that OpenGL recognises. This task is significant & therefore we are going to use [LearnOpenGL's](https://learnopengl.com/Introduction) own model construction libraries for this purpose.
+
+#### Acquisition
+We are going to acquire the necessary files from LearnOpenGL's Github repository. There are four files we need, one half for constructing models & the other for loading shaders. The former files are [mesh.h](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/mesh.h#L4), [model.h](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/model.h#L26) & the latter are [shader.h](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/shader.h#L4) & [shader_m.h](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/shader_m.h#L4).
+
+#### Includes
+Once the LearnOpenGL files have been retrieved, navigate to `C:\Users\Public\OpenGL\include` & create a new folder called `learnopengl`. Place all four files inside of this folder. Since the `learnopengl` folder is within the umbrella `OpenGL` folder, it should already be included within the Visual Studio project.
+
+However, we still need to add the LearnOpenGL includes to our `main.cpp` file. If this fails, then something in the aforementioned process was done incorrectly, or it may be possible that the `OpenGL` include & library folder is not setup or included correctly:
+
+**CPP**
+```c++
+//LEARNOPENGL
+#include <learnopengl/shader_m.h>
+#include <learnopengl/model.h>
+```
+
+### GLAD
+#### Includes
+In order to make use of LearnOpenGL's libraries, we need to use GLAD instead of GLEW. We can replace our GLEW include in our `main.cpp` file by including `glad.h` instead:
+
+**CPP**
+```c++
+//GLAD
+#include <glad/glad.h>
+```
+
+#### Acquisition
+Instructions on how to add GLAD to a Visual Studio project are included in [Lab 5](/Lab5/README.md) & are referenced below:
+
+*"GLAD can be downloaded from the [GLAD Loader-Generator Web Service](https://glad.dav1d.de/) in multiple different forms depending upon the individual's requirements. If one is to use GLAD for this lab, set the `Language` to `C++`, the `gl` to an OpenGL version of at least `Version 3.3` & lastly set the `Profile` to `Core`.*
+
+*In the `Downloads` folder, open the `glad` folder & navigate to the `include` subfolder. Move both the internal `glad` & `KHR` folders to the `C:\Users\Public\OpenGL\include` folder. Then, in the `glad` folder's `lib` folder, move the `glad.c` file into your Visual Studio Project's project directory where your `main.cpp` file is located.*
+
+*In your `main.cpp` file, add the ```#include <glad/glad.h>``` include. Like with GLEW, make sure that the ```#include``` is located above all other OpenGL related includes, since GLAD must run before all other OpenGL related libraries. If Visual Studio fails to retrieve `glad.h`, then something has gone wrong in any of the aforementioned processes."*
+
+### Rock Model
+
 [Rock](https://www.turbosquid.com/3d-models/rock07base3ds-3d-1899446)
-
-[GLAD](/Lab5/README.md)
-
-[Mesh](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/mesh.h#L4)
-
-[Model](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/model.h#L26)
-
-[Shader](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/shader.h#L4)
-
-[Shader M](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/shader_m.h#L4)
 
 - Clone ASSIMP source
 - Install CMAKE
