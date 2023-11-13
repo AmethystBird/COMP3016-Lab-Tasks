@@ -1,68 +1,68 @@
 # Lab 9 - Model Loading
 ## Overview
-In order to load models in OpenGL, we will need to modify our project's dependencies. First, we will need to retrieve the ASSIMP model loading library in order to load models from files. However, constructing models in OpenGL from these files requires a significant amount of extra code. Luckily, we are able to acquire dependencies for this purpose from [LearnOpenGL](). Lastly, we will be using GLAD instead of GLEW due to LearnOpenGL's dependencies upon it.
+In order to load models in OpenGL, we will need to modify our project's dependencies. First, we will need to retrieve the Assimp model loading library in order to load models from files. However, constructing models in OpenGL from these files requires a significant amount of extra code. Luckily, we are able to acquire dependencies for this purpose from [LearnOpenGL](). Lastly, we will be using GLAD instead of GLEW due to LearnOpenGL's dependencies upon it.
 
 ## Setup
 ### CMake
-In order to make use of ASSIMP, one can download it in a precompiled binary form. However, it is not guaranteed that this form of retrieval will always work on all systems. For this reason, we are going to download ASSIMP's source & compile the binaries. In order to do this, we need to install [CMake](https://cmake.org/download/). For Windows, the appropriate file to download is the `Windows x64 Installer`:
+In order to make use of Assimp, one can download it in a precompiled binary form. However, it is not guaranteed that this form of retrieval will always work on all systems. For this reason, we are going to download Assimp's source & compile the binaries. In order to do this, we need to install [CMake](https://cmake.org/download/). For Windows, the appropriate file to download is the `Windows x64 Installer`:
 
 ![CMake Download](/Lab9/media/CMakeDownload.png)
 
-### ASSIMP
-We need a location to store ASSIMP's source & our future binaries. This can be anywhere, however a good location for this is within our `Public` directory, so as to place it adjacently to our `OpenGL` dependencies for good organisation. Navigate to `C:\Users\Public` & create a folder named `ASSIMP` & create two folders within this one called `Source` & `Binaries`:
+### Assimp
+We need a location to store Assimp's source & our future binaries. This can be anywhere, however a good location for this is within our `Public` directory, so as to place it adjacently to our `OpenGL` dependencies for good organisation. Navigate to `C:\Users\Public` & create a folder named `Assimp` & create two folders within this one called `Source` & `Binaries`:
 
-We need to clone the ASSIMP repository in order to acquire its source. Open the `Build.md` file within the [ASSIMP Github repository](https://github.com/assimp/assimp/blob/master/Build.md) & navigate to the `Get the source` section under `Manual build instructions`. A command for cloning the ASSIMP repository should be provided:
+We need to clone the Assimp repository in order to acquire its source. Open the `Build.md` file within the [Assimp Github repository](https://github.com/assimp/assimp/blob/master/Build.md) & navigate to the `Get the source` section under `Manual build instructions`. A command for cloning the Assimp repository should be provided:
 
 ![Assimp Repository](/Lab9/media/AssimpRepository.png)
 
-Either clone the repository through the command line as specified by ASSIMP's instructions, or alternatively one can use software such as Github Desktop. The location for where we are going to clone it is `C:\Users\Public\ASSIMP\Source`.
+Either clone the repository through the command line as specified by Assimp's instructions, or alternatively one can use software such as Github Desktop. The location for where we are going to clone it is `C:\Users\Public\Assimp\Source`.
 
-### Building ASSIMP with CMake
+### Building Assimp with CMake
 #### Overview
-In order to build ASSIMP, we need to first open CMake. Within CMake, two text boxes should be located at the top left of its main window. The text box labeled `Where is the source code` will require the directory to ASSIMP's source. The text box labeled `Where to build the binaries` instead requires the directory to build the binaries to:
+In order to build Assimp, we need to first open CMake. Within CMake, two text boxes should be located at the top left of its main window. The text box labeled `Where is the source code` will require the directory to Assimp's source. The text box labeled `Where to build the binaries` instead requires the directory to build the binaries to:
 
 ![CMake](/Lab9/media/CMake.png)
 
 #### Configuration
-Once our source code & the building locations are provided, we can configure our build with the `Configure` button at the bottom left of the CMake window. A new window should pop up, giving options for what kind of generator we wish to use. We probably need to select `Visual Studio 17 2022`, since we are going to be using ASSIMP with Visual Studio. If you are using a different version of Visual Studio, then select the appropriate version for your system. We also need to ensure that we build 64 bit ASSIMP binaries, therefore we need to choose the `x64` option. Once both of these specifications are selected, select `Finish`. Once this is done, CMake will start building the binaries.
+Once our source code & the building locations are provided, we can configure our build with the `Configure` button at the bottom left of the CMake window. A new window should pop up, giving options for what kind of generator we wish to use. We probably need to select `Visual Studio 17 2022`, since we are going to be using Assimp with Visual Studio. If you are using a different version of Visual Studio, then select the appropriate version for your system. We also need to ensure that we build 64 bit Assimp binaries, therefore we need to choose the `x64` option. Once both of these specifications are selected, select `Finish`. Once this is done, CMake will start building the binaries.
 
 ![CMakeConfiguration](/Lab9/media/CMakeConfigure.png)
 
 #### Generation
-Once the binaries have been built, we still need to generate the Visual Studio ASSIMP files. In order to do this, click the `Generate` button next to the `Configure` button. Now, a Visual Studio project called `Assimp.sln` should have been created within `C:\Users\Public\ASSIMP\Binaries`. Open this project & build it. When doing so, make sure to do so with the `x64` configuration & preferably in `Release` mode. Note that **we are not using the Assimp.sln Visual Studio project for implementing this lab's OpenGL code**. It is only being used for generating Visual Studio project files for your respective OpenGL project.
+Once the binaries have been built, we still need to generate the Visual Studio Assimp files. In order to do this, click the `Generate` button next to the `Configure` button. Now, a Visual Studio project called `Assimp.sln` should have been created within `C:\Users\Public\Assimp\Binaries`. Open this project & build it. When doing so, make sure to do so with the `x64` configuration & preferably in `Release` mode. Note that **we are not using the Assimp.sln Visual Studio project for implementing this lab's OpenGL code**. It is only being used for generating Visual Studio project files for your respective OpenGL project.
 
-A file called `assimp-vc143-mt.dll` should now be located in `C:\Users\Public\ASSIMP\Binaries\bin\Release\`. Copy this file into your OpenGL Visual Studio project.
+A file called `assimp-vc143-mt.dll` should now be located in `C:\Users\Public\Assimp\Binaries\bin\Release\`. Copy this file into your OpenGL Visual Studio project.
 
 ### Visual Studio Project
 #### VC++ Directories
-ASSIMP's directories should be in the following locations shown below. The code files should mostly be made up of many header files, the configuration should be limited to one file named `config.h` & the libraries should consist of two files named `assimp-vc143-mt` with the file extensions `.exp` & `.lib`:
+Assimp's directories should be in the following locations shown below. The code files should mostly be made up of many header files, the configuration should be limited to one file named `config.h` & the libraries should consist of two files named `assimp-vc143-mt` with the file extensions `.exp` & `.lib`:
 
-- **Include** Code: `C:\Users\Public\ASSIMP\Source\assimp\include\assimp`
-- **Include** Configuration: `C:\Users\Public\ASSIMP\Binaries\include\assimp`
-- **Library**: `C:\Users\Public\ASSIMP\Binaries\lib\Release`
+- **Include** Code: `C:\Users\Public\Assimp\Source\assimp\include\assimp`
+- **Include** Configuration: `C:\Users\Public\Assimp\Binaries\include\assimp`
+- **Library**: `C:\Users\Public\Assimp\Binaries\lib\Release`
 
 We need to add these include & library paths to our Visual Studio project. In order to do this, right click the project in the `Solution Explorer`, click `Properties`, unfold `Configuration Properties` & select `VC++ Directories`. Add the following paths to the `Include` & `Library Directories`:
 
-- **Include** Code: `C:\Users\Public\ASSIMP\Source\assimp\include`
-- **Include** Configuration: `C:\Users\Public\ASSIMP\Binaries\include`
-- **Library**: `C:\Users\Public\ASSIMP\Binaries\lib\Release`
+- **Include** Code: `C:\Users\Public\Assimp\Source\assimp\include`
+- **Include** Configuration: `C:\Users\Public\Assimp\Binaries\include`
+- **Library**: `C:\Users\Public\Assimp\Binaries\lib\Release`
 
-Lastly, we need to add the ASSIMP includes to our `main.cpp` file. If this fails, then something in the aforementioned process was done incorrectly:
+Lastly, we need to add the Assimp includes to our `main.cpp` file. If this fails, then something in the aforementioned process was done incorrectly:
 
 **CPP**
 ```c++
-//ASSIMP
+//Assimp
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 ```
 
 #### Linking
-Next, we also need to link the ASSIMP library to the Visual Studio project. In order to do this, unfold `Linker` & navigate to `Input` & add `assimp-vc143-mt.lib` under `Additional Dependencies`.
+Next, we also need to link the Assimp library to the Visual Studio project. In order to do this, unfold `Linker` & navigate to `Input` & add `assimp-vc143-mt.lib` under `Additional Dependencies`.
 
 ### LearnOpenGL
 #### Files
-ASSIMP allows us to retrieve models from files. However, it lacks the ability to construct the models. Therefore, we still need to map models to a form that OpenGL recognises. This task is significant & therefore we are going to use [LearnOpenGL's](https://learnopengl.com/Introduction) own model construction libraries for this purpose.
+Assimp allows us to retrieve models from files. However, it lacks the ability to construct the models. Therefore, we still need to map models to a form that OpenGL recognises. This task is significant & therefore we are going to use [LearnOpenGL's](https://learnopengl.com/Introduction) own model construction libraries for this purpose.
 
 #### Acquisition
 We are going to acquire the necessary files from LearnOpenGL's Github repository. There are four files we need, one half for constructing models & the other for loading shaders. The former files are [mesh.h](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/mesh.h#L4), [model.h](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/model.h#L26) & the latter are [shader.h](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/shader.h#L4) & [shader_m.h](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/shader_m.h#L4).
@@ -106,7 +106,9 @@ With all our code dependencies not setup, we still need to acquire a model that 
 There are various options when downloading the rock model. We only need the `Rock07-Base-Obj` & `Rock07-BaseTextures` zip files. Once both are downloaded, decompress both zip files. Within our Visual Studio project, if the folder does not already exist, create one called `media` & create a folder called `rock` inside of it. Next, move all the textures from the `Rock07-BaseTextures` folder & both the mtl & obj `Rock07-Base` files within the `Rock07-Base-Obj` folder into the `rock` folder in your Visual Studio project.
 
 ## Implementation
-### GLAD
+### Initialisation
+Where GLEW would normally be initialised, we are going to initialise GLAD instead. Additionally, we also need to replace our old shader loading code to use LearnOpenGL's shader loader. Lastly, we need to load our rock model by creating a `Model` object & providing the path to our rock `.obj` file:
+
 **CPP**
 ```c++
 //Initialisation of GLAD
@@ -115,17 +117,32 @@ if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     cout << "GLAD failed to initialise\n";
     return -1;
 }
-```
 
-### File Retrieval
-**CPP**
-```c++
+//Loading of shaders
 Shader Shaders("shaders/vertexShader.vert", "shaders/fragmentShader.frag");
 Model Rock("media/rock/Rock07-Base.obj");
 Shaders.use();
 ```
 
+Note that we ourselves do not need to access our rock's vertices, nor do we manually send our rock through a buffer or setup vertex attribute arrays for its information. This is done automatically when we initialise our rock.
+
+### Model
+In the case of the rock model, its appearance will likely be huge in respect to our coordinate system model's previous scaling settings in past labs. By using a scale of ```0.025f``` on all axes, the rock should appear at an appropriate size:
+
+**CPP**
+```c++
+//Scaling to zoom in
+model = scale(model, vec3(0.025f, 0.025f, 0.025f));
+```
+
 ### Render Loop
+Within our render loop, we need to call ```glEnable(GL_CULL_FACE)``` in order to set any backwards facing vertices to be invisible. If we don't do this, then our rock, along with any other 3D components of our scene are going to try to render both at the same time. This will create strange visual artifacts.
+
+We also need to change how we set our uniforms in order to not act against our new shader loader's way of setting up uniforms. We should only have one uniform, which is our ```mvp```. We can assign it as a uniform by calling ```Shaders.setMat4()``` & passing the desired name of our uniform to use within our shaders, as well as our actual variable.
+
+Lastly, we can remove our drawing code & replace it with our model's ```Draw()``` function, by providing our shader program:
+
+**CPP**
 ```c++
 ...
 //Rendering
@@ -144,3 +161,5 @@ Shaders.setMat4("mvpIn", mvp); //Setting of uniform with Shader class
 Rock.Draw(Shaders);
 ...
 ```
+
+If the scene is working correctly, a rock should appear in the scene & this lab should be complete!
