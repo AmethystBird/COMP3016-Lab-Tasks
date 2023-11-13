@@ -59,7 +59,7 @@ In Visual Studio, right click your project file, select `Properties`, unfold `Li
 
 #### GLAD Alternative to GLEW
 ##### Overview
-In the [LearnOpenGL](https://learnopengl.com/Introduction) tutorial, the GLAD library is used as opposed to GLEW. If you are following the LearnOpenGL material, **you may wish to use GLAD, however I do not recommend this** even if you are following said tutorial. This is because GLAD will require one to follow LearnOpenGL's error-prone system of implementing GLSL shaders into projects, which are needed at a basic level in this module & are the focus of the succeeding COMP3015 module. The `LoadShaders` header & cpp files in [Files](/Lab5/Files/) use GLEW & will allow for easier implementing of GLSL shaders. If you still wish to use GLAD, the process of retrieval is still available below.
+In the [LearnOpenGL](https://learnopengl.com/Introduction) tutorial, the GLAD library is used as opposed to GLEW. If you are following the LearnOpenGL material, **you may wish to use GLAD, however I do not recommend you do so yet**, even if you are following said tutorial. This is because for LearnOpenGL's earlier tutorials, GLAD will require one to follow LearnOpenGL's error-prone system of implementing GLSL shaders into projects. Shaders are needed at a basic level in this module & are the focus of the succeeding COMP3015 module. The `LoadShaders` header & cpp files in [Files](/Lab5/Files/) use GLEW & will allow for easier implementing of GLSL shaders. If you still wish to use GLAD, the process of retrieval is still available below. Note that starting from lab 9, GLAD will be used instead of GLEW due to the introduction of model loading.
 
 ##### Retrieval
 GLAD can be downloaded from the [GLAD Loader-Generator Web Service](https://glad.dav1d.de/) in multiple different forms depending upon the individual's requirements. If one is to use GLAD for this lab, set the `Language` to `C++`, the `gl` to an OpenGL version of at least `Version 3.3` & lastly set the `Profile` to `Core`.
@@ -237,7 +237,7 @@ while (glfwWindowShouldClose(window) == false)
 ### Overview
 From a high level perspective, there are 3 stages that must take place in order to render objects in 3D space to a window.
 - The instantiation of spacial information in C++ | CPU
-- The transition of data to the shader with OpenGL | CPU -->> GPU
+- The transition of data to the shader with OpenGL | CPU → GPU
 - The rendering stage with GLSL (OpenGL Shading Language) | GPU
 
 ### CPU Instantiation
@@ -336,7 +336,7 @@ glBindBuffer(GL_ARRAY_BUFFER, 0);
 ```
 
 #### Shader Retrieval
-In order to render our attribute arrays to a window, we need to send them through the OpenGL Graphics Pipeline. Depending upon the stage in the pipeline, we ourselves either cannot implement, have the option to, or must implement how the rendering is achieved. The stages that we need to implement are the vertex & fragment shaders.
+In order to render our attribute arrays to a window, we need to send them through the OpenGL Graphics Pipeline. Depending upon the stage in the pipeline, we ourselves either cannot implement, have the option to, or must implement how the rendering is accomplished. The stages that we need to implement are the vertex & fragment shaders.
 
 In order to do this, we need to create two files, which we will place inside the `shaders` folder & Visual Studio `shaders` filter. They will be named `vertexShader.vert` & `fragmentShader.frag`, however the names & extensions can be anything.
 
