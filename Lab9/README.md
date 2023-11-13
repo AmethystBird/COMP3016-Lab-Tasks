@@ -1,8 +1,34 @@
 # Lab 9 - Model Loading
-## Setup
-[CMake](https://cmake.org/download/)
+## Overview
+In order to load models in OpenGL, we will need to modify our project's dependencies. First, we will need to retrieve the ASSIMP model loading library in order to load models from files. However, constructing models in OpenGL from these files requires a significant amount of extra code. Luckily, we are able to acquire dependencies for this purpose from [LearnOpenGL](). Lastly, we will be using GLAD instead of GLEW due to LearnOpenGL's dependencies upon it.
 
-[ASSIMP](https://github.com/assimp/assimp/blob/master/Build.md)
+## Setup
+### CMake
+In order to make use of ASSIMP, one can download it in a precompiled binary form. However, it is not guaranteed that this form of retrieval will always work on all systems. For this reason, we are going to download ASSIMP's source & compile the binaries. In order to do this, we need to install [CMake](https://cmake.org/download/). For Windows, the appropriate file to download is the `Windows x64 Installer`:
+
+![Image]()
+
+### ASSIMP
+We need to clone the ASSIMP repository in order to acquire its source. We can do this anywhere, however a good location for this is within our `Public` directory, so as to place it adjacently to our `OpenGL` dependencies for good organisation. Navigate to `C:\Users\Public` & create a folder named `ASSIMP` & create two folders within this one called `Source` & `Binaries`:
+
+![Image]()
+
+Open the `Build.md` file within the [ASSIMP Github repository](https://github.com/assimp/assimp/blob/master/Build.md) & navigate to the `Get the source` section under `Manual build instructions`. A command for cloning the ASSIMP repository should be provided:
+
+![Image]()
+
+Either clone the repository through the command line as specified by ASSIMP's instructions, or alternatively one can use software such as Github Desktop. The location for where we are going to clone it is `C:\Users\Public\ASSIMP\Source`.
+
+### Building ASSIMP
+In order to build ASSIMP, we need to first open CMake. Within CMake, two text boxes should be located at the top left of its main window. The text box labeled `Where is the source code` will require the directory to ASSIMP's source. The text box labeled `Where to build the binaries` instead requires the directory to build the binaries to:
+
+![CMake](/Lab9/media/CMake.png)
+
+Once our source code & the building locations are provided, we can configure our build with the `Configure` button at the bottom left of the CMake window. A new window should pop up, giving options for what kind of generator we wish to use. We probably need to select `Visual Studio 17 2022`, since we are going to be using ASSIMP with Visual Studio. If you are using a different version of Visual Studio, then select the appropriate version for your system. We also need to ensure that we build 64 bit ASSIMP binaries, therefore we need to choose the `x64` option. Once both of these specifications are selected, select `Finish`. Once this is done, CMake will start building the binaries.
+
+![CMakeConfiguration](/Lab9/media/CMakeConfigure.png)
+
+Once the binaries have been built, we still need to generate the Visual Studio ASSIMP files. In order to do this, click the `Generate` button next to the `Configure` button. Now, a Visual Studio project should have been created within `C:\Users\Public\ASSIMP\Binaries`.
 
 [Rock](https://www.turbosquid.com/3d-models/rock07base3ds-3d-1899446)
 
@@ -32,8 +58,7 @@
     - assimp-vc143-mt.lib
 
 - Acquire mesh, model, shader & shader_m header files from LearnOpenGL repo
-    - Create LearnOpenGL includes folder for shader & shader_m files
-    - Add mesh & model files to VS project
+- Create LearnOpenGL includes folder for all files
 
 ## Implementation
 ### Includes
