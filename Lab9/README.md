@@ -6,16 +6,14 @@ In order to load models in OpenGL, we will need to modify our project's dependen
 ### CMake
 In order to make use of ASSIMP, one can download it in a precompiled binary form. However, it is not guaranteed that this form of retrieval will always work on all systems. For this reason, we are going to download ASSIMP's source & compile the binaries. In order to do this, we need to install [CMake](https://cmake.org/download/). For Windows, the appropriate file to download is the `Windows x64 Installer`:
 
-![Image]()
+![CMake Download](/Lab9/media/CMakeDownload.png)
 
 ### ASSIMP
-We need to clone the ASSIMP repository in order to acquire its source. We can do this anywhere, however a good location for this is within our `Public` directory, so as to place it adjacently to our `OpenGL` dependencies for good organisation. Navigate to `C:\Users\Public` & create a folder named `ASSIMP` & create two folders within this one called `Source` & `Binaries`:
+We need a location to store ASSIMP's source & our future binaries. This can be anywhere, however a good location for this is within our `Public` directory, so as to place it adjacently to our `OpenGL` dependencies for good organisation. Navigate to `C:\Users\Public` & create a folder named `ASSIMP` & create two folders within this one called `Source` & `Binaries`:
 
-![Image]()
+We need to clone the ASSIMP repository in order to acquire its source. Open the `Build.md` file within the [ASSIMP Github repository](https://github.com/assimp/assimp/blob/master/Build.md) & navigate to the `Get the source` section under `Manual build instructions`. A command for cloning the ASSIMP repository should be provided:
 
-Open the `Build.md` file within the [ASSIMP Github repository](https://github.com/assimp/assimp/blob/master/Build.md) & navigate to the `Get the source` section under `Manual build instructions`. A command for cloning the ASSIMP repository should be provided:
-
-![Image]()
+![Assimp Repository](/Lab9/media/AssimpRepository.png)
 
 Either clone the repository through the command line as specified by ASSIMP's instructions, or alternatively one can use software such as Github Desktop. The location for where we are going to clone it is `C:\Users\Public\ASSIMP\Source`.
 
@@ -103,28 +101,9 @@ Instructions on how to add GLAD to a Visual Studio project are included in [Lab 
 ### Rock Model
 With all our code dependencies not setup, we still need to acquire a model that we can compose into our scene. We are going to use a free Rock `.obj` model from [Turbosquid](https://www.turbosquid.com/3d-models/rock07base3ds-3d-1899446). However you can find your own model if desired. For greater certainty in the model loading correctly, using a `.obj` file is preferable since this lab also uses this format:
 
-![Turbosquid Rock]()
+![Turbosquid Rock](/Lab9/media/TurbosquidRock.png)
 
 There are various options when downloading the rock model. We only need the `Rock07-Base-Obj` & `Rock07-BaseTextures` zip files. Once both are downloaded, decompress both zip files. Within our Visual Studio project, if the folder does not already exist, create one called `media` & create a folder called `rock` inside of it. Next, move all the textures from the `Rock07-BaseTextures` folder & both the mtl & obj `Rock07-Base` files within the `Rock07-Base-Obj` folder into the `rock` folder in your Visual Studio project.
-
-- Clone ASSIMP source
-- Install CMAKE
-- Compile ASSIMP binaries in CMAKE
-- Run ASSIMP VS project in Release
-- Copy `C:\Users\Public\ASSIMP\Binaries\bin\Release\assimp-vc143-mt.dll` to OpenGL VS project
-
-- VC++ Directories
-    - Include Directories
-        - C:\Users\Public\ASSIMP\Source\assimp\include
-        - C:\Users\Public\ASSIMP\Binaries\include
-    - Library Directories
-        - C:\Users\Public\ASSIMP\Binaries\lib\Release
-- Linker, Input, Additional Dependencies
-    - assimp-vc143-mt.lib
-
-- Setup GLAD
-- Acquire mesh, model, shader & shader_m header files from LearnOpenGL repo
-- Create LearnOpenGL includes folder for all files
 
 ## Implementation
 ### GLAD
