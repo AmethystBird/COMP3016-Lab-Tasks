@@ -20,35 +20,37 @@ Open the `Build.md` file within the [ASSIMP Github repository](https://github.co
 Either clone the repository through the command line as specified by ASSIMP's instructions, or alternatively one can use software such as Github Desktop. The location for where we are going to clone it is `C:\Users\Public\ASSIMP\Source`.
 
 ### Building ASSIMP
+#### Overview
 In order to build ASSIMP, we need to first open CMake. Within CMake, two text boxes should be located at the top left of its main window. The text box labeled `Where is the source code` will require the directory to ASSIMP's source. The text box labeled `Where to build the binaries` instead requires the directory to build the binaries to:
 
 ![CMake](/Lab9/media/CMake.png)
 
+#### Configuration
 Once our source code & the building locations are provided, we can configure our build with the `Configure` button at the bottom left of the CMake window. A new window should pop up, giving options for what kind of generator we wish to use. We probably need to select `Visual Studio 17 2022`, since we are going to be using ASSIMP with Visual Studio. If you are using a different version of Visual Studio, then select the appropriate version for your system. We also need to ensure that we build 64 bit ASSIMP binaries, therefore we need to choose the `x64` option. Once both of these specifications are selected, select `Finish`. Once this is done, CMake will start building the binaries.
 
 ![CMakeConfiguration](/Lab9/media/CMakeConfigure.png)
 
+#### Generation
 Once the binaries have been built, we still need to generate the Visual Studio ASSIMP files. In order to do this, click the `Generate` button next to the `Configure` button. Now, a Visual Studio project called `Assimp.sln` should have been created within `C:\Users\Public\ASSIMP\Binaries`. Open this project & build it. When doing so, make sure to do so with the `x64` configuration & preferably in `Release` mode. Note that **we are not using the Assimp.sln Visual Studio project for implementing this lab's OpenGL code**. It is only being used for generating Visual Studio project files for your respective OpenGL project.
 
 A file called `assimp-vc143-mt.dll` should now be located in `C:\Users\Public\ASSIMP\Binaries\bin\Release\`. Copy this file into your OpenGL Visual Studio project.
 
-ASSIMP's directories should be in the following locations:
-- Includes
-    - Code: `C:\Users\Public\ASSIMP\Source\assimp\include\assimp`
-    - Configuration: `C:\Users\Public\ASSIMP\Binaries\include\assimp`
-- Libraries
-    - `C:\Users\Public\ASSIMP\Binaries\lib\Release`
+### Visual Studio Project
+#### VC++ Directories
+ASSIMP's directories should be in the following locations shown below. The code files should mostly be made up of many header files, the configuration should be limited to one file named `config.h` & the libraries should consist of two files named `assimp-vc143-mt` with the file extensions `.exp` & `.lib`:
 
-We need to add these include & library paths to our Visual Studio project. In order to do this, right click the project in the `Solution Explorer`, click `Properties`, unfold `Configuration Properties` & select `VC++ Directories`.
+- **Include** Code: `C:\Users\Public\ASSIMP\Source\assimp\include\assimp`
+- **Include** Configuration: `C:\Users\Public\ASSIMP\Binaries\include\assimp`
+- **Library**: `C:\Users\Public\ASSIMP\Binaries\lib\Release`
 
-Add the following to the `Include Directories`:
-- `C:\Users\Public\ASSIMP\Source\assimp\include`
-- `C:\Users\Public\ASSIMP\Binaries\include`
+We need to add these include & library paths to our Visual Studio project. In order to do this, right click the project in the `Solution Explorer`, click `Properties`, unfold `Configuration Properties` & select `VC++ Directories`. Add the following paths to the `Include` & `Library Directories`:
 
-Add the following to the `Library Directories`:
-- `C:\Users\Public\ASSIMP\Binaries\lib\Release`
+- **Include** Code: `C:\Users\Public\ASSIMP\Source\assimp\include`
+- **Include** Configuration: `C:\Users\Public\ASSIMP\Binaries\include`
+- **Library**: `C:\Users\Public\ASSIMP\Binaries\lib\Release`
 
-Next, we also need to link the ASSIMP library to the Visual Studio project. In order to do this, unfold `Linker` & navigate to `Input` & add `assimp-vc143-mt.dll` under `Additional Dependencies`.
+#### Linking
+Next, we also need to link the ASSIMP library to the Visual Studio project. In order to do this, unfold `Linker` & navigate to `Input` & add `assimp-vc143-mt.lib` under `Additional Dependencies`.
 
 [Rock](https://www.turbosquid.com/3d-models/rock07base3ds-3d-1899446)
 
@@ -77,6 +79,7 @@ Next, we also need to link the ASSIMP library to the Visual Studio project. In o
 - Linker, Input, Additional Dependencies
     - assimp-vc143-mt.lib
 
+- Setup GLAD
 - Acquire mesh, model, shader & shader_m header files from LearnOpenGL repo
 - Create LearnOpenGL includes folder for all files
 
