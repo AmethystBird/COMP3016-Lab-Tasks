@@ -72,7 +72,7 @@ We are going to acquire the necessary files from LearnOpenGL's Github repository
 #### Includes
 Once the LearnOpenGL files have been retrieved, navigate to `C:\Users\Public\OpenGL\include` & create a new folder called `learnopengl`. Place all four files inside of this folder. Since the `learnopengl` folder is within the umbrella `OpenGL` folder, it should already be included within the Visual Studio project.
 
-However, we still need to add the LearnOpenGL includes to our `main.cpp` file. If this fails, then something in the aforementioned process was done incorrectly, or it may be possible that the `OpenGL` include & library folder is not setup or included correctly:
+However, we still need to add the LearnOpenGL includes to our `main.cpp` file. If this fails, then something in the aforementioned process was done incorrectly, or it may be possible that the `OpenGL` include & library folder is not setup or included correctly. In addition, since we are using LearnOpenGL's shader loader, we no longer need to include `LoadShaders.h`:
 
 **CPP**
 ```c++
@@ -101,8 +101,11 @@ Instructions on how to add GLAD to a Visual Studio project are included in [Lab 
 *In your `main.cpp` file, add the ```#include <glad/glad.h>``` include. Like with GLEW, make sure that the ```#include``` is located above all other OpenGL related includes, since GLAD must run before all other OpenGL related libraries. If Visual Studio fails to retrieve `glad.h`, then something has gone wrong in any of the aforementioned processes."*
 
 ### Rock Model
+With all our code dependencies not setup, we still need to acquire a model that we can compose into our scene. We are going to use a free Rock `.obj` model from [Turbosquid](https://www.turbosquid.com/3d-models/rock07base3ds-3d-1899446). However you can find your own model if desired. For greater certainty in the model loading correctly, using a `.obj` file is preferable since this lab also uses this format:
 
-[Rock](https://www.turbosquid.com/3d-models/rock07base3ds-3d-1899446)
+![Turbosquid Rock]()
+
+There are various options when downloading the rock model. We only need the `Rock07-Base-Obj` & `Rock07-BaseTextures` zip files. Once both are downloaded, decompress both zip files. Within our Visual Studio project, if the folder does not already exist, create one called `media` & create a folder called `rock` inside of it. Next, move all the textures from the `Rock07-BaseTextures` folder & both the mtl & obj `Rock07-Base` files within the `Rock07-Base-Obj` folder into the `rock` folder in your Visual Studio project.
 
 - Clone ASSIMP source
 - Install CMAKE
@@ -124,23 +127,6 @@ Instructions on how to add GLAD to a Visual Studio project are included in [Lab 
 - Create LearnOpenGL includes folder for all files
 
 ## Implementation
-### Includes
-**CPP**
-```c++
-//GLAD
-//#include <GL/glew.h>
-#include <glad/glad.h>
-
-//ASSIMP
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
-//LEARNOPENGL
-#include <learnopengl/shader_m.h>
-#include <learnopengl/model.h>
-```
-
 ### GLAD
 **CPP**
 ```c++
