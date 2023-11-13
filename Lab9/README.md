@@ -162,4 +162,49 @@ Rock.Draw(Shaders);
 ...
 ```
 
+### Shaders
+In our vertex shader, our vertex attribute pointer at location 2 needs to be set to ```textureVertex``` & sent through ```textureFrag``` so our fragment shader can process the texture. Then, in our fragment shader we need to set ```FragColor``` to our texture. In order to do this, we need to call the ```texture()``` function & pass two parameters. The first parameter requires the texture's colour & the second requires the texture's coordinates so that the texture's colours can be mapped correctly:
+
+**Vertex Shader**
+```GLSL
+#version 460
+//Triangle position with values retrieved from main.cpp
+layout (location = 0) in vec3 position;
+//Texture coordinates from last stage
+layout (location = 2) in vec2 textureVertex;
+
+//Model-View-Projection Matrix
+uniform mat4 mvpIn;
+
+//Texture to send
+out vec2 textureFrag;
+
+void main()
+{
+    //Transformation applied to vertices
+    gl_Position = mvpIn * vec4(position.x, position.y, position.z, 1.0);
+    //Sending texture coordinates to next stage
+    textureFrag = textureVertex;
+}
+```
+
+**Fragment Shader**
+```GLSL
+#version 460
+//Colour value to send to next stage
+out vec4 FragColor;
+
+//Texture coordinates from last stage
+in vec2 textureFrag;
+
+uniform sampler2D texture_diffuse1;
+
+void main()
+{
+    //Setting of colour coordinates to colour map
+    FragColor = texture(texture_diffuse1, textureFrag);
+}
+```
+
+## Conclusion
 If the scene is working correctly, a rock should appear in the scene & this lab should be complete!
