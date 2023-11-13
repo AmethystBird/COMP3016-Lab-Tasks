@@ -6,6 +6,35 @@
 
 [Rock](https://www.turbosquid.com/3d-models/rock07base3ds-3d-1899446)
 
+[GLAD](/Lab5/README.md)
+
+[Mesh](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/mesh.h#L4)
+
+[Model](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/model.h#L26)
+
+[Shader](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/shader.h#L4)
+
+[Shader M](https://github.com/JoeyDeVries/LearnOpenGL/blob/3e94252892660902bef62068c35253cbe3464c9b/includes/learnopengl/shader_m.h#L4)
+
+- Clone ASSIMP source
+- Install CMAKE
+- Compile ASSIMP binaries in CMAKE
+- Run ASSIMP VS project in Release
+- Copy `C:\Users\Public\ASSIMP\Binaries\bin\Release\assimp-vc143-mt.dll` to OpenGL VS project
+
+- VC++ Directories
+    - Include Directories
+        - C:\Users\Public\ASSIMP\Source\assimp\include
+        - C:\Users\Public\ASSIMP\Binaries\include
+    - Library Directories
+        - C:\Users\Public\ASSIMP\Binaries\lib\Release
+- Linker, Input, Additional Dependencies
+    - assimp-vc143-mt.lib
+
+- Acquire mesh, model, shader & shader_m header files from LearnOpenGL repo
+    - Create LearnOpenGL includes folder for shader & shader_m files
+    - Add mesh & model files to VS project
+
 ## Implementation
 ### Includes
 **CPP**
