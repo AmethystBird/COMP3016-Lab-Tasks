@@ -16,7 +16,7 @@ Note that if a lab appears to exist within this repository but is not linked by 
 
 [Lab 5 - Introduction to OpenGL](/Lab5/README.md)
 
-[Lab 6 - Lighting & Extras](/Lab6/README.md)
+[Lab 6 - Quads, Uniforms & Textures](/Lab6/README.md)
 
 [Lab 7 - Transformations](/Lab7/README.md)
 
