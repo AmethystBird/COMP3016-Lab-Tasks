@@ -28,7 +28,27 @@ Once our source code & the building locations are provided, we can configure our
 
 ![CMakeConfiguration](/Lab9/media/CMakeConfigure.png)
 
-Once the binaries have been built, we still need to generate the Visual Studio ASSIMP files. In order to do this, click the `Generate` button next to the `Configure` button. Now, a Visual Studio project should have been created within `C:\Users\Public\ASSIMP\Binaries`.
+Once the binaries have been built, we still need to generate the Visual Studio ASSIMP files. In order to do this, click the `Generate` button next to the `Configure` button. Now, a Visual Studio project called `Assimp.sln` should have been created within `C:\Users\Public\ASSIMP\Binaries`. Open this project & build it. When doing so, make sure to do so with the `x64` configuration & preferably in `Release` mode. Note that **we are not using the Assimp.sln Visual Studio project for implementing this lab's OpenGL code**. It is only being used for generating Visual Studio project files for your respective OpenGL project.
+
+A file called `assimp-vc143-mt.dll` should now be located in `C:\Users\Public\ASSIMP\Binaries\bin\Release\`. Copy this file into your OpenGL Visual Studio project.
+
+ASSIMP's directories should be in the following locations:
+- Includes
+    - Code: `C:\Users\Public\ASSIMP\Source\assimp\include\assimp`
+    - Configuration: `C:\Users\Public\ASSIMP\Binaries\include\assimp`
+- Libraries
+    - `C:\Users\Public\ASSIMP\Binaries\lib\Release`
+
+We need to add these include & library paths to our Visual Studio project. In order to do this, right click the project in the `Solution Explorer`, click `Properties`, unfold `Configuration Properties` & select `VC++ Directories`.
+
+Add the following to the `Include Directories`:
+- `C:\Users\Public\ASSIMP\Source\assimp\include`
+- `C:\Users\Public\ASSIMP\Binaries\include`
+
+Add the following to the `Library Directories`:
+- `C:\Users\Public\ASSIMP\Binaries\lib\Release`
+
+Next, we also need to link the ASSIMP library to the Visual Studio project. In order to do this, unfold `Linker` & navigate to `Input` & add `assimp-vc143-mt.dll` under `Additional Dependencies`.
 
 [Rock](https://www.turbosquid.com/3d-models/rock07base3ds-3d-1899446)
 
