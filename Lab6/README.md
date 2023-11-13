@@ -413,8 +413,18 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 ```
 
+Using the above code will produce no changes, since using linear interpolation for upscale filtering is the default setting. In order to produce a different result, we can set the upscale filtering method to nearest neighbour. In doing so, the texture should appear pixelated:
+
+**CPP**
+```c++
+//Sets bound texture to use nearest neighbour downscaling
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+//Sets to use nearest neighbour upscaling
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+```
+
 ### Task 5
-Try composing the aforementioned code in order to generate a textured rectangle with potentially more appropriate filtering.
+Try comparing both filtering systems by implementing both aforementioned code snippets separately.
 
 #### Mipmaps
 When an object is downscaled significantly, such as a scenario where it is being viewed from far away in a scene, unwanted visual artifacts may appear. This is because OpenGL will not be able to differentiate between notable features & details of a texture & so will try to represent them all based on their relative positions. This is also not efficient, since a texture may be being rendered at a significantly lower resolution to that of its actual resolution.
