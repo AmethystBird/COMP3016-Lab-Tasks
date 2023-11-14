@@ -21,3 +21,5 @@ Note that if a lab appears to exist within this repository but is not linked by 
 [Lab 7 - Transformations](/Lab7/README.md)
 
 [Lab 8 - Procedural Terrain Generation](/Lab8/README.md)
+
+[Lab 9 - Model Loading](/Lab9/README.md)

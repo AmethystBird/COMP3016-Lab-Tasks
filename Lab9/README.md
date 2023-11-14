@@ -18,7 +18,7 @@ We need to clone the Assimp repository in order to acquire its source. Open the 
 Either clone the repository through the command line as specified by Assimp's instructions, or alternatively one can use software such as Github Desktop. The location for where we are going to clone it is `C:\Users\Public\Assimp\Source`.
 
 ### Building Assimp with CMake
-#### Overview
+#### Directories
 In order to build Assimp, we need to first open CMake. Within CMake, two text boxes should be located at the top left of its main window. The text box labeled `Where is the source code` will require the directory to Assimp's source. The text box labeled `Where to build the binaries` instead requires the directory to build the binaries to:
 
 ![CMake](/Lab9/media/CMake.png)
@@ -29,7 +29,7 @@ Once our source code & the building locations are provided, we can configure our
 ![CMakeConfiguration](/Lab9/media/CMakeConfigure.png)
 
 #### Generation
-Once the binaries have been built, we still need to generate the Visual Studio Assimp files. In order to do this, click the `Generate` button next to the `Configure` button. Now, a Visual Studio project called `Assimp.sln` should have been created within `C:\Users\Public\Assimp\Binaries`. Open this project & build it. When doing so, make sure to do so with the `x64` configuration & preferably in `Release` mode. Note that **we are not using the Assimp.sln Visual Studio project for implementing this lab's OpenGL code**. It is only being used for generating Visual Studio project files for your respective OpenGL project.
+Once the binaries have been built, we still need to generate the Visual Studio Assimp files. In order to do this, click the `Generate` button next to the `Configure` button. Now, a Visual Studio project called `Assimp.sln` should have been created within `C:\Users\Public\Assimp\Binaries`. Open this project & build it. When doing so, make sure to do so with the `x64` configuration & preferably in `Release` mode. Note that **we are not using the Assimp.sln Visual Studio project for implementing this lab's OpenGL code**. It is only being used for generating Visual Studio project files to move into your respective Visual Studio OpenGL project.
 
 A file called `assimp-vc143-mt.dll` should now be located in `C:\Users\Public\Assimp\Binaries\bin\Release\`. Copy this file into your OpenGL Visual Studio project.
 
@@ -70,7 +70,7 @@ We are going to acquire the necessary files from LearnOpenGL's Github repository
 #### Includes
 Once the LearnOpenGL files have been retrieved, navigate to `C:\Users\Public\OpenGL\include` & create a new folder called `learnopengl`. Place all four files inside of this folder. Since the `learnopengl` folder is within the umbrella `OpenGL` folder, it should already be included within the Visual Studio project.
 
-However, we still need to add the LearnOpenGL includes to our `main.cpp` file. If this fails, then something in the aforementioned process was done incorrectly, or it may be possible that the `OpenGL` include & library folder is not setup or included correctly. In addition, since we are using LearnOpenGL's shader loader, we no longer need to include `LoadShaders.h`:
+However, we still need to add the LearnOpenGL includes to our `main.cpp` file. If this fails, then something in the aforementioned process was done incorrectly, or it may be possible that the `OpenGL` include & library folder is not setup or included correctly as in past labs. In addition, since we are using LearnOpenGL's shader loader, we no longer need to include `LoadShaders.h`:
 
 **CPP**
 ```c++
@@ -92,7 +92,7 @@ In order to make use of LearnOpenGL's libraries, we need to use GLAD instead of 
 #### Acquisition
 Instructions on how to add GLAD to a Visual Studio project are included in [Lab 5](/Lab5/README.md) & are referenced below:
 
-*"GLAD can be downloaded from the [GLAD Loader-Generator Web Service](https://glad.dav1d.de/) in multiple different forms depending upon the individual's requirements. If one is to use GLAD for this lab, set the `Language` to `C++`, the `gl` to an OpenGL version of at least `Version 3.3` & lastly set the `Profile` to `Core`.*
+*"GLAD can be downloaded from the [GLAD Loader-Generator Web Service](https://glad.dav1d.de/) in multiple different forms depending upon the individual's requirements. ... set the `Language` to `C++`, the `gl` to an OpenGL version of at least `Version 3.3` & lastly set the `Profile` to `Core`.*
 
 *In the `Downloads` folder, open the `glad` folder & navigate to the `include` subfolder. Move both the internal `glad` & `KHR` folders to the `C:\Users\Public\OpenGL\include` folder. Then, in the `glad` folder's `lib` folder, move the `glad.c` file into your Visual Studio Project's project directory where your `main.cpp` file is located.*
 
@@ -136,11 +136,11 @@ model = scale(model, vec3(0.025f, 0.025f, 0.025f));
 ```
 
 ### Render Loop
-Within our render loop, we need to call ```glEnable(GL_CULL_FACE)``` in order to set any backwards facing vertices to be invisible. If we don't do this, then our rock, along with any other 3D components of our scene are going to try to render both at the same time. This will create strange visual artifacts.
+Within our render loop, we need to call ```glEnable(GL_CULL_FACE)``` in order to set any backwards facing vertices to be invisible. If we don't do this, then both the front & back faces of any 3D object in our scene are going to render, irrespective of the observer's position in relation to them. This will create strange visual artifacts.
 
-We also need to change how we set our uniforms in order to not act against our new shader loader's way of setting up uniforms. We should only have one uniform, which is our ```mvp```. We can assign it as a uniform by calling ```Shaders.setMat4()``` & passing the desired name of our uniform to use within our shaders, as well as our actual variable.
+We also need to change how we set our uniforms in order to not act against our new shader loader's way of setting up uniforms. We should only have one uniform, which is our ```mvp```. We can assign it as a uniform by calling ```Shaders.setMat4()``` & by passing the desired name of our uniform to use within our shaders, as well as our actual variable.
 
-Lastly, we can remove our drawing code & replace it with our model's ```Draw()``` function, by providing our shader program:
+Lastly, we can remove our drawing code & replace it with our model's ```Draw()``` function & provide our shader program to it:
 
 **CPP**
 ```c++
