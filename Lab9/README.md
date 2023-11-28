@@ -206,5 +206,81 @@ void main()
 }
 ```
 
-## Conclusion
-If the scene is working correctly, a rock should appear in the scene & this lab should be complete!
+### Task 1
+Try to compose the aforementioned code in order to render a rock to the scene that is scaled appropriately.
+
+## Second Model
+### Setup
+Now that we have rendered one object into the scene, we are going to add a second one. In order to do this, we are going to be introducing a [tree model](https://www.turbosquid.com/3d-models/yamaboushi-tan-6000-a-3d-model-1814882). As with downloading the rock, navigate to the tree download as displayed below & acquire both the tree's `obj` & `mtl` files from the `yamaboushi_tan_6000_a_obj.zip` file & its associated textures in the `tex.zip` file:
+
+![Turbosquid Tree](/Lab9/media/TurbosquidTree.png)
+
+Once both are downloaded, decompress both zip files. Within our Visual Studio project, create a folder called `tree` inside of the `media` folder. Next, move all the textures from the `tex` folder & both the `mtl` & `obj` `yamaboushi_tan_6000_a_spr1` files within the `yamaboushi_tan_6000_a_obj` folder into the `tree` folder in your Visual Studio project.
+
+You likely noticed that there are multiple tree model variations & an overwhelming amount of textures as a result. Whether you are using the tree suggested above or not, if you wish to reduce the amount of textures in your `media` folder down to only the necessary ones, open the model's associated ```mtl``` file in a text editor for a list of textures that are utilised by the model.
+
+### Implementation
+#### Model-View-Projection Matrix
+We will need to scale our tree model differently to our rock model. Because of this, we need to make use of the model-view-projection matrix. In order to scale, move or translate our tree model in any way, we need to translate our MVP in order to change our model's position in relation to it. Since this will now need to be done multiple times throughout the render loop, we are going to create a function for this purpose called ```SetMatrices()```:
+
+**Header**
+```c++
+//Sets the model-view-projection matrix
+void SetMatrices(Shader& ShaderProgramIn);
+```
+
+In order to facilitate ```SetMatrices()```, we need to elevate our MVP variables to object variables so that they can also be accessed by the function. Within the function, we need to move the code within our render loop that sets the value of our MVP & assigns the uniform value to it:
+
+**CPP**
+```c++
+//Model-View-Projection Matrix
+mat4 mvp;
+mat4 model;
+mat4 view;
+mat4 projection;
+
+...
+
+void SetMatrices(Shader& ShaderProgramIn)
+{
+    mvp = projection * view * model; //Setting of MVP
+    ShaderProgramIn.setMat4("mvpIn", mvp); //Setting of uniform with Shader class
+}
+```
+
+Note that it is important to **replace old, local variable equivalents of our MVP variables that still exist with our new object variables** instead.
+
+#### Draw Function
+If we try to draw our tree now with the ```Draw()``` function, it should render on top of the rock. This is of course more desireable than our tree floating in the air somewhere else, so we are going to leave this as is. However, feel free to change the positions of any of the models yourself if you wish to.
+
+#### Scale Function
+Our problem is that the tree model is far larger than our rock, so we will need to scale down its size. In order to do this, we will need to downscale our model variable with the ```scale()``` function. Every time we change a component of our mvp, we also need to set our MVP in order to synchronise our values. In order to do this, we need to call ```SetMatrices()``` after every rescaling of our model, or after any kind of translation whatsoever.
+
+#### Effect of Translation
+It is important to understand that when we translate any component of our MVP, that it has a combined/relative effect, rather than a setting effect. As an example, this holds true for when we call ```scale()``` on our model variable. In order to reduce the size of our tree, executing ```scale()``` with decimal values reduces the model's size in relation to its hitherto (up until now) value by multiplication; it does not set our model's size to the value we give.
+
+#### Loop Iterations
+Because we are operating within our render loop, we also need to account for our model's values for the loop's next iteration. Because of this, after drawing our tree, we upscale our model variable back to our original position with values of `20.0f` & then call ```SetMatrices()``` once more. This will ensure that our rock is drawn at the correct size. We also need to call ```SetMatrices()``` after setting our view. Originally, this is the only location where we used to set our matrices:
+
+**Render Loop**
+```c++
+//Transformations & Drawing
+//Viewer orientation
+view = lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp); //Sets the position of the viewer, the movement direction in relation to it & the world up direction
+
+//Rock
+SetMatrices(Shaders);
+Rock.Draw(Shaders);
+
+//Tree (changes MVP in relation to past values)
+model = scale(model, vec3(0.05f, 0.05f, 0.05f));
+SetMatrices(Shaders);
+Tree.Draw(Shaders);
+
+//Rock (reorient MVP back to starting values)
+model = scale(model, vec3(20.0f, 20.0f, 20.0f));
+SetMatrices(Shaders);
+```
+
+#### Task 2
+Try to compose the aforementioned code in order to additionally render a tree to the scene, where both models are scaled appropriately.
