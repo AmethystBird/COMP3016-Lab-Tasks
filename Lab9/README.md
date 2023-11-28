@@ -210,7 +210,7 @@ void main()
 Try to compose the aforementioned code in order to render a rock to the scene that is scaled appropriately.
 
 ## Second Model
-### Setup
+### Acquisition
 Now that we have rendered one object into the scene, we are going to add a second one. In order to do this, we are going to be introducing a [tree model](https://www.turbosquid.com/3d-models/yamaboushi-tan-6000-a-3d-model-1814882). As with downloading the rock, navigate to the tree download as displayed below & acquire both the tree's `obj` & `mtl` files from the `yamaboushi_tan_6000_a_obj.zip` file & its associated textures in the `tex.zip` file:
 
 ![Turbosquid Tree](/Lab9/media/TurbosquidTree.png)
