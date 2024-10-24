@@ -240,8 +240,8 @@ From a high level perspective, there are 3 stages that must take place in order 
 - The transition of data to the shader with OpenGL | CPU → GPU
 - The rendering stage with GLSL (OpenGL Shading Language) | GPU
 
-### CPU Instantiation
-First, we must instantiate any coordinates in C++ that will ultimately be rendered to a window in some form. These coordinates must be contained within floating point arrays. For this reason, at this stage it is ambiguous as to what these coordinates relate to. Their purpose is only defined upon being converted into vertex buffer objects (VBOs). The coordinates in question could be manifested as the vertices of an object, its colours or other things. To keep things simple, we are only going to be instantiating the vertices at this stage:
+### CPU Initialisation
+First, we must initialise any coordinates in C++ that will ultimately be rendered to a window in some form. These coordinates must be contained within floating point arrays. For this reason, at this stage it is ambiguous as to what these coordinates relate to. Their purpose is only defined upon being converted into vertex buffer objects (VBOs). The coordinates in question could be manifested as the vertices of an object, its colours or other things. To keep things simple, we are only going to be initialising the vertices at this stage:
 
 **CPP**
 
